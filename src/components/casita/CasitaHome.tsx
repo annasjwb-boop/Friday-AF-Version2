@@ -16,6 +16,7 @@ import { METAPHOR_LABELS, METAPHORS, type MetaphorId } from "./metaphors";
 import { getTurntableFrames } from "./turntableFrames";
 import { CasitaHomePicker } from "./CasitaHomePicker";
 import { CasitaRecovery } from "./CasitaRecovery";
+import { CasitaReadiness } from "./CasitaReadiness";
 import { CasitaRisk } from "./CasitaRisk";
 import "./CasitaHome.css";
 
@@ -226,6 +227,8 @@ export function CasitaHome() {
 
         {activeTab === "risk" ? (
           <CasitaRisk />
+        ) : activeTab === "readiness" ? (
+          <CasitaReadiness />
         ) : activeTab === "recovery" ? (
           <CasitaRecovery
             metaphor={metaphor}

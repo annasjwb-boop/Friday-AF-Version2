@@ -95,6 +95,15 @@
   box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.35);
 }
 
+/* --- Shared body ------------------------------------------------------------ */
+
+/* The vault content itself, chrome-free, so it can sit inside either its own
+   standalone sheet or Casita's. The accent lives here rather than on .vault
+   so it resolves in both hosts. */
+.vault-body {
+  --vault-accent: #f4581d;
+}
+
 /* --- Documented value hero --------------------------------------------------- */
 
 .vault-hero {
@@ -401,3 +410,18 @@
   color: #74787f;
 }
 
+
+/* --- Real device ------------------------------------------------------------
+ * Matches the Casita host: on an actual phone the OS draws the status bar, so
+ * the mock one comes off and the title clears the notch on its own.
+ * -------------------------------------------------------------------------- */
+
+@media (max-width: 500px) {
+  .vault__status {
+    display: none;
+  }
+
+  .vault__top {
+    padding-top: calc(6px + env(safe-area-inset-top, 0px));
+  }
+}
