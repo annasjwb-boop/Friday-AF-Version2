@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 import { Monitor, Moon, Smartphone, Sun } from "lucide-react";
 import { BackgroundTableOfContents } from "./BackgroundTableOfContents";
+import { DEVICE_MODE, SHOW_VARIANT_PICKER } from "../../app/config";
 import "./MobileSimulator.css";
 
 const DesktopHome = lazy(() =>
@@ -22,6 +23,8 @@ function loadTheme(): Theme {
 }
 
 function loadMode(): DeviceMode {
+  // A pinned DEVICE_MODE wins over whatever the visitor last toggled.
+  if (DEVICE_MODE !== "auto") return DEVICE_MODE;
   return localStorage.getItem(MODE_STORAGE_KEY) === "desktop"
     ? "desktop"
     : "mobile";
@@ -43,14 +46,14 @@ export function MobileSimulator({ children }: MobileSimulatorProps) {
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem(MODE_STORAGE_KEY, mode);
+    if (DEVICE_MODE === "auto") localStorage.setItem(MODE_STORAGE_KEY, mode);
   }, [mode]);
 
   return (
     <div className={`simulator-stage${mode === "desktop" ? " is-desktop" : ""}`}>
       {mode === "mobile" ? (
         <>
-          <BackgroundTableOfContents />
+          {SHOW_VARIANT_PICKER && <BackgroundTableOfContents />}
 
           <div className="simulator-device" id="app-device">
             <div className="simulator-viewport" id="app-viewport">
@@ -65,18 +68,20 @@ export function MobileSimulator({ children }: MobileSimulatorProps) {
       )}
 
       <div className="stage-controls">
-        <button
-          type="button"
-          className="stage-toggle"
-          onClick={() => setMode(mode === "mobile" ? "desktop" : "mobile")}
-          aria-label={`Switch to ${mode === "mobile" ? "desktop" : "mobile"} version`}
-        >
-          {mode === "mobile" ? (
-            <Monitor size={20} strokeWidth={2} aria-hidden="true" />
-          ) : (
-            <Smartphone size={20} strokeWidth={2} aria-hidden="true" />
-          )}
-        </button>
+        {DEVICE_MODE === "auto" && (
+          <button
+            type="button"
+            className="stage-toggle"
+            onClick={() => setMode(mode === "mobile" ? "desktop" : "mobile")}
+            aria-label={`Switch to ${mode === "mobile" ? "desktop" : "mobile"} version`}
+          >
+            {mode === "mobile" ? (
+              <Monitor size={20} strokeWidth={2} aria-hidden="true" />
+            ) : (
+              <Smartphone size={20} strokeWidth={2} aria-hidden="true" />
+            )}
+          </button>
+        )}
         <button
           type="button"
           className="stage-toggle"

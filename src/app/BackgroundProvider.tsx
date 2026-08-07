@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { BackgroundContext, type BackgroundVariant } from "./background";
+import { ACTIVE_VARIANT, SHOW_VARIANT_PICKER } from "./config";
 import {
   SANCTUARY_THEMES,
   type SanctuaryThemeId,
@@ -9,6 +10,11 @@ const STORAGE_KEY = "aidfinder:background";
 const THEME_STORAGE_KEY = "aidfinder:sanctuary-b-theme";
 
 function loadVariant(): BackgroundVariant {
+  // With the picker off there is only one reachable variant. Read past the
+  // stored value rather than through it, so a visitor who browsed the
+  // variants before still lands on the active one.
+  if (!SHOW_VARIANT_PICKER) return ACTIVE_VARIANT;
+
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored === "dusk") return "dusk";
   if (stored === "sanctuary") return "sanctuary";
@@ -35,7 +41,7 @@ export function BackgroundProvider({ children }: { children: ReactNode }) {
     useState<SanctuaryThemeId>(loadTheme);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, variant);
+    if (SHOW_VARIANT_PICKER) localStorage.setItem(STORAGE_KEY, variant);
   }, [variant]);
 
   useEffect(() => {

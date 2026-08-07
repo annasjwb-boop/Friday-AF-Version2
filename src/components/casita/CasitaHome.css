@@ -415,3 +415,29 @@
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
+
+/* --- Real device -----------------------------------------------------------
+ * Below 500px the simulator drops its frame and the app runs edge-to-edge on
+ * an actual phone. The chrome that reads as convincing inside the frame is
+ * wrong there: the phone already draws a status bar, and the notch/dynamic
+ * island sits where our title would go.
+ * ------------------------------------------------------------------------- */
+
+@media (max-width: 500px) {
+  /* The device draws the real one; ours would stack underneath it. */
+  .casita__status {
+    display: none;
+  }
+
+  /* With the mock status bar gone, the title needs to clear the notch
+     itself rather than sitting in the space the status bar was holding. */
+  .casita__top {
+    padding-top: calc(6px + env(safe-area-inset-top, 0px));
+  }
+
+  /* On shorter phones a fixed 310px stage eats a disproportionate share of
+     the screen and pushes the stats and card stack below the fold. */
+  .casita__stage {
+    height: min(310px, 34dvh);
+  }
+}

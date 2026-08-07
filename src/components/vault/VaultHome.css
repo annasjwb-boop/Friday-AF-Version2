@@ -410,3 +410,18 @@
   color: #74787f;
 }
 
+
+/* --- Real device ------------------------------------------------------------
+ * Matches the Casita host: on an actual phone the OS draws the status bar, so
+ * the mock one comes off and the title clears the notch on its own.
+ * -------------------------------------------------------------------------- */
+
+@media (max-width: 500px) {
+  .vault__status {
+    display: none;
+  }
+
+  .vault__top {
+    padding-top: calc(6px + env(safe-area-inset-top, 0px));
+  }
+}
