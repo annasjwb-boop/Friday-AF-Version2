@@ -1,0 +1,9 @@
+/* ---------------------------------------------------------------------------
+ * Casita Readiness tab. Casita's sheet supplies less top padding than the
+ * standalone vault sheet does, and the tab strip sits directly above, so the
+ * host opens up the breathing room here rather than in the shared vault body.
+ * ------------------------------------------------------------------------- */
+
+.casita-readiness {
+  padding: 14px 0 24px;
+}
