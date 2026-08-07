@@ -1,0 +1,66 @@
+/* Shared widget card + controls for the home dashboard */
+
+.home-widget {
+  position: relative;
+  border-radius: 32px;
+  padding: var(--space-5);
+  background: var(--surface-card);
+  backdrop-filter: blur(18.76px);
+  -webkit-backdrop-filter: blur(18.76px);
+  border: 1px solid var(--surface-card-border);
+  box-shadow: var(--surface-card-inset);
+}
+
+.home-widget__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.home-widget__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.home-widget__title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  color: var(--ink-strong);
+  letter-spacing: -0.01em;
+}
+
+.home-widget__subtitle {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  color: var(--ink-muted);
+  line-height: var(--leading-normal);
+  letter-spacing: -0.01em;
+}
+
+.home-widget__info {
+  display: flex;
+  color: var(--ink-faint);
+}
+
+/* Dark pill call-to-action shared across widgets */
+.home-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--cta-bg);
+  color: var(--cta-ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  letter-spacing: -0.01em;
+  transition: background var(--transition-fast);
+}
+
+.home-cta:hover {
+  background: var(--cta-bg-hover);
+}

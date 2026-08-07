@@ -1,0 +1,79 @@
+/* Header avatar: the living miniature sanctuary itself — no fill, no
+   container, just the model floating in the header. */
+
+.sanctuary-c-avatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 160ms ease,
+    opacity 120ms ease;
+}
+
+.sanctuary-c-avatar__scene {
+  position: absolute;
+  inset: -5px;
+  display: block;
+  pointer-events: none;
+}
+
+.sanctuary-c-avatar:hover {
+  transform: scale(1.05);
+}
+
+.sanctuary-c-avatar:active {
+  transform: scale(0.93);
+}
+
+.sanctuary-c-avatar:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Hidden instantly while the story overlay sits exactly on top of it. */
+.sanctuary-c-avatar.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* FAB mode: the model sits fully inside a soft paper disc, icon-sized.
+   The border-beam wrapper owns the floating bottom-center position (set
+   inline, since the component pins its own position: relative); the
+   button itself is just the disc the beam orbits. */
+.sanctuary-c-fab {
+  transition: opacity 240ms ease;
+}
+
+.sanctuary-c-fab.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sanctuary-c-avatar--fab {
+  display: block;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  /* Opaque ink disc: the pale clay model reads like a cameo on black, and
+     the pulse-outside beam needs an opaque child with its own hairline. */
+  background: #111214;
+  box-shadow:
+    0 14px 32px rgba(19, 20, 23, 0.32),
+    0 2px 6px rgba(19, 20, 23, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  transition:
+    transform 160ms ease,
+    opacity 240ms ease;
+}
+
+/* The whole miniature — clouds included — stays inside the disc. */
+.sanctuary-c-avatar--fab .sanctuary-c-avatar__scene {
+  inset: 7px;
+}

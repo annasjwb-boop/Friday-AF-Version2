@@ -1,0 +1,102 @@
+.simulator-stage {
+  height: 100dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-stage);
+  padding: var(--space-5);
+  overflow: hidden;
+}
+
+/* Desktop mode is a real full-viewport page, not a card on the stage. */
+.simulator-stage.is-desktop {
+  padding: 0;
+}
+
+.simulator-device {
+  position: relative;
+  width: var(--device-width);
+  height: var(--device-height);
+  max-height: calc(100dvh - 2 * var(--space-5));
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  /* Generous device-style corners, like a modern phone mockup. */
+  border-radius: 44px;
+  box-shadow: var(--shadow-device);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App content lives here and is clipped to the viewport */
+.simulator-viewport {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Floating stage controls (device mode + light/dark), outside the frame. */
+.stage-controls {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.stage-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-md);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.stage-toggle:hover {
+  transform: scale(1.06);
+}
+
+.stage-toggle:active {
+  transform: scale(0.96);
+}
+
+/* Edge-to-edge on narrow browser widths */
+@media (max-width: 500px) {
+  /* The stage toggles are desktop affordances; at app width they would float
+     on top of the app's own bottom controls. */
+  .stage-controls {
+    display: none;
+  }
+
+  .simulator-stage {
+    padding: 0;
+    background: var(--color-bg);
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .simulator-device {
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}

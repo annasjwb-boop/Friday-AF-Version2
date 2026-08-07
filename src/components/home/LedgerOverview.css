@@ -1,0 +1,707 @@
+/* Variant 5 — "Recovery Ledger". Per the reference: a dark instrument sheet
+   owns the top of the device — icon tabs and the active hero — with big
+   rounded bottom corners, handing off to the warm paper field below where
+   the details live as quiet dark-ink mono rows and soft cards. Light
+   figures, thin strokes, generous air: Oura-like calm. Fixed colors in both
+   themes, like the photographic variants. */
+
+.ledger {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-system);
+  color: #1a1b1d;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Dark instrument sheet -----------------------------------------------------*/
+
+.ledger-top {
+  /* Clears the floating header the screen reclaimed. */
+  padding: calc(var(--ledger-chrome, 64px) + var(--space-2)) 0 var(--space-5);
+  border-radius: 0 0 36px 36px;
+  background:
+    radial-gradient(
+      120% 60% at 50% 0%,
+      rgba(148, 163, 184, 0.12) 0%,
+      rgba(148, 163, 184, 0) 65%
+    ),
+    linear-gradient(to bottom, #131518 0%, #0a0b0d 70%);
+  color: #ffffff;
+}
+
+/* The ring hero carries its own air below the dip. */
+.ledger-top--risk {
+  padding-bottom: var(--space-2);
+}
+
+/* Preparedness wears the reference's dusk gradient: slate sinking into a
+   warm peach glow. */
+.ledger-top--preparedness {
+  background:
+    radial-gradient(
+      110% 50% at 50% 108%,
+      rgba(255, 196, 148, 0.35) 0%,
+      rgba(255, 196, 148, 0) 70%
+    ),
+    linear-gradient(
+      to bottom,
+      #3d4551 0%,
+      #4d4d55 34%,
+      #71605a 58%,
+      #a87f64 80%,
+      #cf9c74 100%
+    );
+}
+
+/* Icon tabs -------------------------------------------------------------------*/
+
+.ledger-tabs {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-7);
+  padding: 0 var(--space-4);
+}
+
+.ledger-tabs__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: var(--space-2) var(--space-1);
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.38);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--transition-base);
+}
+
+.ledger-tabs__tab.is-active {
+  color: #ffffff;
+}
+
+.ledger-tabs__indicator {
+  width: 16px;
+  height: 1.5px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  opacity: 0;
+  transform: scaleX(0.4);
+  transition:
+    opacity var(--transition-base),
+    transform 220ms ease;
+}
+
+.ledger-tabs__tab.is-active .ledger-tabs__indicator {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.ledger-tabs__tab:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+/* Risk hero: the dusk ring, seated inside the sheet. */
+.ledger-top .risk-hero-flip {
+  margin: var(--space-2) 0 0;
+}
+
+/* Preparedness hero -------------------------------------------------------------*/
+
+.prep-hero {
+  padding: var(--space-6) var(--space-5) var(--space-4);
+}
+
+.prep-hero__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.prep-hero__figure {
+  margin-top: var(--space-3);
+  font-family: var(--font-system);
+  font-size: 64px;
+  line-height: 1;
+  font-weight: var(--weight-medium);
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.prep-hero__unit {
+  margin-left: 5px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* One segment per readiness section, each filled to its own share. */
+.prep-hero__segments {
+  display: flex;
+  gap: 5px;
+  margin-top: var(--space-5);
+}
+
+.prep-hero__segment {
+  flex: 1 1 0;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+}
+
+.prep-hero__segment-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  transition: width 320ms ease;
+}
+
+.prep-hero__caption {
+  margin-top: var(--space-4);
+  max-width: 300px;
+  font-size: 13px;
+  line-height: 19px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* Recovery hero -------------------------------------------------------------------*/
+
+.recovery-hero {
+  padding: var(--space-4) var(--space-5) 0;
+}
+
+.recovery-hero__views {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.recovery-hero__view {
+  position: relative;
+  padding: 0 0 8px;
+  border: none;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--transition-base);
+}
+
+.recovery-hero__view.is-active {
+  color: #ffffff;
+}
+
+.recovery-hero__view::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 1.5px;
+  background: #ffffff;
+  transition: right 220ms ease;
+}
+
+.recovery-hero__view.is-active::after {
+  right: 0;
+}
+
+.recovery-hero__view:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: 4px;
+}
+
+.recovery-hero__reading {
+  animation: ledger-fade-in 320ms ease both;
+}
+
+.recovery-hero__label {
+  margin-top: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.recovery-hero__figure {
+  margin-top: var(--space-2);
+  font-family: var(--font-system);
+  font-size: 42px;
+  line-height: 1.05;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.recovery-hero__est {
+  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Funding strip: a dense field of hairline bars rising toward the gap —
+   colored by the funding segment each falls into, brightening to the right;
+   the red tail is the uncovered balance. */
+.recovery-hero__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 64px;
+  margin-top: var(--space-5);
+}
+
+.recovery-hero__bar {
+  flex: 1 1 0;
+  border-radius: 1px;
+  transform-origin: bottom;
+  animation: ledger-bar-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.recovery-hero__axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.recovery-hero__axis-item {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.recovery-hero__axis-item--gap {
+  color: #ff7a66;
+}
+
+/* Light paper body ---------------------------------------------------------------*/
+
+.ledger-body {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-4) 0;
+  animation: ledger-fade-in 320ms ease both;
+}
+
+.ledger-section-label {
+  margin: var(--space-5) 0 var(--space-1);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.42);
+}
+
+/* Breakdown rows (exposures, readiness sections) --------------------------------*/
+
+.ledger-rows {
+  list-style: none;
+}
+
+.ledger-row {
+  border-top: 1px solid rgba(26, 27, 29, 0.1);
+}
+
+.ledger-row:first-child {
+  border-top: none;
+}
+
+.ledger-row__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 16px 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  color: #1a1b1d;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ledger-row__head:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+.ledger-row__labels {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ledger-row__name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.9);
+}
+
+/* Value appended inline after the name, per the reference rows. */
+.ledger-row__inline {
+  margin-left: 6px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: rgba(26, 27, 29, 0.5);
+}
+
+.ledger-row__inline.is-complete {
+  color: #47862c;
+}
+
+.ledger-row__inline.is-empty {
+  color: rgba(26, 27, 29, 0.32);
+}
+
+.ledger-row__meta {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.38);
+}
+
+.ledger-row__chevron {
+  flex: 0 0 auto;
+  color: rgba(26, 27, 29, 0.35);
+  transition: transform 200ms ease;
+}
+
+.ledger-row__chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.ledger-row__body {
+  padding: 0 0 var(--space-4);
+}
+
+.ledger-row__description {
+  max-width: 320px;
+  font-size: 13px;
+  line-height: 19px;
+  color: rgba(26, 27, 29, 0.62);
+}
+
+.ledger-row__detail {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.45);
+}
+
+/* Readiness item checklist. */
+.ledger-row__items {
+  list-style: none;
+  padding: 0 0 var(--space-3);
+}
+
+.ledger-row__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: rgba(26, 27, 29, 0.45);
+}
+
+.ledger-row__item.is-done {
+  color: rgba(26, 27, 29, 0.75);
+}
+
+.ledger-row__item-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px dashed rgba(26, 27, 29, 0.25);
+  border-radius: var(--radius-pill);
+  color: #47862c;
+}
+
+.ledger-row__item.is-done .ledger-row__item-mark {
+  border: none;
+  background: rgba(71, 134, 44, 0.13);
+}
+
+.ledger-row__item-hint {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.35);
+}
+
+/* Funding source rows -------------------------------------------------------------*/
+
+.ledger-sources {
+  list-style: none;
+}
+
+.ledger-source {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "dot name amount"
+    ". detail amount";
+  column-gap: 10px;
+  row-gap: 4px;
+  align-items: center;
+  padding: 13px 0;
+  border-top: 1px solid rgba(26, 27, 29, 0.1);
+}
+
+.ledger-source:first-child {
+  border-top: none;
+}
+
+.ledger-source__dot {
+  grid-area: dot;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  /* Keeps the pale insurance swatch legible on the paper field. */
+  box-shadow: 0 0 0 1px rgba(26, 27, 29, 0.16);
+}
+
+.ledger-source__name {
+  grid-area: name;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.9);
+}
+
+.ledger-source__detail {
+  grid-area: detail;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.38);
+}
+
+.ledger-source__amount {
+  grid-area: amount;
+  font-family: var(--font-system);
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: rgba(26, 27, 29, 0.9);
+}
+
+.ledger-source--gap .ledger-source__amount {
+  color: #c8351c;
+}
+
+/* Paper cards (asset library, support options) ------------------------------------*/
+
+.ledger-card {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-2);
+  padding: var(--space-4) 20px;
+  border: none;
+  border-radius: 26px;
+  background: #f6f5f1;
+  box-shadow:
+    0 1px 2px rgba(31, 26, 17, 0.05),
+    0 8px 24px rgba(31, 26, 17, 0.06);
+  color: #1a1b1d;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition-base);
+}
+
+.ledger-card:active {
+  background: #efeee9;
+}
+
+.ledger-card:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.ledger-card__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.ledger-card__labels {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ledger-card__title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: #1a1b1d;
+}
+
+.ledger-card__subtitle {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a29f95;
+}
+
+.ledger-card__value-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.ledger-card__value {
+  font-family: var(--font-system);
+  font-size: 23px;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-card__value--gap {
+  color: #c8351c;
+}
+
+.ledger-card__chevron {
+  color: #a29f95;
+}
+
+.ledger-card__progress {
+  height: 3px;
+  margin-top: var(--space-4);
+  border-radius: var(--radius-pill);
+  background: rgba(26, 27, 29, 0.1);
+  overflow: hidden;
+}
+
+.ledger-card__progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: #1a1b1d;
+  transition: width 320ms ease;
+}
+
+.ledger-card__caption {
+  margin-top: var(--space-3);
+  max-width: 300px;
+  font-size: 13px;
+  line-height: 19px;
+  color: #605d54;
+}
+
+.ledger-card__meta {
+  display: block;
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a29f95;
+}
+
+/* Panel footer ---------------------------------------------------------------------*/
+
+.ledger-action {
+  align-self: flex-start;
+  margin-top: var(--space-5);
+  padding: 10px 18px;
+  border: 1px solid rgba(26, 27, 29, 0.28);
+  border-radius: var(--radius-pill);
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.82);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color var(--transition-fast);
+}
+
+.ledger-action:active {
+  border-color: rgba(26, 27, 29, 0.55);
+}
+
+.ledger-action:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.ledger-footnote {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-6);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(26, 27, 29, 0.42);
+}
+
+/* Motion --------------------------------------------------------------------*/
+
+@keyframes ledger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes ledger-bar-rise {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ledger-body,
+  .recovery-hero__reading,
+  .recovery-hero__bar {
+    animation: none;
+  }
+}

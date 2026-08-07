@@ -1,0 +1,134 @@
+/* ---------------------------------------------------------------------------
+ * "Why it looks this way" sheet. No darkened backdrop: the scene above stays
+ * visible so a selected row can highlight its region of the 3D environment.
+ * Light mode: warm paper sheet with charcoal ink.
+ * ------------------------------------------------------------------------- */
+
+.sanctuary-b-why {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 21;
+  display: flex;
+  flex-direction: column;
+  max-height: 52%;
+  padding: var(--space-4) 0 calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  border-radius: 18px 18px 0 0;
+  background: rgba(248, 244, 236, 0.96);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 -18px 50px rgba(62, 52, 38, 0.28);
+}
+
+.sanctuary-b-why__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: 0 var(--space-4) 0 var(--space-5);
+}
+
+.sanctuary-b-why__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.01em;
+  line-height: var(--leading-tight);
+  color: #2d2a24;
+}
+
+.sanctuary-b-why__hint {
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: rgba(58, 52, 44, 0.62);
+}
+
+.sanctuary-b-why__close {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(45, 42, 36, 0.08);
+  color: rgba(45, 42, 36, 0.75);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.sanctuary-b-why__close:hover {
+  background: rgba(45, 42, 36, 0.15);
+}
+
+.sanctuary-b-why__list {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-3);
+  padding: 0 var(--space-3);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sanctuary-b-why__row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: var(--space-3) var(--space-3);
+  border: none;
+  border-left: 2px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.sanctuary-b-why__row:hover {
+  background: rgba(45, 42, 36, 0.05);
+}
+
+.sanctuary-b-why__row.is-active {
+  border-left-color: #c07b31;
+  background: rgba(192, 123, 49, 0.1);
+}
+
+.sanctuary-b-why__row-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+  color: #2d2a24;
+}
+
+.sanctuary-b-why__row-meaning {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: rgba(58, 52, 44, 0.64);
+}
+
+.sanctuary-b-why__row-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: var(--space-2);
+  overflow: hidden;
+}
+
+.sanctuary-b-why__row-fact {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #a4611f;
+}
+
+.sanctuary-b-why__row-action {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: rgba(58, 52, 44, 0.8);
+}

@@ -1,0 +1,54 @@
+/* Dusk-variant hero: the score readout seated at the center of a tall, thin
+   open ring, fully contained within the frame. Fine strokes, sparse dots,
+   no card, no label or CTA. */
+.risk-hero-flip {
+  position: relative;
+  height: 360px;
+  /* Bleed past the screen padding so the ring is sized against the full
+     device width (its ends still stay inside the frame). */
+  margin: 0 calc(-1 * var(--space-4));
+  overflow: hidden;
+}
+
+.risk-hero-flip__meter {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Centered inside the ring: the block's visual middle lands on the ring's
+   center (y = 132 in the 360px-tall hero). */
+.risk-hero-flip__content {
+  position: absolute;
+  top: 64px;
+  left: var(--space-6);
+  right: var(--space-6);
+  text-align: center;
+  color: #ffffff;
+}
+
+.risk-hero-flip__value {
+  font-size: 46px;
+  line-height: 52px;
+  font-weight: var(--weight-bold);
+  letter-spacing: -1.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.risk-hero-flip__title {
+  margin-top: 2px;
+  font-size: 17px;
+  line-height: 23px;
+  font-weight: var(--weight-medium);
+}
+
+.risk-hero-flip__description {
+  max-width: 240px;
+  margin: 6px auto 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: rgba(255, 255, 255, 0.75);
+}

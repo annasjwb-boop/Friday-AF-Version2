@@ -1,0 +1,276 @@
+.home-screen {
+  gap: var(--space-5);
+  /* No background of its own: the ambient shader is the sole backdrop, so the
+     top of the content blends seamlessly into the header/status-bar area. */
+  background: transparent;
+}
+
+/* ---------------------------------------------------------------------------
+ * Dark Landscape variant: the risk hero floats on the imagery, the photo
+ * dissolves through a progressive backdrop blur (no white wash), and the
+ * widgets are full-width rounded cards stacked over the blurred imagery.
+ * ------------------------------------------------------------------------- */
+
+.home-screen--landscape {
+  gap: 0;
+  padding: var(--space-5) 0 0;
+}
+
+/* The hero is pinned at its resting offset (header + screen padding), so it
+   never scrolls with the page: the card stack rides over it on a higher
+   layer, and the stack's backdrop blur dissolves the hero and imagery as it
+   passes. */
+.home-screen--landscape .risk-hero {
+  /* Push the score block down the screen so it sits closer to the card
+     stack instead of hugging the header. */
+  margin: 64px 0 0;
+  position: sticky;
+  /* Matches the hero's resting offset (screen padding + the margin above):
+     the sticky inset is measured from inside the scroll container's header
+     padding, so only the screen's own top padding counts here. */
+  top: calc(var(--space-5) + 64px);
+  z-index: 0;
+}
+
+.home-screen--landscape .home-scrim,
+.home-screen--landscape .home-sheet {
+  position: relative;
+  z-index: 1;
+}
+
+/* Scroll-driven recede: as the cards start covering it, the hero also sinks
+   back — fading and softening. Applied to the hero's children rather than the
+   hero itself: a filter on the hero (even identity blur(0) at rest) would
+   make it a backdrop root and break the breakdown pill's frosted backdrop.
+   Browsers without scroll-driven animations still get the backdrop-blur
+   dissolve above. */
+@supports (animation-timeline: scroll()) {
+  .home-screen--landscape .risk-hero__gauge,
+  .home-screen--landscape .risk-hero__content {
+    animation: home-hero-recede linear both;
+    animation-timeline: scroll(nearest);
+    animation-range: 0 260px;
+  }
+
+  /* The pill itself uses backdrop-filter, so it only fades. */
+  .home-screen--landscape .risk-hero__breakdown {
+    animation: home-hero-fade linear both;
+    animation-timeline: scroll(nearest);
+    animation-range: 0 260px;
+  }
+}
+
+@keyframes home-hero-recede {
+  to {
+    opacity: 0.25;
+    filter: blur(7px);
+  }
+}
+
+@keyframes home-hero-fade {
+  to {
+    opacity: 0.15;
+  }
+}
+
+/* White text over the dark photo needs a darker halo than over the sky. */
+.home-screen--landscape .risk-hero__content {
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.55);
+}
+
+/* Seam between the imagery and the card stack: two stacked backdrop-blur
+   layers with offset masks approximate a progressive blur — the photo stays
+   visible but melts out of focus as it approaches the cards. Its net flow
+   footprint (height + negative margin) sets the hero-to-cards gap. */
+.home-scrim {
+  position: relative;
+  height: 80px;
+  margin-top: -32px;
+  pointer-events: none;
+}
+
+.home-scrim::before,
+.home-scrim::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.home-scrim::before {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 45%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 45%);
+}
+
+.home-scrim::after {
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  mask-image: linear-gradient(to bottom, transparent 30%, #000 85%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 30%, #000 85%);
+}
+
+/* Card stack: the container continues the blur behind the cards (picking up
+   where the scrim ramp maxes out), so the imagery showing through the gaps
+   and side slivers stays soft rather than sharp. */
+.home-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-1) calc(var(--space-6) + var(--space-4));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* Cards keep their rounded shape but run (nearly) edge-to-edge. Near-opaque
+   surfaces keep content legible over the photo in both themes; the sheet
+   already blurs the backdrop, so the cards don't re-blur it themselves. */
+.home-sheet .home-widget {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+[data-theme="dark"] .home-sheet .home-widget {
+  background: rgba(18, 18, 20, 0.78);
+}
+
+/* ---------------------------------------------------------------------------
+ * Dusk Grain variant: the flipped-meter hero floats on the grain; below it,
+ * the widgets keep their rounded frosted card shapes (the gradient-shader
+ * surface) but run nearly edge-to-edge, stacked with slim gaps — same
+ * rhythm as the dawn landscape sheet.
+ * ------------------------------------------------------------------------- */
+
+.home-screen--dusk {
+  gap: 0;
+  padding: var(--space-5) 0 0;
+}
+
+/* The hero is pinned at its resting offset on a layer beneath the cards: the
+   card stack rides over it as the page scrolls. */
+.home-screen--dusk .risk-hero-flip {
+  margin: 0 0 var(--space-3);
+  position: sticky;
+  top: var(--space-5);
+  z-index: 0;
+}
+
+.home-sheet-dusk {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-1) calc(var(--space-6) + var(--space-4));
+}
+
+/* Scroll-driven recede: as the cards start covering it, the hero sinks into
+   the background — fading and softening (same ramp as the dawn variant). */
+@supports (animation-timeline: scroll()) {
+  .home-screen--dusk .risk-hero-flip__meter,
+  .home-screen--dusk .risk-hero-flip__content {
+    animation: home-hero-recede linear both;
+    animation-timeline: scroll(nearest);
+    animation-range: 0 260px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Variant 5 — "Recovery Ledger": a dark instrument sheet bleeds from the very
+ * top of the device (behind the floating chrome) and hands off to the light
+ * paper backdrop below, per the reference. The screen reclaims the header
+ * clearance so the sheet can own the top edge.
+ * ------------------------------------------------------------------------- */
+
+.home-screen--ledger {
+  --ledger-chrome: calc(var(--header-height) + var(--space-2));
+  gap: 0;
+  margin-top: calc(-1 * var(--ledger-chrome));
+  padding: 0 0 calc(var(--space-6) + var(--space-4));
+}
+
+@media (max-width: 500px) {
+  .home-screen--ledger {
+    --ledger-chrome: calc(
+      var(--header-height) + var(--space-2) + env(safe-area-inset-top, 0px)
+    );
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Variant 4.B — one coherent product: full-bleed warm canvas, the component
+ * manages its own padding, rhythm, and persistent bottom tab bar (which
+ * relies on the screen filling the scroll container's height).
+ * ------------------------------------------------------------------------- */
+
+.home-screen--sanctuaryb {
+  gap: 0;
+  padding: 0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Flex stretch (not percentage heights) so the product always fills the
+   scroll container and its floating nav sits at the true bottom. */
+.home-screen--sanctuaryb > .gd {
+  flex: 1;
+}
+
+/* Full-page tools (Explore) lock the screen to the viewport so the tool
+   owns its own scroll + pinned foot instead of growing the app scroll. */
+.home-screen--sanctuaryb:has(.gd--tool) {
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.home-screen--sanctuaryb > .gd--tool {
+  min-height: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Variant 4 — "Sanctuary": a full-screen, non-scrolling 3D hero. The screen
+ * reclaims the header clearance so the scene runs edge to edge behind the
+ * floating chrome.
+ * ------------------------------------------------------------------------- */
+
+.home-screen--sanctuary {
+  --sanctuary-chrome: calc(var(--header-height) + var(--space-2));
+  height: calc(100% + var(--sanctuary-chrome));
+  margin-top: calc(-1 * var(--sanctuary-chrome));
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 500px) {
+  .home-screen--sanctuary {
+    --sanctuary-chrome: calc(
+      var(--header-height) + var(--space-2) + env(safe-area-inset-top, 0px)
+    );
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Variant 7 — "Casita": full-bleed product shell; the component owns its own
+ * dark header, sheet, and sticky bottom nav (same contract as 4.B).
+ * ------------------------------------------------------------------------- */
+
+.home-screen--casita {
+  gap: 0;
+  padding: 0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------------------------------------------------------------------------
+ * Variant 6 — "Home Atlas": shares the sanctuary's full-screen edge-to-edge
+ * treatment; the map component owns everything inside the frame.
+ * ------------------------------------------------------------------------- */
+
+.home-screen--atlas {
+  background: #0a0b0e;
+}

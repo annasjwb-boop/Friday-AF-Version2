@@ -1,0 +1,182 @@
+/* ---------------------------------------------------------------------------
+ * Home picker: full-screen takeover that isolates the diorama on white,
+ * cycles through the ten home metaphors, and pairs each with a short
+ * personalized story before committing the choice.
+ * ------------------------------------------------------------------------- */
+
+.home-picker {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  color: #111214;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 0
+    calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+/* --- Header ---------------------------------------------------------------- */
+
+.home-picker__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px 0;
+}
+
+.home-picker__close {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: #f2f2f3;
+  color: #55595e;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.home-picker__heading {
+  font-size: 15px;
+  font-weight: 550;
+  letter-spacing: -0.005em;
+}
+
+.home-picker__head-spacer {
+  width: 34px;
+}
+
+/* --- Stage ------------------------------------------------------------------ */
+
+.home-picker__stage {
+  position: relative;
+  height: 330px;
+  margin-top: 8px;
+  touch-action: none;
+  overflow: hidden;
+}
+
+.home-picker__orbit {
+  position: absolute;
+  inset: 0;
+}
+
+.home-picker__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(17, 18, 20, 0.07);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  color: #45494e;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.home-picker__arrow--prev {
+  left: 12px;
+}
+
+.home-picker__arrow--next {
+  right: 12px;
+}
+
+/* --- Dots -------------------------------------------------------------------- */
+
+.home-picker__dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px 0 0;
+}
+
+.home-picker__dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #d9dbde;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.home-picker__dot.is-active {
+  background: #111214;
+  transform: scale(1.35);
+}
+
+/* --- Story -------------------------------------------------------------------- */
+
+.home-picker__story {
+  padding: 18px 30px 0;
+  text-align: center;
+}
+
+.home-picker__name {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.home-picker__badge {
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: rgba(17, 18, 20, 0.05);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #6d7278;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.home-picker__text {
+  margin: 10px auto 0;
+  max-width: 300px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  font-weight: 400;
+  color: #74787f;
+}
+
+/* --- Footer -------------------------------------------------------------------- */
+
+.home-picker__foot {
+  margin-top: auto;
+  padding: 16px 22px 0;
+}
+
+.home-picker__cta {
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: #17181a;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 520;
+  letter-spacing: 0.005em;
+  padding: 15px 16px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.home-picker__cta:disabled {
+  background: #f2f2f3;
+  color: #a3a8ae;
+  cursor: default;
+}

@@ -1,0 +1,11 @@
+.product-orbit {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.product-orbit:active {
+  cursor: grabbing;
+}

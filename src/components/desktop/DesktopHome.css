@@ -1,0 +1,1419 @@
+/* ---------------------------------------------------------------------------
+ * Desktop AidFinder — product chrome on the stage (brand, risk map, contact,
+ * avatar) around a self-contained rounded canvas. Inside the canvas: the
+ * property switcher up top, the diorama as a contained backdrop, the risk
+ * tick-strip, and money cards floating left and right.
+ * ------------------------------------------------------------------------- */
+
+.desk {
+  --desk-accent: #f4581d;
+  --desk-surface: #ffffff;
+  --desk-tint: #f5f5f6;
+  --desk-border: rgba(17, 18, 20, 0.08);
+  --desk-ink: #17181a;
+  --desk-mid: #74787f;
+  --desk-faint: #a3a8ae;
+
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 28px 28px;
+  color: var(--desk-ink);
+}
+
+:root[data-theme="dark"] .desk {
+  --desk-surface: #17181b;
+  --desk-tint: rgba(255, 255, 255, 0.055);
+  --desk-border: rgba(255, 255, 255, 0.1);
+  --desk-ink: #f4f4f5;
+  --desk-mid: #a6abb3;
+  --desk-faint: #71757c;
+}
+
+/* --- Stage chrome (outside the canvas) ---------------------------------------- */
+
+.desk__chrome {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px 16px;
+  flex-shrink: 0;
+}
+
+/* --- Section tabs, centered in the chrome ---------------------------------------- */
+
+.desk__tabs {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, calc(-50% - 6px));
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:root[data-theme="dark"] .desk__tabs {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.desk__tab {
+  border: none;
+  background: none;
+  padding: 7px 18px;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 520;
+  color: var(--desk-mid);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.desk__tab:hover {
+  color: var(--desk-ink);
+}
+
+.desk__tab.is-active {
+  background: var(--desk-surface);
+  color: var(--desk-ink);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.desk__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.desk__brand-icon {
+  width: 28px;
+  height: 28px;
+  color: #0079fd;
+  display: grid;
+  place-items: center;
+}
+
+.desk__brand-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.desk__wordmark {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+
+.desk__nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.desk__nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity var(--transition-fast);
+}
+
+.desk__nav-link:hover {
+  opacity: 1;
+}
+
+.desk__nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 9px 18px;
+  background: var(--desk-ink);
+  color: var(--desk-surface);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.desk__nav-cta:hover {
+  opacity: 0.85;
+}
+
+.desk__avatar {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #b98757;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+/* --- Self-contained canvas ------------------------------------------------------- */
+
+.desk__canvas {
+  position: relative;
+  /* Self-contained proportions: never stretch to fill tall windows. */
+  height: min(800px, 100%);
+  min-height: 0;
+  width: min(1360px, 100%);
+  margin: auto;
+  background: var(--desk-surface);
+  border-radius: 28px;
+  box-shadow: var(--shadow-device);
+  padding: 24px 36px 36px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* --- V1 "Framed": keep the canvas, lighten its treatment ---------------------------
+   The device shadow becomes a hairline edge with a whisper of depth, and the
+   stage gutter tightens so the gray reads as a margin, not a mat. */
+
+.desk--framed {
+  padding: 10px 18px 18px;
+}
+
+.desk--framed .desk__canvas {
+  border: 1px solid var(--desk-border);
+  box-shadow: 0 12px 32px rgba(17, 18, 20, 0.05);
+}
+
+/* --- V2 "Flat": no canvas — the page itself is the product surface -----------------
+   Chrome separates with a hairline instead of floating on gray; content keeps
+   its width cap so the composition holds on wide monitors. */
+
+.desk--flat {
+  padding: 0;
+  background: var(--desk-surface);
+}
+
+.desk--flat .desk__chrome {
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--desk-border);
+}
+
+/* Chrome padding is symmetric here, so the tabs recenter exactly. */
+.desk--flat .desk__tabs {
+  transform: translate(-50%, -50%);
+}
+
+.desk--flat .desk__canvas {
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* --- Canvas header: property switcher + freshness --------------------------------- */
+
+.desk__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 3;
+}
+
+.desk__property {
+  position: relative;
+}
+
+.desk__property-btn {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 8px;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 6px 8px;
+  margin: -6px -8px;
+  border-radius: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.desk__property-btn:hover {
+  background: var(--desk-tint);
+}
+
+.desk__property-name {
+  font-size: 14.5px;
+  font-weight: 590;
+  letter-spacing: -0.005em;
+  color: var(--desk-ink);
+}
+
+.desk__property-address {
+  grid-column: 1;
+  font-size: 12px;
+  font-weight: 440;
+  color: var(--desk-faint);
+  margin-top: 1px;
+}
+
+.desk__property-chevron {
+  grid-row: 1;
+  grid-column: 2;
+  color: var(--desk-faint);
+  transition: transform 0.18s ease;
+}
+
+.desk__property-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.desk__property-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+}
+
+.desk__property-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: -8px;
+  z-index: 4;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  min-width: 320px;
+  background: var(--desk-surface);
+  border: 1px solid var(--desk-border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.desk__property-option {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 10px 12px;
+  border-radius: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.desk__property-option:hover {
+  background: var(--desk-tint);
+}
+
+.desk__property-option.is-active {
+  background: var(--desk-tint);
+}
+
+.desk__property-score {
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+.desk__property-score.is-protected {
+  color: #3d9a50;
+}
+
+.desk__property-score.is-manageable {
+  color: #3d9a50;
+}
+
+.desk__property-score.is-exposed,
+.desk__property-score.is-elevated {
+  color: var(--desk-accent);
+}
+
+.desk__updated {
+  font-size: 12px;
+  font-weight: 440;
+  color: var(--desk-faint);
+  padding-top: 4px;
+}
+
+/* --- Diorama backdrop (contained within the canvas) -------------------------------- */
+
+.desk__stage {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  /* Height-driven so the diorama always fits inside the canvas frame:
+     centered at 40%, a 78%-tall stage spans 1%–79% of the canvas. The
+     orbit renders in contain mode, so the model floats fully inside it. */
+  height: min(620px, 78%);
+  width: auto;
+  aspect-ratio: 4 / 3;
+  cursor: pointer;
+  z-index: 0;
+}
+
+/* Feather the render's rectangular edges so the cast shadows fade out
+   naturally instead of cutting off — the model reads as rendered in place,
+   not as a pasted image. Doubly important in dark mode (white-backed). */
+.desk__stage {
+  -webkit-mask-image: radial-gradient(
+    ellipse 58% 54% at 50% 50%,
+    #000 50%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    ellipse 58% 54% at 50% 50%,
+    #000 50%,
+    transparent 75%
+  );
+}
+
+/* --- Three-column grid above the backdrop ------------------------------------------ */
+
+/* Only the cards catch the pointer, so drags anywhere else fall through
+   and spin the model. */
+.desk__grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 292px minmax(360px, 1fr) 292px;
+  gap: 36px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.desk-card {
+  pointer-events: auto;
+}
+
+/* --- Flanking cards -------------------------------------------------------------- */
+
+.desk__col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.desk-card {
+  background: var(--desk-surface);
+  border: 1px solid var(--desk-border);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.desk-card--tinted {
+  background: var(--desk-tint);
+  border-color: transparent;
+}
+
+:root[data-theme="dark"] .desk-card--tinted {
+  background: #1e1f23;
+}
+
+.desk-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.desk-card__title {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 570;
+  letter-spacing: -0.005em;
+}
+
+.desk-card__more {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--desk-border);
+  border-radius: 50%;
+  background: none;
+  color: var(--desk-mid);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.desk-card__text {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  font-weight: 430;
+  color: var(--desk-mid);
+}
+
+.desk-card__text:last-child {
+  margin-bottom: 0;
+}
+
+.desk-card__foot {
+  margin-top: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.desk-card__figure {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.desk-card__value {
+  font-size: 19px;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.desk-card__value.is-gap {
+  color: var(--desk-accent);
+}
+
+.desk-card__of {
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--desk-faint);
+}
+
+.desk-card__label {
+  font-size: 11.5px;
+  font-weight: 440;
+  color: var(--desk-faint);
+}
+
+/* Drillable cards: real buttons that open a detail view. */
+.desk-card--drill {
+  position: relative;
+  font-family: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.desk-card--drill:hover {
+  background: rgba(17, 18, 20, 0.07);
+}
+
+:root[data-theme="dark"] .desk-card--drill:hover {
+  background: #24262b;
+}
+
+/* The absolute hint is the true last child, so reset the text's gap manually. */
+.desk-card--drill .desk-card__text {
+  margin-bottom: 0;
+}
+
+.desk-card__drill-hint {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--desk-border);
+  border-radius: 50%;
+  color: var(--desk-mid);
+  display: grid;
+  place-items: center;
+}
+
+/* Tinted stat cards: icon chip + one big number. */
+.desk-card__badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--desk-surface);
+  color: var(--desk-accent);
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+}
+
+.desk-card__big {
+  font-size: 26px;
+  font-weight: 640;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 6px;
+}
+
+/* --- Progress ring ---------------------------------------------------------------- */
+
+.desk-ring__track,
+.desk-ring__fill {
+  fill: none;
+  stroke-width: 5;
+}
+
+.desk-ring__track {
+  stroke: var(--desk-border);
+}
+
+.desk-ring__fill {
+  stroke: var(--desk-accent);
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.8s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.desk-ring__text {
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--desk-ink);
+  text-anchor: middle;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Center: caption + risk score anchored below the backdrop ---------------------- */
+
+.desk__center {
+  min-width: 0;
+  align-self: stretch;
+}
+
+/* Pinned just below the diorama's base (which ends at 73% of the canvas),
+   so the score tracks the model at any window height. */
+.desk__score {
+  position: absolute;
+  top: calc(73% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(440px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.desk__score-line {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 440;
+  color: var(--desk-mid);
+}
+
+.desk__score-line strong {
+  font-weight: 620;
+  color: var(--desk-ink);
+}
+
+.desk__score-sub {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 430;
+  color: var(--desk-faint);
+}
+
+.desk__ticks {
+  margin-top: 14px;
+  display: flex;
+  gap: 4px;
+}
+
+.desk__ticks i {
+  width: 5px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--desk-border);
+  transition: background 0.3s ease;
+}
+
+/* Ticks light up left-to-right once the view mounts (per-tick delay inline). */
+.desk__ticks.is-armed i.is-on {
+  background: var(--desk-accent);
+}
+
+.desk__story {
+  margin: 16px 0 0;
+  max-width: 400px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  font-weight: 430;
+  color: var(--desk-mid);
+}
+
+/* --- Tab pages (Actions, Applications) --------------------------------------------- */
+
+.desk__page {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: 20px;
+  padding: 4px 4px 8px;
+}
+
+.desk__page-head {
+  max-width: 560px;
+  margin: 8px auto 28px;
+  text-align: center;
+}
+
+.desk__page-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+}
+
+.desk__page-sub {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 430;
+  color: var(--desk-mid);
+}
+
+.desk__page-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.desk__page-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.desk__page-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 0 2px;
+  font-size: 12px;
+  font-weight: 560;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--desk-faint);
+}
+
+.desk__page-label-note {
+  font-size: 11.5px;
+  font-weight: 480;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--desk-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.desk__page-note {
+  margin: 4px 2px 0;
+  font-size: 11.5px;
+  line-height: 1.55;
+  font-weight: 430;
+  color: var(--desk-faint);
+}
+
+/* Risk-action cards */
+
+.desk-action__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.desk-action__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 570;
+  letter-spacing: -0.005em;
+}
+
+.desk-action__points {
+  flex-shrink: 0;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--desk-tint);
+  font-size: 11px;
+  font-weight: 570;
+  color: var(--desk-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.desk-action__subtitle {
+  margin: 3px 0 10px;
+  font-size: 12px;
+  font-weight: 480;
+  color: var(--desk-faint);
+}
+
+.desk-action__foot {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--desk-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.desk-action__detail {
+  font-size: 11.5px;
+  font-weight: 450;
+  color: var(--desk-mid);
+}
+
+.desk-action__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 550;
+  color: var(--desk-ink);
+  text-decoration: none;
+}
+
+.desk-action__link:hover {
+  color: var(--desk-accent);
+}
+
+/* Readiness task rows */
+
+.desk-task {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.desk-task__body .desk-card__text {
+  margin: 4px 0 0;
+}
+
+.desk-task__btn {
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  background: var(--desk-ink);
+  color: var(--desk-surface);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 560;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.desk-task__btn:hover {
+  opacity: 0.85;
+}
+
+/* Application rows */
+
+.desk__apps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.desk-app {
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+}
+
+.desk-app__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.desk-app__main .desk-card__text {
+  margin: 4px 0 0;
+}
+
+.desk-app__category {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 520;
+  letter-spacing: 0.02em;
+  color: var(--desk-faint);
+}
+
+.desk-app__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.desk-app__off-plan {
+  font-weight: 440;
+}
+
+.desk-app__meta {
+  flex-shrink: 0;
+  width: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.desk-app__amount {
+  font-size: 12.5px;
+  font-weight: 560;
+  font-variant-numeric: tabular-nums;
+}
+
+.desk-app__timing {
+  font-size: 11.5px;
+  font-weight: 440;
+  color: var(--desk-faint);
+}
+
+.desk-app__side {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.desk-app__status {
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.desk-app__status.is-ready {
+  background: rgba(61, 154, 80, 0.12);
+  color: #2f7f40;
+}
+
+.desk-app__status.is-progress {
+  background: rgba(0, 121, 253, 0.1);
+  color: #0068da;
+}
+
+.desk-app__status.is-attention {
+  background: rgba(244, 88, 29, 0.1);
+  color: var(--desk-accent);
+}
+
+.desk-app__status.is-idle {
+  background: var(--desk-tint);
+  color: var(--desk-mid);
+}
+
+:root[data-theme="dark"] .desk-app__status.is-ready {
+  color: #7fd08f;
+}
+
+:root[data-theme="dark"] .desk-app__status.is-progress {
+  color: #6fb4ff;
+}
+
+/* --- Home picker: dedicated selection view over the canvas ------------------------- */
+
+.desk-picker {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--desk-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 36px 32px;
+}
+
+.desk-picker__head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.desk-picker__heading {
+  font-size: 14.5px;
+  font-weight: 590;
+  letter-spacing: -0.005em;
+}
+
+.desk-picker__close {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--desk-border);
+  border-radius: 50%;
+  background: none;
+  color: var(--desk-mid);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.desk-picker__close:hover {
+  background: var(--desk-tint);
+}
+
+/* Sliding carousel: the track carries all ten dioramas; neighbors peek in
+   at reduced scale and are clickable. Only the centered slide mounts the
+   interactive orbit — the rest are static hero frames. */
+.desk-picker__carousel {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.desk-picker__track {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  display: flex;
+}
+
+.desk-picker__slide {
+  position: relative;
+  width: 560px;
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.desk-picker__slide:not(.is-active) {
+  cursor: pointer;
+}
+
+.desk-picker__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Matches the orbit's contain-fit margin so the swap is seamless. */
+  transform: scale(0.96);
+  pointer-events: none;
+}
+
+.desk-picker__orbit {
+  position: absolute;
+  inset: 0;
+}
+
+/* Same edge feathering as the overview stage: shadows fade, never cut. */
+.desk-picker__slide {
+  -webkit-mask-image: radial-gradient(
+    ellipse 58% 54% at 50% 50%,
+    #000 50%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    ellipse 58% 54% at 50% 50%,
+    #000 50%,
+    transparent 75%
+  );
+}
+
+.desk-picker__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--desk-border);
+  border-radius: 50%;
+  background: var(--desk-surface);
+  color: var(--desk-ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background var(--transition-fast), opacity var(--transition-fast);
+}
+
+.desk-picker__arrow--prev {
+  left: calc(50% - 348px);
+}
+
+.desk-picker__arrow--next {
+  right: calc(50% - 348px);
+}
+
+.desk-picker__arrow:hover:not(:disabled) {
+  background: var(--desk-tint);
+}
+
+.desk-picker__arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.desk-picker__story {
+  flex-shrink: 0;
+  max-width: 520px;
+  text-align: center;
+  min-height: 96px;
+}
+
+.desk-picker__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.desk-picker__badge {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--desk-tint);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0;
+  color: var(--desk-mid);
+}
+
+.desk-picker__text {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  font-weight: 430;
+  color: var(--desk-mid);
+}
+
+.desk-picker__foot {
+  flex-shrink: 0;
+  margin-top: 18px;
+}
+
+.desk-picker__cta {
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 12px 28px;
+  background: var(--desk-ink);
+  color: var(--desk-surface);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 570;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.desk-picker__cta:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.desk-picker__cta:disabled {
+  background: var(--desk-tint);
+  color: var(--desk-faint);
+  cursor: default;
+}
+
+/* --- Aid readiness drill-in: documents + home inventory over the canvas ------------ */
+
+.desk-readiness {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--desk-surface);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 36px 0;
+}
+
+.desk-readiness__sub {
+  flex-shrink: 0;
+  max-width: 560px;
+  margin: 10px auto 24px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 430;
+  color: var(--desk-mid);
+}
+
+.desk-readiness__grid {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: start;
+  padding-bottom: 32px;
+}
+
+.desk-readiness__col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.desk-readiness__note {
+  margin: -6px 2px 2px;
+}
+
+.desk-readiness__section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.desk-readiness__meta {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  font-weight: 440;
+  color: var(--desk-faint);
+}
+
+.desk-readiness__count {
+  flex-shrink: 0;
+  font-size: 11.5px;
+  font-weight: 520;
+  color: var(--desk-mid);
+  font-variant-numeric: tabular-nums;
+}
+
+.desk-readiness__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Document rows are toggles — tapping files (or unfiles) the document. */
+.desk-readiness__row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  border-top: 1px solid var(--desk-border);
+  background: none;
+  padding: 9px 0;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 460;
+  color: var(--desk-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.desk-readiness__check {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid var(--desk-border);
+  border-radius: 50%;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.desk-readiness__row.is-done .desk-readiness__check {
+  background: #3d9a50;
+  border-color: #3d9a50;
+}
+
+.desk-readiness__row-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.desk-readiness__row-status {
+  flex-shrink: 0;
+  font-size: 11.5px;
+  font-weight: 550;
+  color: var(--desk-accent);
+}
+
+.desk-readiness__row.is-done .desk-readiness__row-status {
+  color: var(--desk-faint);
+  font-weight: 460;
+}
+
+/* Inventory rows: item name against its estimated replacement value. */
+.desk-readiness__asset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--desk-border);
+  padding: 9px 0;
+  font-size: 12.5px;
+  font-weight: 460;
+}
+
+.desk-readiness__value {
+  flex-shrink: 0;
+  color: var(--desk-mid);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Variant toggle: prototype-only switch, bottom-left of the stage --------------- */
+
+.desk__variant {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 50;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--desk-border);
+  border-radius: var(--radius-pill);
+  background: var(--desk-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.desk__variant-btn {
+  border: none;
+  background: none;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 540;
+  color: var(--desk-mid);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.desk__variant-btn:hover {
+  color: var(--desk-ink);
+}
+
+.desk__variant-btn.is-active {
+  background: var(--desk-ink);
+  color: var(--desk-surface);
+}
+
+/* --- Narrower windows: the backdrop returns to the flow, columns stack ----------- */
+
+@media (max-width: 1080px) {
+  .desk {
+    overflow: auto;
+  }
+
+  .desk__canvas {
+    overflow: visible;
+    flex: none;
+  }
+
+  .desk__grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: start;
+    padding-top: 16px;
+  }
+
+  .desk__center {
+    order: -1;
+    align-self: auto;
+  }
+
+  .desk__score {
+    position: static;
+    transform: none;
+    width: auto;
+    margin-top: 16px;
+  }
+
+  .desk__stage {
+    position: static;
+    transform: none;
+    height: auto;
+    width: min(520px, 100%);
+    margin: 0 auto;
+  }
+
+  .desk__col {
+    flex-direction: row;
+  }
+
+  .desk__col .desk-card {
+    flex: 1;
+  }
+
+  .desk__chrome {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .desk__tabs,
+  .desk--flat .desk__tabs {
+    position: static;
+    transform: none;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .desk__page-grid,
+  .desk-readiness__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .desk-app {
+    flex-wrap: wrap;
+  }
+}

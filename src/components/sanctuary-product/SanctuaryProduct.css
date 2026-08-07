@@ -1,0 +1,1319 @@
+/* -----------------------------------------------------------------------------
+ * GO-inspired system: electric blue field, acid yellow accents, white
+ * rounded sheets, chunky Space Grotesk numerals, dotted separators, and a
+ * frosted floating pill nav. Every screen sits on the blue.
+ * --------------------------------------------------------------------------- */
+
+.gd {
+  --gd-blue: #3626f5;
+  --gd-blue-deep: #2a1bd8;
+  --gd-yellow: #edff3d;
+  --gd-ink: #101014;
+  --gd-cyan: #a6edfb;
+  --gd-pink: #f9cfe0;
+  --gd-pink-hot: #f553a0;
+  --gd-tint: rgba(255, 255, 255, 0.62);
+  --gd-faint: rgba(255, 255, 255, 0.4);
+  --gd-dash: rgba(255, 255, 255, 0.26);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  width: 100%;
+  /* Reference field: a soft violet bloom at the top melting into deep
+     electric blue at the bottom. */
+  background:
+    radial-gradient(
+      130% 55% at 50% -6%,
+      #5a48ff 0%,
+      rgba(90, 72, 255, 0) 62%
+    ),
+    linear-gradient(180deg, #4133fa 0%, var(--gd-blue) 42%, #2b1ade 100%);
+  color: #fff;
+  font-family: "Space Grotesk", var(--font-system);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Full-page tools (Explore) fill the device viewport so the scroll
+   region + pinned foot can share the height. */
+.gd--tool {
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+/* Film grain over the blue field, under the sheets — the reference's
+   textured ground. */
+.gd::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+.gd-view {
+  position: relative;
+  z-index: 1;
+}
+
+.gd-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  animation: gd-enter 300ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+
+@keyframes gd-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gd-view {
+    animation-duration: 1ms;
+  }
+}
+
+/* Shared bits. ----------------------------------------------------------------*/
+
+/* Screen label: small icon + name, like the reference "Plan Breakdown". */
+.gd-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.gd-label svg {
+  color: var(--gd-yellow);
+}
+
+.gd-dotted {
+  border: none;
+  border-top: 1.5px dashed var(--gd-dash);
+  margin: 18px 0 0;
+}
+
+/* Chip — small rounded tag. */
+.gd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.gd-chip--yellow {
+  background: var(--gd-yellow);
+  color: var(--gd-ink);
+}
+
+.gd-chip--glass {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+/* Compact dark action pill — never full-width. */
+.gd-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--gd-ink);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms ease;
+}
+
+.gd-pill:active {
+  transform: scale(0.96);
+}
+
+/* White pill for actions sitting on the blue field, reference style. */
+.gd-pill--white {
+  background: #fff;
+  color: var(--gd-ink);
+  box-shadow: 0 10px 26px rgba(10, 6, 80, 0.3);
+}
+
+.gd-pill__time {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--gd-yellow);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gd-ink);
+}
+
+/* Small stat triplet, reference style: bold value over quiet label. */
+.gd-stats {
+  display: flex;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.gd-stat__value {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-stat__value small {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gd-tint);
+}
+
+.gd-stat__label {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--gd-tint);
+}
+
+/* Frosted floating pill navigation. ------------------------------------------*/
+
+.gd-navdock {
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
+  height: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* Frosted track exactly one pill tall — the active pill fills its full
+   height, flush inside, per the reference. */
+.gd-nav {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 66px;
+  padding: 5px;
+  border-radius: 999px;
+  /* Glassy frost — mostly the blurred content behind, with a faint
+     light wash so it still reads on white sheets. */
+  background: rgba(238, 240, 252, 0.38);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 16px 36px rgba(10, 6, 80, 0.24);
+  transform: translateY(calc(-100% - 26px - env(safe-area-inset-bottom, 0px)));
+}
+
+.gd-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  height: 56px;
+  min-width: 54px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(16, 16, 20, 0.6);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 260ms ease,
+    color 260ms ease,
+    padding 260ms ease,
+    transform 160ms ease;
+  outline: none;
+}
+
+.gd-nav__item:active {
+  transform: scale(0.94);
+}
+
+.gd-nav__item:focus-visible {
+  box-shadow: 0 0 0 2px rgba(54, 38, 245, 0.5);
+}
+
+.gd-nav__item.is-active {
+  padding: 0 22px;
+  background: #fff;
+  color: var(--gd-ink);
+  box-shadow: 0 6px 18px rgba(10, 6, 80, 0.24);
+}
+
+.gd-nav__label {
+  display: none;
+}
+
+.gd-nav__item.is-active .gd-nav__label {
+  display: inline;
+}
+
+/* -----------------------------------------------------------------------------
+ * Home — the sanctuary on blue
+ * --------------------------------------------------------------------------- */
+
+.gd-home {
+  padding: calc(24px + env(safe-area-inset-top, 0px)) 22px
+    calc(112px + env(safe-area-inset-bottom, 0px));
+}
+
+.gd-home__greeting {
+  margin-top: 18px;
+  font-size: 31px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+}
+
+.gd-home__greeting span {
+  color: var(--gd-tint);
+}
+
+/* The sanctuary stands directly on the blue field — no card, full bleed. */
+.gd-home__stage {
+  position: relative;
+  height: 360px;
+  margin: 6px -22px 0;
+}
+
+.gd-home__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--gd-faint);
+}
+
+/* Action pills riding the stage's bottom edge. */
+.gd-stage-actions {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.gd-swap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(16, 16, 20, 0.18);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The narrative reading beneath the model — chapters the user cycles
+   through, then one action. */
+.gd-home__story {
+  margin-top: 20px;
+}
+
+.gd-home__story-page {
+  /* Enough room that chapter swaps don't bounce the layout. */
+  min-height: 148px;
+  animation: gd-enter 300ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+
+.gd-home__story-headline {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.gd-home__story-body {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--gd-tint);
+}
+
+.gd-home__story-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.gd-home__story-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.gd-home__story-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 220ms ease,
+    width 220ms ease;
+}
+
+.gd-home__story-dot.is-active {
+  width: 22px;
+  background: var(--gd-yellow);
+}
+
+.gd-home__story-arrows {
+  display: flex;
+  gap: 8px;
+}
+
+.gd-home__story-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms ease;
+}
+
+.gd-home__story-arrow:active {
+  transform: scale(0.92);
+}
+
+.gd-home__story .gd-pill {
+  margin-top: 18px;
+}
+
+/* -----------------------------------------------------------------------------
+ * Home explore — full-page sandbox tool. Numbers never leave; appearance
+ * (color + model) is creative and can stick.
+ * --------------------------------------------------------------------------- */
+
+.gd-explore {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  animation: gd-enter 300ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+
+.gd-explore__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 22px 18px;
+}
+
+.gd-explore__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gd-explore__back,
+.gd-explore__reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gd-explore__back {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.gd-explore__reset {
+  gap: 5px;
+  padding: 8px 12px;
+  border-style: dashed;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.gd-explore__reset:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.gd-explore__titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.gd-explore__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gd-yellow);
+}
+
+.gd-explore__title {
+  margin-top: 2px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.gd-explore__promise {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--gd-tint);
+}
+
+.gd-explore__stage {
+  position: relative;
+  height: 260px;
+  margin: 6px -22px 0;
+  flex: 0 0 auto;
+}
+
+.gd-explore__reading {
+  margin-top: 4px;
+  min-height: 96px;
+  animation: gd-enter 280ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+
+.gd-explore__reading-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--gd-yellow);
+}
+
+.gd-explore__reading-headline {
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.gd-explore__reading-body {
+  margin-top: 8px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--gd-tint);
+}
+
+/* Four dimension chips — pick a lever. */
+.gd-explore__dims {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.gd-explore__dim {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 10px 9px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  font-family: inherit;
+  color: var(--gd-tint);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.gd-explore__dim.is-active {
+  border-color: #fff;
+  background: #fff;
+  color: var(--gd-ink);
+}
+
+.gd-explore__dim.is-dirty:not(.is-active) {
+  border-color: var(--gd-yellow);
+}
+
+.gd-explore__dim-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.gd-explore__dim-value {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: inherit;
+}
+
+/* The active lever — one dimension at a time, with a truth marker. */
+.gd-explore__lever {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(16, 16, 20, 0.22);
+}
+
+.gd-explore__lever-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gd-explore__lever-label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.gd-explore__lever-unit {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--gd-tint);
+}
+
+.gd-explore__lever-nums {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-explore__lever-nums strong {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.gd-explore__lever-nums span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gd-yellow);
+}
+
+.gd-explore__track {
+  position: relative;
+  margin-top: 14px;
+}
+
+.gd-explore__track input[type="range"] {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--gd-yellow);
+}
+
+.gd-explore__truth-mark {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(16, 16, 20, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.gd-explore__track-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gd-faint);
+}
+
+.gd-explore__model {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.38);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gd-explore__model span {
+  color: var(--gd-tint);
+  font-weight: 500;
+}
+
+.gd-explore__foot {
+  flex: 0 0 auto;
+  padding: 12px 22px calc(14px + env(safe-area-inset-bottom, 0px));
+  border-top: 1.5px dashed var(--gd-dash);
+  background: rgba(16, 16, 20, 0.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.gd-explore__done {
+  width: 100%;
+  justify-content: center;
+}
+
+.gd-home__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 26px;
+  font-size: 14px;
+  color: var(--gd-tint);
+}
+
+.gd-home__foot strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------------
+ * Risk — bulky dial meter
+ * --------------------------------------------------------------------------- */
+
+.gd-risk__top {
+  position: relative;
+  padding: calc(24px + env(safe-area-inset-top, 0px)) 22px 0;
+}
+
+.gd-risk__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gd-dialwrap {
+  position: relative;
+  /* Bleed slightly past the screen padding so the dial reads big and wide. */
+  width: calc(100% + 20px);
+  /* Air below the dial's lowest bend before the driver story begins
+     (the gauge opens at the top, so the arc dips lowest at center). */
+  margin: 14px -10px 56px;
+}
+
+.gd-dial {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.gd-dial__track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 30;
+  stroke-linecap: round;
+}
+
+.gd-dial__arc {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 30;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.35));
+  animation: gd-dial-in 1100ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
+  animation-delay: 150ms;
+}
+
+/* Zone-change milestones sitting inside the meter. */
+.gd-dial__mile {
+  fill: rgba(255, 255, 255, 0.45);
+}
+
+.gd-dial__mile.is-passed {
+  fill: var(--gd-blue);
+}
+
+@keyframes gd-dial-in {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gd-dial__arc {
+    animation: none;
+  }
+}
+
+.gd-dial__cap {
+  fill: var(--gd-yellow);
+}
+
+.gd-dial__cap-core {
+  fill: var(--gd-blue);
+}
+
+.gd-dial__end {
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--gd-faint);
+  font-family: inherit;
+}
+
+/* Center readout layered over the dial. */
+.gd-dial__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* Optical alignment with the dial's true center (the gauge opens up). */
+  padding-bottom: 22px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.gd-dial__score {
+  font-size: 80px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-dial__delta {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--gd-tint);
+}
+
+/* -----------------------------------------------------------------------------
+ * Readiness — token wall on yellow
+ * --------------------------------------------------------------------------- */
+
+.gd-ready {
+  padding: calc(24px + env(safe-area-inset-top, 0px)) 22px
+    calc(112px + env(safe-area-inset-bottom, 0px));
+}
+
+.gd-ready__figure {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 26px;
+  font-size: 92px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-ready__of {
+  font-size: 30px;
+  font-weight: 600;
+  color: var(--gd-tint);
+}
+
+.gd-ready__sub {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--gd-tint);
+}
+
+/* Folder grid — one folder per record, grouped by content type
+   (blue folders hold documents, dark folders hold photos). */
+.gd-foldergroup {
+  margin-top: 28px;
+}
+
+.gd-foldergroup + .gd-foldergroup {
+  margin-top: 32px;
+}
+
+.gd-foldergroup__title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gd-tint);
+}
+
+.gd-folders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gd-folder {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 180ms ease;
+}
+
+.gd-folder:active {
+  transform: scale(0.95);
+}
+
+/* Name and count riding the folder's front pocket. */
+.gd-folder__info {
+  position: absolute;
+  left: 13%;
+  right: 8%;
+  bottom: 12%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(16, 16, 20, 0.35);
+  pointer-events: none;
+}
+
+.gd-folder__name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.gd-folder__count {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.gd-ready__next {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.gd-ready__complete {
+  margin-top: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--gd-tint);
+}
+
+.gd-ready__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 26px;
+  font-size: 14px;
+  color: var(--gd-tint);
+}
+
+.gd-ready__foot strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Folder sheet — opens from a folder tile. Portaled into #app-viewport so
+   it stays inside the phone frame and covers the floating nav. Re-declares
+   the palette and type the .gd scope normally provides. */
+
+.gd-folderlay {
+  --gd-blue: #3626f5;
+  --gd-yellow: #edff3d;
+  --gd-ink: #101014;
+
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-family: "Space Grotesk", var(--font-system);
+  -webkit-font-smoothing: antialiased;
+}
+
+.gd-folderlay__scrim {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(10, 6, 60, 0.52);
+  cursor: pointer;
+  animation: gd-scrim-in 240ms ease both;
+}
+
+@keyframes gd-scrim-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.gd-fsheet {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  max-height: 76%;
+  overflow-y: auto;
+  padding: 26px 22px calc(30px + env(safe-area-inset-bottom, 0px));
+  background: #fff;
+  border-radius: 32px 32px 0 0;
+  color: var(--gd-ink);
+  animation: gd-fsheet-up 340ms cubic-bezier(0.3, 0.7, 0.2, 1) both;
+}
+
+@keyframes gd-fsheet-up {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gd-fsheet,
+  .gd-folderlay__scrim {
+    animation-duration: 1ms;
+  }
+}
+
+.gd-fsheet__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.gd-fsheet__title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.gd-fsheet__subtitle {
+  margin-top: 4px;
+  font-size: 13.5px;
+  color: #8a8a94;
+}
+
+.gd-fsheet__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(16, 16, 20, 0.06);
+  color: var(--gd-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gd-fsheet__rows {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.gd-fsheet__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 8px 0;
+}
+
+.gd-fsheet__rows > li + li {
+  border-top: 1.5px dashed rgba(16, 16, 20, 0.14);
+}
+
+.gd-fsheet__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(16, 16, 20, 0.3);
+  color: #fff;
+}
+
+.gd-fsheet__mark.is-done {
+  border: none;
+  background: var(--gd-ink);
+}
+
+.gd-fsheet__name {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15.5px;
+  font-weight: 600;
+}
+
+.gd-fsheet__name small {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #8a8a94;
+}
+
+.gd-fsheet__value {
+  font-size: 15.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-pill--small {
+  padding: 8px 13px;
+  font-size: 13px;
+}
+
+.gd-fsheet__connect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1.5px dashed rgba(16, 16, 20, 0.3);
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gd-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gd-fsheet__note {
+  margin-top: 18px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #8a8a94;
+}
+
+/* -----------------------------------------------------------------------------
+ * Recovery — linked funding capsules
+ * --------------------------------------------------------------------------- */
+
+.gd-recover__top {
+  /* Extra top air, matching the Risk hero's breathing room. */
+  padding: calc(36px + env(safe-area-inset-top, 0px)) 22px 0;
+}
+
+.gd-recover__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Cycling cost-view chip — glass, compact, tap advances. */
+.gd-recover__cycle {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  gap: 4px;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.gd-recover__cycle:active {
+  transform: scale(0.96);
+}
+
+.gd-recover__cycle svg {
+  opacity: 0.7;
+}
+
+.gd-recover__hero {
+  margin-top: 40px;
+  margin-bottom: 36px;
+  animation: gd-enter 280ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+
+.gd-recover__figure {
+  font-size: 62px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.gd-recover__sub {
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--gd-tint);
+}
+
+.gd-recover__sub strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.gd-recover__funded {
+  margin-top: 14px;
+}
+
+/* Slim tick meter, reference style: thin vertical ticks, colored by
+   the funding source; the unfunded tail fades out. */
+.gd-recover__meter {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 4px;
+  height: 44px;
+  margin: 8px 0 10px;
+}
+
+.gd-recover__tick {
+  flex: 1 1 0;
+  max-width: 2.5px;
+  border-radius: 2px;
+}
+
+.gd-recover__tick.is-gap {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.gd-recover__ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--gd-faint);
+  padding: 0 4px;
+}
+
+/* Funding ledger on the blue field. */
+.gd-recover__ledger {
+  padding: 0 22px calc(118px + env(safe-area-inset-bottom, 0px));
+}
+
+.gd-recover__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gd-recover__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.gd-recover__rows > li + li {
+  border-top: 1.5px dashed var(--gd-dash);
+}
+
+.gd-recover__dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+
+.gd-recover__name {
+  flex: 1;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.gd-recover__amount {
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.gd-recover__row--gap .gd-recover__name,
+.gd-recover__row--gap .gd-recover__amount {
+  color: var(--gd-yellow);
+}
+
+.gd-recover__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+}

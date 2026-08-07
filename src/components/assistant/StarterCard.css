@@ -1,0 +1,157 @@
+.starter-stack {
+  position: relative;
+  width: 100%;
+}
+
+/* Slightly rotated dark layers peeking out beneath the card. */
+.starter-stack__layer {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  height: 186px;
+  border-radius: 32px;
+  pointer-events: none;
+}
+
+.starter-stack__layer--back {
+  width: 278px;
+  background: rgba(0, 0, 0, 0.5);
+  transform: translateX(-50%) rotate(2.06deg);
+}
+
+.starter-stack__layer--mid {
+  width: 314px;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateX(-50%) rotate(-1.39deg);
+}
+
+.starter-card {
+  position: relative;
+  /* Flex column: buttons otherwise vertically center their content. */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: 216px;
+  padding: 24px 21px;
+  border: none;
+  border-radius: var(--ink-card-radius);
+  background: var(--ink-card-bg);
+  box-shadow: var(--ink-card-inset);
+  overflow: hidden;
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--transition-base);
+}
+
+.starter-card:active {
+  transform: scale(0.985);
+}
+
+.starter-card__glow {
+  position: absolute;
+  inset: 0;
+  background: var(--ink-card-glow);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.starter-card__title {
+  position: relative;
+  display: block;
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: -0.48px;
+  line-height: 1.1;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.starter-card__body {
+  position: relative;
+  display: block;
+  margin-top: 11px;
+  max-width: 296px;
+  font-size: 18px;
+  line-height: 1.1;
+  letter-spacing: -0.4px;
+  color: #fff;
+}
+
+.starter-card__footer {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.starter-card__ring {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Gray progress track (per Figma: not-started state). */
+.starter-card__ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 4px),
+    #000 calc(100% - 3px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 4px),
+    #000 calc(100% - 3px)
+  );
+}
+
+/* Small blue progress dot sitting on the track, upper-left. */
+.starter-card__ring::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #0a84ff;
+}
+
+.starter-card__time {
+  font-size: 14px;
+  font-weight: var(--weight-medium);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.starter-card__status {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+
+.starter-card__status-line {
+  font-size: 14px;
+  letter-spacing: -0.28px;
+  color: #fff;
+}
+
+.starter-card__status-sub {
+  font-size: 14px;
+  font-weight: var(--weight-medium);
+  color: rgba(255, 255, 255, 0.7);
+}

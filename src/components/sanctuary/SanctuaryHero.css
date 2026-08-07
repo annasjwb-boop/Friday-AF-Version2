@@ -1,0 +1,295 @@
+/* ---------------------------------------------------------------------------
+ * Sanctuary hero: cinematic full-frame layout over the Dusk Grain mesh.
+ * The whole ramp is dark now — sepia into slate into near-black — so the
+ * ink is warm off-white throughout, with the cream CTA as the anchor.
+ * ------------------------------------------------------------------------- */
+
+.sanctuary {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sanctuary__eyebrow {
+  position: relative;
+  z-index: 2;
+  padding-top: calc(var(--header-height) + var(--space-3));
+  text-align: center;
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(240, 232, 218, 0.55);
+}
+
+/* The scene is embedded directly in the page — no card, no frame. */
+.sanctuary__stage {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 54%;
+  min-height: 0;
+  margin-top: calc(-1 * var(--space-4));
+  transition: flex-basis 550ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* In the risk view the model and ring own most of the screen. */
+.sanctuary__stage--risk {
+  flex-basis: 68%;
+}
+
+.sanctuary__stage canvas {
+  display: block;
+  transition:
+    filter 450ms ease,
+    transform 550ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* While the score sits on top, the model steps back into the dusk. Tapping
+   it clears the dim and dismisses the score — the model comes forward. */
+.sanctuary__stage.is-dimmed canvas {
+  filter: brightness(0.58) saturate(0.85);
+  transform: scale(0.94);
+}
+
+/* Score overlay: centered on the stage, transparent to drags so the model
+   stays interactive underneath. */
+.sanctuary-score {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* Soft pool of dusk behind the readout so the numbers hold against the
+     bright clay underneath. */
+  background: radial-gradient(
+    46% 34% at 50% 44%,
+    rgba(10, 11, 14, 0.52) 0%,
+    rgba(10, 11, 14, 0) 72%
+  );
+}
+
+.sanctuary-score__inner {
+  width: 100%;
+  padding: 0 var(--space-4);
+}
+
+.sanctuary__hint {
+  max-width: 260px;
+  text-align: center;
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  letter-spacing: 0.02em;
+  color: rgba(226, 219, 205, 0.5);
+}
+
+.sanctuary__panel--risk {
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* Content zone over the darkening lower mesh */
+.sanctuary__panel {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-5) var(--space-5);
+}
+
+.sanctuary-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.sanctuary-details__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sanctuary-details__title {
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: var(--leading-tight);
+  color: #ede5d3;
+}
+
+.sanctuary-details__desc {
+  max-width: 290px;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: rgba(226, 219, 205, 0.66);
+}
+
+/* Status chip — also the hidden trigger for the risk-state demo control */
+.sanctuary-details__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border: 1px solid rgba(236, 228, 214, 0.24);
+  border-radius: 3px;
+  background: transparent;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  color: rgba(236, 228, 214, 0.78);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    background var(--transition-base);
+}
+
+.sanctuary-details__status:hover {
+  border-color: rgba(236, 228, 214, 0.45);
+  background: rgba(236, 228, 214, 0.06);
+}
+
+.sanctuary-details__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d9a45f;
+}
+
+.sanctuary-details__status-dot[data-state="vulnerable"] {
+  background: #c49a4e;
+}
+
+.sanctuary-details__status-dot[data-state="high-risk"] {
+  background: #cf6d3d;
+}
+
+.sanctuary-details__status-dot[data-state="damaged"] {
+  background: #8d7a63;
+}
+
+.sanctuary-details__status-dot[data-state="recovering"] {
+  background: #9aa565;
+}
+
+/* Risk-state demo control */
+.sanctuary-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  overflow: hidden;
+}
+
+.sanctuary-demo__label {
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(226, 219, 205, 0.45);
+}
+
+.sanctuary-demo__row {
+  display: flex;
+  gap: 6px;
+}
+
+.sanctuary-demo__chip {
+  padding: 5px 9px;
+  border: 1px solid rgba(236, 228, 214, 0.22);
+  border-radius: 3px;
+  background: transparent;
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: rgba(236, 228, 214, 0.7);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.sanctuary-demo__chip.is-active {
+  background: #e9e0cc;
+  border-color: #e9e0cc;
+  color: #1a1712;
+}
+
+/* Actions */
+.sanctuary__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 300px;
+  margin-top: auto;
+}
+
+.sanctuary__cta {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #e9e0cc;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+  color: #1a1712;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(4, 5, 7, 0.5);
+  transition:
+    background var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.sanctuary__cta:hover {
+  background: #f3ecdb;
+}
+
+.sanctuary__cta:active {
+  transform: scale(0.985);
+}
+
+.sanctuary__change {
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.03em;
+  color: rgba(226, 219, 205, 0.66);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(226, 219, 205, 0.3);
+  cursor: pointer;
+  transition: color var(--transition-base);
+}
+
+.sanctuary__change:hover {
+  color: #ede5d3;
+}
+
+/* Fine grain over the whole experience, matching the reference imagery. */
+.sanctuary__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+}

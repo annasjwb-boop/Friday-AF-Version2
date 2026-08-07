@@ -1,0 +1,109 @@
+.recovery-plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.recovery-plan__figures {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.recovery-plan__figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.recovery-plan__figure--end {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.recovery-plan__figure-label {
+  font-size: 11px;
+  color: var(--ink-muted);
+  letter-spacing: -0.01em;
+}
+
+.recovery-plan__figure-value {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.recovery-plan__bar {
+  position: relative;
+  height: 32px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--bar-track);
+}
+
+/* Striped placeholder shown before a scenario exists. */
+.recovery-plan__bar--empty {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(0, 0, 0, 0.08),
+    rgba(0, 0, 0, 0.08) 6px,
+    rgba(0, 0, 0, 0.03) 6px,
+    rgba(0, 0, 0, 0.03) 12px
+  );
+}
+
+[data-theme="dark"] .recovery-plan__bar--empty {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.08) 6px,
+    rgba(255, 255, 255, 0.03) 6px,
+    rgba(255, 255, 255, 0.03) 12px
+  );
+}
+
+.recovery-plan__empty-hint {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  letter-spacing: -0.01em;
+  line-height: var(--leading-normal);
+}
+
+.recovery-plan__bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 7px;
+  background: linear-gradient(93deg, #2b83ff 58%, #0252f2 106%);
+}
+
+.recovery-plan__gap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recovery-plan__gap-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 11px;
+  color: var(--ink-muted);
+  letter-spacing: -0.01em;
+}
+
+.recovery-plan__gap-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--gap-dot);
+  box-shadow: 0 0 6px var(--gap-dot);
+}
+
+.recovery-plan__gap-value {
+  font-size: 13px;
+  font-weight: var(--weight-medium);
+  color: var(--gap-ink);
+  letter-spacing: -0.01em;
+}

@@ -1,0 +1,43 @@
+.mobile-tabbar {
+  flex: 0 0 auto;
+  height: var(--tabbar-height);
+  display: flex;
+  align-items: stretch;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+}
+
+.mobile-tabbar__item {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 44px;
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  transition: color var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-tabbar__item:active {
+  transform: scale(0.96);
+}
+
+.mobile-tabbar__item.is-active {
+  color: var(--color-primary);
+}
+
+.mobile-tabbar__item:focus-visible {
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-md);
+}
+
+.mobile-tabbar__label {
+  line-height: 1;
+}

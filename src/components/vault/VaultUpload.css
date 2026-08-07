@@ -1,0 +1,262 @@
+/* ---------------------------------------------------------------------------
+ * Vault document upload — bottom sheet: source picker → uploading →
+ * AI verification → verified.
+ * ------------------------------------------------------------------------- */
+
+.vault-upload {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-family: var(--font-system);
+}
+
+.vault-upload__scrim {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(10, 11, 13, 0.45);
+  cursor: pointer;
+}
+
+.vault-upload__sheet {
+  position: relative;
+  background: #ffffff;
+  color: #111214;
+  border-radius: 24px 24px 0 0;
+  padding: 10px 22px calc(30px + env(safe-area-inset-bottom, 0px));
+  min-height: 320px;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.28);
+}
+
+.vault-upload__grabber {
+  display: block;
+  width: 36px;
+  height: 4px;
+  margin: 2px auto 0;
+  border-radius: var(--radius-pill);
+  background: rgba(17, 18, 20, 0.12);
+}
+
+.vault-upload__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: #f5f5f6;
+  color: #6d7278;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.vault-upload__body {
+  padding-top: 22px;
+}
+
+.vault-upload__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 580;
+  letter-spacing: -0.01em;
+}
+
+.vault-upload__spark {
+  color: #f4581d;
+}
+
+.vault-upload__lede {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  font-weight: 420;
+  color: #74787f;
+}
+
+/* --- Source options ------------------------------------------------------------ */
+
+.vault-upload__options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.vault-upload__option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid rgba(17, 18, 20, 0.05);
+  border-radius: 16px;
+  background: #f9f9fa;
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #111214;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.vault-upload__option:active {
+  background: #f0f0f2;
+}
+
+.vault-upload__option-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(17, 18, 20, 0.06);
+  color: #4b5058;
+  display: grid;
+  place-items: center;
+}
+
+.vault-upload__option-chev {
+  margin-left: auto;
+  color: #c6cacf;
+}
+
+.vault-upload__note {
+  margin: 18px 0 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 410;
+  color: #a3a8ae;
+}
+
+/* --- Uploading -------------------------------------------------------------------- */
+
+.vault-upload__file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 13px 14px;
+  border-radius: 16px;
+  background: #f9f9fa;
+  border: 1px solid rgba(17, 18, 20, 0.05);
+}
+
+.vault-upload__file-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(17, 18, 20, 0.06);
+  color: #4b5058;
+  display: grid;
+  place-items: center;
+}
+
+.vault-upload__file-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vault-upload__file-name {
+  font-size: 13px;
+  font-weight: 510;
+}
+
+.vault-upload__file-meta {
+  font-size: 11.5px;
+  font-weight: 420;
+  color: #a3a8ae;
+  font-variant-numeric: tabular-nums;
+}
+
+.vault-upload__bar {
+  height: 4px;
+  margin-top: 16px;
+  border-radius: var(--radius-pill);
+  background: rgba(17, 18, 20, 0.07);
+  overflow: hidden;
+}
+
+.vault-upload__bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #17181a;
+  transition: width 0.12s linear;
+}
+
+/* --- AI verification ----------------------------------------------------------------- */
+
+.vault-upload__checks {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vault-upload__checks li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 13.5px;
+  font-weight: 460;
+  color: #4b5058;
+}
+
+.vault-upload__checks li.is-done {
+  color: #111214;
+}
+
+.vault-upload__check-mark {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(17, 18, 20, 0.12);
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+
+.is-done .vault-upload__check-mark {
+  background: #2f9e53;
+  border-color: #2f9e53;
+}
+
+/* --- Done ------------------------------------------------------------------------------ */
+
+.vault-upload__body--done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 30px;
+}
+
+.vault-upload__body--done .vault-upload__lede {
+  max-width: 260px;
+}
+
+.vault-upload__done-check {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e9f7ee;
+  color: #2f9e53;
+  display: grid;
+  place-items: center;
+  margin-bottom: 16px;
+}

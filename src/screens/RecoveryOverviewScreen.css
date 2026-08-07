@@ -1,0 +1,132 @@
+/* Shared shell for the recovery-plan screens. The app layout supplies the
+   backdrop (ambient shader in light mode, solid black in dark mode). */
+.recovery-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-height: 100%;
+  padding: var(--space-5) var(--space-4);
+  padding-bottom: calc(var(--space-6) + var(--space-4));
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+/* --- Overview ------------------------------------------------------------ */
+
+.recovery-overview__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.recovery-overview__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.02em;
+  line-height: 32px;
+  color: var(--ink-strong);
+}
+
+.recovery-overview__subtitle {
+  font-size: var(--text-md);
+  letter-spacing: -0.02em;
+  line-height: 20px;
+  color: var(--ink-soft);
+}
+
+.recovery-overview__sources {
+  display: flex;
+  flex-direction: column;
+}
+
+.recovery-overview__source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--row-divider);
+}
+
+.recovery-overview__source-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  color: var(--ink-strong);
+}
+
+.recovery-overview__source-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+}
+
+.recovery-overview__source-value {
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  color: var(--ink-secondary);
+}
+
+.recovery-overview__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.recovery-overview__action {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: var(--space-4) 20px;
+  border: 1px solid var(--surface-card-border);
+  border-radius: 20px;
+  background: var(--surface-card);
+  box-shadow: var(--surface-card-inset);
+  color: var(--ink-muted);
+  text-align: left;
+  transition: background var(--transition-fast);
+}
+
+.recovery-overview__action:hover {
+  background: var(--surface-card-hover);
+}
+
+.recovery-overview__action-copy {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.recovery-overview__action-title {
+  font-size: var(--text-md);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.recovery-overview__action-title--support {
+  color: #2b59ff;
+}
+
+.recovery-overview__action-title--resources {
+  color: #0a9d64;
+}
+
+[data-theme="dark"] .recovery-overview__action-title--support {
+  color: #97aeff;
+}
+
+[data-theme="dark"] .recovery-overview__action-title--resources {
+  color: #9afcb1;
+}
+
+.recovery-overview__action-desc {
+  max-width: 244px;
+  font-size: var(--text-md);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--ink-secondary);
+}

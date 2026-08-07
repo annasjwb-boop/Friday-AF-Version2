@@ -1,0 +1,176 @@
+/* --- Filter chips ---------------------------------------------------------- */
+
+.support-options__filters {
+  display: flex;
+  gap: 5px;
+  margin: 0 calc(-1 * var(--space-4));
+  padding: 0 var(--space-4);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.support-options__filters::-webkit-scrollbar {
+  display: none;
+}
+
+.support-options__filter {
+  flex-shrink: 0;
+  height: 44px;
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: 1.2;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.support-options__filter.is-active {
+  background: var(--chip-selected-bg);
+  color: var(--chip-selected-ink);
+  font-weight: var(--weight-semibold);
+}
+
+/* --- Program cards ---------------------------------------------------------- */
+
+.support-options__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.support-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border: 1px solid var(--surface-card-border);
+  border-radius: 32px;
+  background: var(--surface-card);
+  box-shadow: var(--surface-card-inset);
+}
+
+.support-card__heading {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+.support-card__accent {
+  flex-shrink: 0;
+  width: 3px;
+  border-radius: 3px;
+}
+
+.support-card__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.support-card__name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.015em;
+  line-height: 20px;
+  color: var(--ink);
+}
+
+.support-card__amount {
+  font-size: var(--text-sm);
+  letter-spacing: -0.02em;
+  line-height: 20px;
+  color: var(--ink-muted);
+}
+
+.support-card__meta {
+  font-size: var(--text-sm);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.support-card__desc {
+  max-width: 289px;
+  font-size: var(--text-sm);
+  letter-spacing: -0.03em;
+  line-height: 1.35;
+  color: var(--ink-secondary);
+}
+
+.support-card__more {
+  align-self: center;
+  border: none;
+  padding: var(--space-1);
+  background: none;
+  font-size: var(--text-sm);
+  letter-spacing: -0.02em;
+  color: var(--ink-muted);
+}
+
+.support-card__more:hover {
+  color: var(--ink-body);
+}
+
+/* --- Details sheet ----------------------------------------------------------- */
+
+.support-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  color: #0a0a0a;
+}
+
+.support-sheet__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.support-sheet__name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  line-height: 28px;
+  color: #0a0a0a;
+}
+
+.support-sheet__amount {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.support-sheet__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.support-sheet__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.02em;
+  color: #000;
+}
+
+.support-sheet__text {
+  font-size: var(--text-sm);
+  letter-spacing: -0.03em;
+  line-height: 1.35;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.support-sheet__timing {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.05);
+  font-size: var(--text-sm);
+  letter-spacing: -0.01em;
+  color: #101013;
+}

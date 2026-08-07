@@ -1,0 +1,89 @@
+/* Card-less, white-on-imagery version of the details-view risk gauge, shown
+   at the top of the home screen when the Natural BlueSky variant is active.
+   Geometry mirrors RiskScoreDetails.css (gauge -> readout -> breakdown). */
+.risk-hero {
+  position: relative;
+  height: 272px;
+  /* Bleed past the screen padding so the arc clips at the device edges,
+     matching how the details view crops it. Clip only horizontally: the
+     x-axis clip keeps the oversized arc from causing horizontal scroll,
+     while the y-axis stays visible so the arc's soft bloom isn't cut off. */
+  margin: 0 calc(-1 * var(--space-4));
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.risk-hero__gauge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 520px;
+  height: 260px;
+  transform: translateX(-50%);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.risk-hero__content {
+  position: absolute;
+  top: 84px;
+  left: var(--space-4);
+  right: var(--space-4);
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 1px 14px rgba(31, 58, 82, 0.22);
+}
+
+.risk-hero__value {
+  font-size: 42px;
+  line-height: 50px;
+  font-weight: var(--weight-bold);
+  letter-spacing: -1.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.risk-hero__title {
+  margin-top: 2px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: var(--weight-medium);
+}
+
+.risk-hero__description {
+  width: 300px;
+  margin: 8px auto 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: capitalize;
+}
+
+/* Frosted white pill in place of the details view's bordered white button. */
+.risk-hero__breakdown {
+  position: absolute;
+  top: 228px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition-fast);
+}
+
+.risk-hero__breakdown:active {
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.risk-hero__breakdown:focus-visible {
+  box-shadow: var(--focus-ring);
+}

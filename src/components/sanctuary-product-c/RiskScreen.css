@@ -1,0 +1,184 @@
+/* Risk body content on the blue field — the dial itself is styled in
+   SanctuaryProduct.css. */
+
+.gdc-risk__below {
+  padding: 0 22px calc(118px + env(safe-area-inset-bottom, 0px));
+}
+
+.gdc-risk__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gdc-yellow);
+}
+
+.gdc-risk__tag::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gdc-yellow);
+}
+
+.gdc-risk__title {
+  margin-top: 10px;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  color: #fff;
+}
+
+.gdc-risk__body {
+  margin-top: 10px;
+  max-width: 300px;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--gdc-tint);
+}
+
+.gdc-risk__actionrow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+
+/* Exposure breakdown — the full driver list. --------------------------------*/
+
+.gdc-risk__section {
+  margin-top: 34px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gdc-faint);
+}
+
+.gdc-risk__cards {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 14px 0 0;
+  padding: 0;
+}
+
+.gdc-risk__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  padding: 20px;
+  border: none;
+  border-radius: 2px;
+  font-family: inherit;
+  color: #101014;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  /* Sitting on the blue field, cards need a touch of lift. */
+  box-shadow: 0 10px 24px rgba(40, 18, 0, 0.22);
+  transition: transform 160ms ease;
+}
+
+.gdc-risk__card:active {
+  transform: scale(0.985);
+}
+
+.gdc-risk__card--yellow {
+  background: #ff7500;
+}
+
+.gdc-risk__card--mint {
+  background: #e2e2e4;
+}
+
+.gdc-risk__card--cream {
+  background: #f6f6f7;
+}
+
+.gdc-risk__card--pink {
+  background: #ffd2ad;
+}
+
+.gdc-risk__card--cyan {
+  background: #e2e2e5;
+}
+
+.gdc-risk__cardtop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+.gdc-risk__cardlabels {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gdc-risk__cardname {
+  font-size: 17.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.gdc-risk__cardmeta {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(16, 16, 20, 0.55);
+}
+
+.gdc-risk__cardpts {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.gdc-risk__cardpts small {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(16, 16, 20, 0.55);
+}
+
+.gdc-risk__chevron {
+  flex: 0 0 auto;
+  color: rgba(16, 16, 20, 0.45);
+  transition: transform 220ms ease;
+}
+
+.gdc-risk__chevron.is-open {
+  transform: rotate(180deg);
+}
+
+.gdc-risk__cardbody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: rgba(16, 16, 20, 0.72);
+}
+
+.gdc-risk__carddetail {
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 2px;
+  background: #101014;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}

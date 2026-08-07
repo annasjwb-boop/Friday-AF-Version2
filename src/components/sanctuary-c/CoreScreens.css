@@ -1,0 +1,997 @@
+/* Sanctuary 4.C core screens — calm, restrained system language.
+   A mesh-gradient shader band on top (tabs + the active hero), a white
+   rounded sheet sliding over it with the working content, soft grey and
+   ink-black boxes instead of outlined cards, hairline rules, generous
+   air, one blue accent, black pill actions. */
+
+.scc {
+  --scc-ink: #131417;
+  --scc-sub: #6b6e73;
+  --scc-faint: #9a9da3;
+  --scc-box: #f4f4f6;
+  --scc-well: #ffffff;
+  --scc-line: rgba(19, 20, 23, 0.06);
+  --scc-blue: #e06810;
+  --scc-track: #e5e7eb;
+
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-system);
+  color: var(--scc-ink);
+  -webkit-font-smoothing: antialiased;
+  /* Black shows through the sheet's rounded corner notches, so the lip
+     reads as riding over the stage. */
+  background: #0a0b0d;
+}
+
+/* The stage — solid black band behind the hero. Ink is white; the line
+   beam wrapper rides its bottom edge at the sheet seam. ---------------------*/
+
+.scc-mesh {
+  --mesh-ink: #ffffff;
+  --mesh-sub: rgba(255, 255, 255, 0.72);
+  --mesh-faint: rgba(255, 255, 255, 0.5);
+  --mesh-track: rgba(255, 255, 255, 0.18);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--space-3) + env(safe-area-inset-top, 0px)) var(--space-4)
+    40px;
+  background: #0a0b0d;
+}
+
+/* The working sheet — its lip sits flush at the stage's bottom edge so
+   the traveling beam line glows right behind it. ----------------------------*/
+
+.scc-sheet {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-radius: 2px 2px 0 0;
+  padding: 26px var(--space-4) 120px;
+  background: #ffffff;
+}
+
+/* Tabs — solo icon wayfinding on the gradient. -------------------------------*/
+
+.scc-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding-top: var(--space-1);
+}
+
+.scc-tabs__tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: none;
+  background: none;
+  color: var(--mesh-faint);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 220ms ease;
+}
+
+.scc-tabs__tab.is-active {
+  color: var(--mesh-ink);
+}
+
+/* Panel entrance ------------------------------------------------------------*/
+
+.scc-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: scc-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes scc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section label — bold ink headers with quiet content, per the reference. ----*/
+
+.scc-section-label {
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--scc-ink);
+}
+
+/* Hero (big figure) — lives on the mesh band, so it reads in mesh ink. -------*/
+
+.scc-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-5) 0 var(--space-1);
+}
+
+.scc-hero__label {
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--mesh-sub);
+}
+
+.scc-hero__figure {
+  font-size: 80px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--mesh-ink);
+}
+
+.scc-hero__unit {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--mesh-faint);
+}
+
+/* Risk hero — left-aligned like the reference dashboard. ------------------*/
+
+.scc-hero--risk {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.scc-hero--risk .scc-hero__label {
+  margin-bottom: 10px;
+}
+
+.scc-hero__figure-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Delta chip riding the figure's shoulder, per the reference. */
+.scc-hero__delta {
+  margin-top: 12px;
+  padding: 6px 11px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--mesh-ink);
+}
+
+.scc-hero__delta--good {
+  background: #ff7500;
+  color: #16260c;
+}
+
+/* The zone the score lands in — regular weight, per the reference. */
+.scc-hero__zone {
+  margin-top: 4px;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--mesh-ink);
+}
+
+/* Updated / next-update corners under the meter. */
+.scc-hero__notes {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 12px;
+  font-size: 11.5px;
+  color: var(--mesh-faint);
+}
+
+.scc-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--mesh-sub);
+}
+
+.scc-hero__meta-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--mesh-track);
+  flex: 0 0 auto;
+}
+
+.scc-footnote__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #d3d5d9;
+  flex: 0 0 auto;
+}
+
+.scc-hero__caption {
+  margin-top: 16px;
+  max-width: 300px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--mesh-faint);
+}
+
+/* Zone meter — spectrum sausage pinched at zone boundaries. ----------------*/
+
+.scc-zonebar {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.scc-zonebar__heart {
+  fill: var(--mesh-ink);
+}
+
+.scc-zonebar__tick {
+  stroke: rgba(255, 255, 255, 0.45);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.scc-zonebar__num {
+  fill: var(--mesh-faint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Recovery hero: cost-view switcher in the quiet label position, and a
+   money figure sized down from the score numerals. */
+
+.scc-hero__views {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.scc-hero__view {
+  padding: 2px 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--mesh-faint);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms ease;
+}
+
+.scc-hero__view.is-active {
+  font-weight: 500;
+  color: var(--mesh-ink);
+}
+
+.scc-hero__figure--money {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Readiness affordances — frosted coins riding the mesh band beneath the
+   figure: upload / download / apply / connect. Ink adapts with the mesh. ----*/
+
+.scc-hero__actions {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 26px;
+}
+
+.scc-hero__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--mesh-sub);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scc-hero__action-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--mesh-track);
+  color: var(--mesh-ink);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 160ms ease;
+}
+
+.scc-hero__action:active .scc-hero__action-icon {
+  transform: scale(0.94);
+}
+
+/* Next step — an emphasized, tappable row instead of a flat stat box. -------*/
+
+.scc-next {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 2px;
+  background: rgba(10, 122, 255, 0.08);
+  font-family: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 200ms ease;
+}
+
+.scc-next:active {
+  background: rgba(10, 122, 255, 0.14);
+}
+
+.scc-next__labels {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.scc-next__kicker {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--scc-blue);
+}
+
+.scc-next__value {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--scc-ink);
+}
+
+/* Tick strip ------------------------------------------------------------------*/
+
+.scc-scale {
+  width: 100%;
+  max-width: 296px;
+  margin-top: 22px;
+}
+
+.scc-scale__ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--scc-faint);
+}
+
+.scc-ticks {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+/* The tick strip lives on the mesh: dim ink track, solid ink fill. */
+.scc-ticks__tick {
+  flex: 1 1 0;
+  height: 15px;
+  border-radius: 2px;
+  background: var(--mesh-track);
+}
+
+.scc-ticks__tick.is-filled {
+  background: var(--mesh-ink);
+}
+
+.scc-scale__ends {
+  color: var(--mesh-faint);
+}
+
+/* Cards — soft grey boxes, no outlines. -----------------------------------------*/
+
+.scc-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.scc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 2px;
+  background: var(--scc-box);
+  text-align: left;
+}
+
+.scc-card--button {
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 200ms ease;
+}
+
+.scc-card--button:active {
+  background: #eff0f2;
+}
+
+.scc-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.scc-card__title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.scc-card__body {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--scc-sub);
+}
+
+.scc-card__detail {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--scc-blue);
+}
+
+.scc-card__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid var(--scc-line);
+}
+
+.scc-card__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.scc-card__stat-value {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.scc-card__stat-max {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--scc-faint);
+}
+
+.scc-card__stat-caption {
+  font-size: 11.5px;
+  color: var(--scc-faint);
+}
+
+/* Single quiet label in a card foot (exposure cards, next to the ring). */
+.scc-card__tag {
+  align-self: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--scc-sub);
+}
+
+/* Circle chevron — a soft white coin on the grey box. ----------------------------*/
+
+.scc-circle-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: var(--scc-well);
+  color: var(--scc-sub);
+}
+
+.scc-circle-chevron svg {
+  transition: transform 220ms ease;
+}
+
+.scc-circle-chevron svg.is-open {
+  transform: rotate(180deg);
+}
+
+/* Mini ring ---------------------------------------------------------------------*/
+
+.scc-ring {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+}
+
+.scc-ring__track {
+  fill: none;
+  stroke: var(--scc-track);
+  stroke-width: 3.5;
+}
+
+.scc-ring__fill {
+  fill: none;
+  stroke: var(--scc-blue);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.scc-ring__text {
+  font-family: var(--font-system);
+  font-size: 8.5px;
+  font-weight: 600;
+  fill: var(--scc-ink);
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+/* Stat cards (readiness pair + next step) ----------------------------------------*/
+
+.scc-stat-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.scc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: none;
+  border-radius: 2px;
+  background: var(--scc-box);
+}
+
+.scc-stat__label {
+  font-size: 12.5px;
+  color: var(--scc-sub);
+}
+
+.scc-stat__value {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.scc-stat__value-sub {
+  font-weight: 400;
+  color: var(--scc-faint);
+}
+
+/* Task rows (readiness sections) ---------------------------------------------------*/
+
+.scc-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.scc-task {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 14px 14px 14px 16px;
+  border: none;
+  border-radius: 2px;
+  background: var(--scc-box);
+  font-family: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 200ms ease;
+}
+
+.scc-task:active {
+  background: #eff0f2;
+}
+
+.scc-task__mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #d3d5d9;
+  border-radius: 2px;
+  background: var(--scc-well);
+  color: #ffffff;
+}
+
+.scc-task__mark.is-done {
+  border-color: var(--scc-blue);
+  background: var(--scc-blue);
+}
+
+.scc-task__labels {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.scc-task__name {
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.scc-task__meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--scc-faint);
+}
+
+.scc-task__meta-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #d3d5d9;
+}
+
+/* Expanded checklist inside a section row. */
+.scc-task__items {
+  display: flex;
+  flex-direction: column;
+  margin: var(--space-2) var(--space-2) 0 49px;
+  list-style: none;
+}
+
+.scc-task__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  font-size: 13px;
+  color: var(--scc-sub);
+}
+
+.scc-task__item + .scc-task__item {
+  border-top: 1px solid var(--scc-line);
+}
+
+.scc-task__item.is-done {
+  color: var(--scc-ink);
+}
+
+.scc-task__item-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #d3d5d9;
+  border-radius: 2px;
+  color: #ffffff;
+}
+
+.scc-task__item.is-done .scc-task__item-mark {
+  border-color: var(--scc-blue);
+  background: var(--scc-blue);
+}
+
+.scc-task__item-hint {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--scc-blue);
+}
+
+/* Recovery outlook ---------------------------------------------------------------------*/
+
+.scc-outlook {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: var(--space-5);
+}
+
+/* Cost-view switcher, in the quiet hero-label position the other tabs use. */
+.scc-outlook__views {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.scc-outlook__view {
+  padding: 2px 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--scc-faint);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 200ms ease;
+}
+
+.scc-outlook__view.is-active {
+  font-weight: 500;
+  color: var(--scc-ink);
+}
+
+.scc-outlook__reading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  animation: scc-rise 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Funding composition, per the reference: figure bottom-left with the
+   outlined gap pill, small grey arc fragments sweeping into the ink
+   capsule (largest source, share written along the curve), blue gap
+   segment at the tail, plus button trailing off the arc. */
+.scc-arc {
+  position: relative;
+  width: 340px;
+  max-width: 100%;
+  height: 290px;
+  margin: 4px auto 10px;
+}
+
+.scc-arc__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scc-arc__seg {
+  animation: scc-seg 460ms ease both;
+}
+
+@keyframes scc-seg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.scc-arc__capsule-text {
+  font-family: var(--font-system);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  fill: #ffffff;
+}
+
+/* Funding type icons, centered on their segments. */
+.scc-arc__icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  pointer-events: none;
+  animation: scc-seg 460ms ease both;
+}
+
+.scc-arc__icon--ink {
+  color: var(--scc-ink);
+}
+
+/* Figure block in the arc's free bottom-left quadrant. */
+.scc-arc__fig {
+  position: absolute;
+  left: 6px;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+}
+
+.scc-arc__fig-label {
+  font-size: 13px;
+  color: var(--scc-sub);
+}
+
+.scc-arc__fig-amount {
+  font-size: 34px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--scc-ink);
+}
+
+/* The uncovered gap, echoing its blue arc segment. */
+.scc-arc__fig-amount--gap {
+  color: #e06810;
+}
+
+/* The gap as a quiet outlined pill under the figure, per the reference. */
+.scc-arc__fig-pill {
+  margin-top: 4px;
+  padding: 7px 12px;
+  border: 1px solid var(--scc-track);
+  border-radius: 2px;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--scc-blue);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The door to more programs, trailing off the arc's tail. */
+.scc-arc__plus {
+  position: absolute;
+  left: 162px;
+  top: 249px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--scc-blue);
+  color: #ffffff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 6px 16px rgba(10, 122, 255, 0.28);
+  transition: transform 160ms ease;
+}
+
+.scc-arc__plus:active {
+  transform: scale(0.94);
+}
+
+/* Funding sources ---------------------------------------------------------------------*/
+
+.scc-sources {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.scc-source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 12px 0;
+}
+
+.scc-source:first-child {
+  padding-top: 2px;
+}
+
+.scc-source:last-child {
+  padding-bottom: 2px;
+}
+
+.scc-source + .scc-source {
+  border-top: 1px solid var(--scc-line);
+}
+
+.scc-source__dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.scc-source__labels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.scc-source__name {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.scc-source__detail {
+  font-size: 11.5px;
+  color: var(--scc-faint);
+}
+
+.scc-source__amount {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.scc-source--gap .scc-source__name,
+.scc-source--gap .scc-source__amount {
+  color: var(--scc-blue);
+}
+
+/* Black pill CTA ------------------------------------------------------------------------*/
+
+.scc-cta {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 2px;
+  background: #111214;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms ease;
+}
+
+.scc-cta:active {
+  transform: scale(0.985);
+}
+
+/* Footnote ---------------------------------------------------------------------------------*/
+
+.scc-footnote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-bottom: var(--space-2);
+  font-size: 11.5px;
+  color: var(--scc-faint);
+}

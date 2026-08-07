@@ -1,0 +1,17 @@
+/* Sanctuary mesh-gradient backdrop. The mesh itself — warped color
+   fields, bottom wash, film grain — is rendered by the WebGL shader in
+   SanctuaryBBackground.tsx; the container carries the theme's flat base
+   color as the no-WebGL fallback. */
+.sanctuary-b-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sanctuary-b-bg__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

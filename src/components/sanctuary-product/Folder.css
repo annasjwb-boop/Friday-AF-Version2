@@ -1,0 +1,206 @@
+/* Folder visuals from Figma (nodes 0:69 "Folder 1", 1:110 "Folder 8").
+   Layer insets and rotations carried over from the design; the folder
+   scales fluidly with its tile. Two skins with fixed meanings:
+   blue = documents, dark = photos. */
+
+.gdf {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.gdf--blue {
+  aspect-ratio: 160 / 160;
+}
+
+.gdf--dark {
+  aspect-ratio: 181 / 180;
+}
+
+.gdf__layer {
+  position: absolute;
+  display: block;
+}
+
+/* Global `img { max-width: 100% }` collapses these abspos folder faces
+   (height:auto + intrinsic ratio wins over the inset box). */
+.gdf img.gdf__layer {
+  max-width: none;
+  max-height: none;
+}
+
+/* Skeleton document sheet. ---------------------------------------------------*/
+
+.gdf-sheet {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 6px;
+  background: #ffffff;
+  border: 0.6px solid #ededed;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.gdf-sheet__row {
+  display: flex;
+  gap: 4px;
+}
+
+.gdf-sheet__bar {
+  display: block;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 18px;
+  background: #ededed;
+}
+
+.gdf-sheet__bar--short {
+  width: 34px;
+}
+
+.gdf-sheet__bar--flex {
+  flex: 1 1 0;
+}
+
+.gdf-sheet__bar--group {
+  margin-top: 3px;
+}
+
+.gdf-sheet__logo {
+  width: 46px;
+  height: 14px;
+  margin-top: 3px;
+}
+
+/* Blue folder — frosted blue pocket, documents peeking (Figma 0:69). --------*/
+
+.gdf-blue__back {
+  top: 16.35%;
+  left: 0;
+  width: 100%;
+  height: 83.65%;
+  object-fit: fill;
+  z-index: 0;
+}
+
+.gdf-blue__sheets {
+  inset: -0.2% 12.94% 13.44% 6.09%;
+  z-index: 1;
+}
+
+.gdf-blue__sheet1 {
+  inset: 0 21.39% 0 0;
+  transform: rotate(-7.67deg);
+}
+
+.gdf-blue__sheet2 {
+  inset: 2.07% 10.57% 1.98% 14.54%;
+  transform: rotate(-3.84deg);
+}
+
+.gdf-blue__sheet3 {
+  inset: 4.33% 0 4.21% 29.17%;
+}
+
+.gdf-blue__front {
+  top: 31.24%;
+  left: 0;
+  width: 100%;
+  height: 68.76%;
+  object-fit: fill;
+  /* Transformed sheets create composited layers that can paint over a
+     later sibling unless the pocket is explicitly stacked above them. */
+  z-index: 2;
+}
+
+/* Dark folder — photos in a smoked pocket (Figma 1:110). ---------------------*/
+
+.gdf-dark__base {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  z-index: 0;
+}
+
+.gdf-dark__photos {
+  inset: 10.05% 10.37% 15% 10.76%;
+  z-index: 1;
+}
+
+.gdf-dark__photo1,
+.gdf-dark__photo2,
+.gdf-dark__photo3 {
+  border-radius: 9.6px;
+}
+
+/* Abstract photo placeholders — soft blurred gradients standing in for
+   the user's own shots, which we can't know ahead of time. */
+.gdf-photo {
+  overflow: hidden;
+  background: #23265c;
+}
+
+.gdf-photo::before {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  filter: blur(7px);
+}
+
+.gdf-photo--dusk::before {
+  background:
+    radial-gradient(85% 75% at 24% 18%, #a6edfb 0%, rgba(166, 237, 251, 0) 62%),
+    radial-gradient(95% 85% at 82% 88%, #5a48ff 0%, rgba(90, 72, 255, 0) 66%),
+    linear-gradient(158deg, #6d77f9 0%, #221b7a 100%);
+}
+
+.gdf-photo--haze::before {
+  background:
+    radial-gradient(80% 70% at 72% 22%, #f9cfe0 0%, rgba(249, 207, 224, 0) 60%),
+    radial-gradient(90% 90% at 18% 82%, #8f7bfa 0%, rgba(143, 123, 250, 0) 64%),
+    linear-gradient(202deg, #a08cf9 0%, #1c1650 100%);
+}
+
+.gdf-photo--bloom::before {
+  background:
+    radial-gradient(75% 70% at 30% 78%, #7fe8d9 0%, rgba(127, 232, 217, 0) 58%),
+    radial-gradient(95% 80% at 78% 18%, #4a3af7 0%, rgba(74, 58, 247, 0) 62%),
+    linear-gradient(146deg, #3d55c9 0%, #141239 100%);
+}
+
+.gdf-dark__photo1 {
+  top: 13.82%;
+  left: 0;
+  width: 79.32%;
+  height: 84.01%;
+}
+
+.gdf-dark__photo2 {
+  top: 0;
+  left: 7.12%;
+  width: 88.48%;
+  height: 93.72%;
+  transform: rotate(-7.08deg);
+  box-shadow: -1.9px 3.8px 3.8px 0 rgba(45, 45, 45, 0.2);
+}
+
+.gdf-dark__photo3 {
+  top: 13.82%;
+  left: 18.64%;
+  width: 81.36%;
+  height: 86.18%;
+  transform: rotate(1.5deg);
+  box-shadow: -1.9px 3.8px 3.8px 0 rgba(0, 0, 0, 0.5);
+}
+
+.gdf-dark__front {
+  top: 42.54%;
+  left: 0;
+  width: 100%;
+  height: 57.46%;
+  object-fit: fill;
+  z-index: 2;
+}

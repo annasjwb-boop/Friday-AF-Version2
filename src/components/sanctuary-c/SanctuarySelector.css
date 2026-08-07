@@ -1,0 +1,332 @@
+/* ---------------------------------------------------------------------------
+ * Sanctuary selector: warm paper bottom sheet (light mode) with
+ * collectible-feeling previews set into deeper shadowbox wells — the wells
+ * stay dark so the cream clay models keep their contrast.
+ * ------------------------------------------------------------------------- */
+
+.sanctuary-c-sheet__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  border: none;
+  background: rgba(22, 22, 26, 0.35);
+  cursor: pointer;
+}
+
+.sanctuary-c-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 21;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3) 0 calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+  border-radius: 2px 2px 0 0;
+  background: rgba(250, 250, 251, 0.96);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 -18px 50px rgba(28, 28, 32, 0.28);
+}
+
+.sanctuary-c-sheet__grabber {
+  align-self: center;
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(22, 22, 26, 0.22);
+  margin-bottom: var(--space-4);
+}
+
+.sanctuary-c-sheet__title {
+  padding: 0 var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.01em;
+  color: #141416;
+}
+
+.sanctuary-c-sheet__hint {
+  padding: 0 var(--space-5);
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: rgba(28, 28, 32, 0.62);
+}
+
+/* Horizontally scrollable row of previews */
+.sanctuary-c-sheet__row {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  /* Keep the first option from snapping flush against the sheet edge. */
+  scroll-padding: 0 var(--space-5);
+}
+
+.sanctuary-c-sheet__row::-webkit-scrollbar {
+  display: none;
+}
+
+.sanctuary-c-option {
+  flex: 0 0 124px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  scroll-snap-align: start;
+}
+
+/* Shadowbox well the little world floats in — kept deep so the cream
+   models read against it even on the light sheet. */
+.sanctuary-c-option__well {
+  position: relative;
+  width: 124px;
+  height: 104px;
+  border-radius: 2px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      80% 55% at 50% 78%,
+      rgba(232, 163, 92, 0.18) 0%,
+      rgba(232, 163, 92, 0) 70%
+    ),
+    linear-gradient(to bottom, #46464b 0%, #55555a 100%);
+  border: 1.5px solid transparent;
+  margin-bottom: var(--space-2);
+  transition:
+    border-color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.sanctuary-c-option:hover .sanctuary-c-option__well {
+  transform: translateY(-2px);
+}
+
+.sanctuary-c-option.is-active .sanctuary-c-option__well {
+  border-color: #e06810;
+  box-shadow: 0 6px 20px rgba(192, 123, 49, 0.32);
+}
+
+.sanctuary-c-option__badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: rgba(232, 163, 92, 0.92);
+  font-size: 9px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #241c12;
+}
+
+.sanctuary-c-option__name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+  color: #141416;
+}
+
+.sanctuary-c-option__descriptor {
+  font-size: 11px;
+  color: rgba(28, 28, 32, 0.58);
+}
+
+.sanctuary-c-sheet__confirm {
+  margin: var(--space-2) var(--space-5) 0;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 2px;
+  background: #1a1a1c;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: #f2f2f3;
+  cursor: pointer;
+  transition: background var(--transition-base);
+}
+
+.sanctuary-c-sheet__confirm:hover {
+  background: #2e2e32;
+}
+
+/* ---------------------------------------------------------------------------
+ * Product (GO-style) appearance: white rounded sheet, Space Grotesk ink
+ * type, electric-blue wells, yellow "current" chip, black pill confirm.
+ * ------------------------------------------------------------------------- */
+
+.sanctuary-c-sheet__backdrop.is-gdc {
+  background: rgba(40, 18, 0, 0.45);
+}
+
+.sanctuary-c-sheet.is-gdc {
+  border-radius: 2px 2px 0 0;
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 -18px 50px rgba(40, 18, 0, 0.32);
+  font-family: "Space Grotesk", var(--font-system);
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__grabber {
+  background: rgba(16, 16, 20, 0.16);
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__title {
+  font-family: inherit;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #101014;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__hint {
+  color: #8a8a94;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-option__well {
+  border-radius: 2px;
+  background:
+    radial-gradient(
+      90% 65% at 50% 82%,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0) 70%
+    ),
+    linear-gradient(to bottom, #ff8a2e 0%, #111114 100%);
+  border-width: 2px;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-option.is-active .sanctuary-c-option__well {
+  border-color: #101014;
+  box-shadow: 0 8px 22px rgba(40, 18, 0, 0.28);
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-option__badge {
+  padding: 3px 9px;
+  border-radius: 2px;
+  background: #ff7500;
+  color: #101014;
+  letter-spacing: 0.04em;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-option__name {
+  letter-spacing: -0.01em;
+  color: #101014;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-option__descriptor {
+  color: #8a8a94;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__confirm {
+  border-radius: 2px;
+  background: #101014;
+  color: #ffffff;
+  transition:
+    background var(--transition-base),
+    transform 160ms ease;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__confirm:hover {
+  background: #1e1e26;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__confirm:active {
+  transform: scale(0.97);
+}
+
+/* Color + brightness — product look controls under the model row. */
+.sanctuary-c-sheet__look {
+  padding: 4px var(--space-5) 14px;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__look-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #8a8a94;
+}
+
+.sanctuary-c-sheet__colors {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sanctuary-c-sheet__colors::-webkit-scrollbar {
+  display: none;
+}
+
+.sanctuary-c-sheet__color {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(16, 16, 20, 0.12);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    border-color 180ms ease,
+    transform 160ms ease;
+}
+
+.sanctuary-c-sheet__color.is-active {
+  border-color: #101014;
+  box-shadow:
+    inset 0 0 0 2px #ffffff,
+    0 0 0 1px #101014;
+  transform: scale(1.06);
+}
+
+.sanctuary-c-sheet__bright {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__bright-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  color: #55555e;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__bright-head span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sanctuary-c-sheet.is-gdc .sanctuary-c-sheet__bright-head strong {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #101014;
+}
+
+.sanctuary-c-sheet__bright input[type="range"] {
+  width: 100%;
+  margin: 0;
+  accent-color: #111114;
+}

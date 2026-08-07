@@ -1,0 +1,346 @@
+.risk-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  overflow: hidden;
+  background: #ffffff;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  color: #111111;
+  -webkit-font-smoothing: antialiased;
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 240ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.risk-screen.is-open {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Back button ---------------------------------------------------------------*/
+.risk-back {
+  position: absolute;
+  top: 52px;
+  left: 16px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #111111;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 150ms ease;
+}
+
+.risk-back:active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.risk-back:focus-visible {
+  outline: 2px solid #2d78f6;
+  outline-offset: 2px;
+}
+
+/* Gauge ---------------------------------------------------------------------*/
+.risk-gauge {
+  position: absolute;
+  top: 103px;
+  left: 50%;
+  width: 520px;
+  height: 260px;
+  transform: translateX(-50%);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.risk-gauge__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.risk-gauge__arc {
+  transition: opacity 250ms ease;
+}
+
+.risk-gauge__arc--preview {
+  opacity: 0;
+}
+
+.risk-gauge__svg.is-previewed .risk-gauge__arc--default {
+  opacity: 0;
+}
+
+.risk-gauge__svg.is-previewed .risk-gauge__arc--preview {
+  opacity: 1;
+}
+
+/* Blurred bloom behind the arc */
+.risk-gauge__bloom {
+  transition: opacity 250ms ease;
+}
+
+.risk-gauge__bloom--default {
+  opacity: 0.7;
+}
+
+.risk-gauge__bloom--preview {
+  opacity: 0;
+}
+
+.risk-gauge__svg.is-previewed .risk-gauge__bloom--default {
+  opacity: 0;
+}
+
+.risk-gauge__svg.is-previewed .risk-gauge__bloom--preview {
+  opacity: 0.7;
+}
+
+.risk-gauge__indicator {
+  transition: stroke 200ms ease;
+}
+
+/* Score readout -------------------------------------------------------------*/
+.score-content {
+  position: absolute;
+  top: 187px;
+  left: 20px;
+  right: 20px;
+  text-align: center;
+}
+
+.score-value {
+  margin: 0;
+  font-size: 42px;
+  line-height: 50px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  color: #000000;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-title {
+  margin: 2px 0 0;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  color: #111111;
+}
+
+.score-description {
+  width: 300px;
+  margin: 8px auto 0;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 400;
+  color: #69696d;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+/* Score breakdown pill ------------------------------------------------------*/
+.score-breakdown {
+  position: absolute;
+  top: 331px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid #e1e1e3;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #29292c;
+  font-size: 13px;
+  font-weight: 400;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Action card + stacked deck ------------------------------------------------*/
+.card-stack {
+  position: absolute;
+  top: 403px;
+  left: 20px;
+  width: 353px;
+  height: 324px;
+}
+
+.stack-card {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 30px;
+}
+
+.stack-card-one {
+  top: 8px;
+  width: 333px;
+  height: 304px;
+  background: #eeeeef;
+}
+
+.stack-card-two {
+  top: 16px;
+  width: 313px;
+  height: 304px;
+  background: #e5e5e6;
+}
+
+.action-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 353px;
+  height: 304px;
+  box-sizing: border-box;
+  border-radius: 30px;
+  padding: 27px 24px 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f3f3f4 0%, #f7f7f8 52%, #fcfcfc 100%);
+  box-shadow:
+    0 12px 22px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.03);
+  will-change: transform, opacity;
+}
+
+/* Behaviour only: let vertical gestures scroll the page while we own the
+   horizontal drag. No visual properties are changed here. */
+.action-card.is-draggable {
+  touch-action: pan-y;
+}
+
+/* Card heading --------------------------------------------------------------*/
+.card-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.heading-marker {
+  flex: 0 0 auto;
+  width: 3px;
+  height: 46px;
+  border-radius: 999px;
+  background: #111111;
+}
+
+.card-heading h2 {
+  margin: -2px 0 3px;
+  font-size: 19px;
+  line-height: 24px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  color: #111111;
+}
+
+.card-heading p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+  color: #7b7b7e;
+}
+
+.card-body {
+  width: 295px;
+  margin: 25px 0 0;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 400;
+  color: #49494c;
+}
+
+.card-value {
+  margin: 17px 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: #171719;
+  white-space: nowrap;
+}
+
+/* Card buttons --------------------------------------------------------------*/
+.card-actions {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 20px;
+  display: flex;
+  gap: 10px;
+  height: 40px;
+}
+
+.see-impact-button {
+  flex: 0 0 94px;
+  width: 94px;
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid #e6e6e8;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #111111;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease;
+}
+
+.see-impact-button.is-active {
+  border: none;
+  background: #2d78f6;
+  color: #ffffff;
+}
+
+.explore-options-button {
+  flex: 1;
+  height: 40px;
+  border: none;
+  border-radius: 999px;
+  background: #090909;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Bottom instructions -------------------------------------------------------*/
+.instruction-copy {
+  position: absolute;
+  top: 752px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 310px;
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 400;
+  color: #a8a8ac;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .risk-screen {
+    transition: opacity 240ms ease;
+    transform: none;
+  }
+}

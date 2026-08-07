@@ -1,0 +1,191 @@
+.acard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 320px;
+  padding: 20px;
+  border-radius: var(--ink-card-radius);
+  background: var(--ink-card-bg);
+  box-shadow: var(--ink-card-inset);
+  color: #fff;
+  overflow: hidden;
+}
+
+/* Aurora glow along the bottom edge, per the Figma Agent card. */
+.acard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ink-card-glow);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+/* Keep content above the glow layer. */
+.acard > * {
+  position: relative;
+}
+
+.acard__title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.acard__text {
+  font-size: 15px;
+  line-height: var(--leading-normal);
+  letter-spacing: -0.2px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.acard__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+  font-size: 14px;
+  line-height: var(--leading-normal);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.acard__list--checks li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.acard__spinner {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.8);
+  animation: acard-spin 900ms linear infinite;
+}
+
+@keyframes acard-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Scorecard */
+.acard__score {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.acard__score-value {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.acard__score-total {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.acard__score-label {
+  margin-top: -6px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Label / value rows */
+.acard__table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.acard__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+}
+
+.acard__row--stacked {
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.acard__row-label {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.acard__row-value {
+  text-align: right;
+  color: #fff;
+}
+
+.acard__row-value--positive {
+  color: #5ee9b5;
+}
+
+.acard__row-value--warn {
+  color: #ff8a6e;
+}
+
+.acard__row-value--muted {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.acard__row--gap .acard__row-value {
+  color: #ff8a6e;
+  font-weight: var(--weight-semibold);
+}
+
+/* Checklist */
+.acard__checklist {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.acard__checklist li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.acard__checklist li:last-child {
+  border-bottom: none;
+}
+
+.acard__checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: #000;
+}
+
+.acard__checklist li.is-done .acard__checkbox {
+  background: #5ee9b5;
+  border-color: #5ee9b5;
+}
+
+.acard__checklist li.is-done {
+  color: rgba(255, 255, 255, 0.55);
+}

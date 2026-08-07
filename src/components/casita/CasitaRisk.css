@@ -1,0 +1,122 @@
+.casita-risk {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px 24px;
+}
+
+/* --- Hero gauge (full-bleed, light) ------------------------------------------ */
+
+.casita-risk__hero {
+  margin: 0 -16px;
+}
+
+.casita-risk__gauge {
+  display: block;
+  width: 100%;
+}
+
+.casita-risk__gauge-label {
+  fill: #a3a8ae;
+  font-size: 12.5px;
+  font-weight: 450;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+}
+
+.casita-risk__gauge-value {
+  fill: #17181a;
+  font-size: 47px;
+  font-weight: 500;
+  font-family: inherit;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.casita-risk__gauge-scale {
+  fill: #a3a8ae;
+  font-size: 12.5px;
+  font-weight: 400;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+}
+
+.casita-risk__summary {
+  margin: -12px auto 6px;
+  padding: 8px 15px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f6f6f7;
+  border-radius: var(--radius-pill);
+  font-size: 12.5px;
+  font-weight: 450;
+  color: #64686e;
+  letter-spacing: 0.005em;
+}
+
+.casita-risk__summary-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #17181a;
+}
+
+/* --- Exposure breakdown ------------------------------------------------------ */
+
+.casita-risk__card {
+  background: #fff;
+  border: 1px solid rgba(17, 18, 20, 0.08);
+  border-radius: 26px;
+  padding: 20px;
+}
+
+.casita-risk__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.casita-risk__card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 550;
+  letter-spacing: -0.005em;
+}
+
+.casita-risk__card-share {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.casita-risk__card-share span {
+  color: #a3a8ae;
+  font-weight: 450;
+  font-size: 13.5px;
+  margin-left: 1px;
+}
+
+.casita-risk__card-divider {
+  margin: 14px 0;
+  border-top: 1.5px dashed rgba(17, 18, 20, 0.12);
+}
+
+.casita-risk__card-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #74787f;
+  font-weight: 400;
+}
+
+.casita-risk__card-meta {
+  margin: 12px 0 0;
+  font-size: 12px;
+  font-weight: 450;
+  color: #a3a8ae;
+  letter-spacing: 0.005em;
+}

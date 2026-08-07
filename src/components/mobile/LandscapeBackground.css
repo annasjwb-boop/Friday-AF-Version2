@@ -1,0 +1,32 @@
+.landscape-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #0b0f0a;
+  pointer-events: none;
+}
+
+.landscape-bg__image {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  /* Keep the dawn sky behind the hero and the dark hills behind the cards. */
+  object-position: center top;
+  display: block;
+}
+
+/* Cool, subtle darkening so the white header chrome stays legible over the
+   lighter dawn sky. */
+.landscape-bg__top-scrim {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 140px;
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 16, 28, 0.38) 0%,
+    rgba(9, 16, 28, 0) 100%
+  );
+}

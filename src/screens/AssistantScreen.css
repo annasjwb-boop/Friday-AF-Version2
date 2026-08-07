@@ -1,0 +1,242 @@
+.assistant-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  /* The screen owns its white canvas; the shader bands float over it. */
+  background: #ffffff;
+}
+
+/* Keep the interface above the ambient bands. */
+.assistant-screen > :not(.assistant-ambient) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------------------- Ambient bands ------------------------------ */
+
+.assistant-ambient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 600ms ease,
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.assistant-ambient--top {
+  top: 0;
+  height: 300px;
+  transform: translateY(-32px);
+}
+
+.assistant-ambient--bottom {
+  bottom: 0;
+  height: 260px;
+  transform: translateY(48px);
+}
+
+.assistant-ambient.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* White gradient veils so each band dissolves into the canvas: the bottom
+   band fades upward into white, the top band fades downward into white. */
+.assistant-ambient__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.92) 20%,
+    rgba(255, 255, 255, 0.7) 44%,
+    rgba(255, 255, 255, 0.42) 68%,
+    rgba(255, 255, 255, 0.16) 88%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+}
+
+.assistant-ambient__veil--top {
+  background: linear-gradient(
+    to top,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.92) 20%,
+    rgba(255, 255, 255, 0.7) 44%,
+    rgba(255, 255, 255, 0.42) 68%,
+    rgba(255, 255, 255, 0.16) 88%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+}
+
+[data-theme="dark"] .assistant-screen {
+  background: #000;
+}
+
+[data-theme="dark"] .assistant-ambient {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-ambient {
+    transform: none;
+    transition: opacity 600ms ease;
+  }
+}
+
+/* ------------------------------- Empty state ---------------------------- */
+
+.assistant-hero {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 20px var(--space-3);
+}
+
+.assistant-hero__brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.44;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  color: #000;
+}
+
+.assistant-hero__headline {
+  margin: var(--space-3) 0 var(--space-6);
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: var(--weight-bold);
+  line-height: 1.05;
+  letter-spacing: -0.7px;
+  color: #000;
+}
+
+/* -------------------------------- Thread -------------------------------- */
+
+.assistant-thread {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) 20px var(--space-2);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.assistant-divider {
+  align-self: center;
+  padding: var(--space-2) 0;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.assistant-bubble {
+  max-width: 300px;
+  font-size: 15px;
+  line-height: var(--leading-normal);
+  letter-spacing: -0.2px;
+  white-space: pre-line;
+}
+
+.assistant-bubble--agent {
+  align-self: flex-start;
+  color: var(--ink-body);
+}
+
+.assistant-bubble--user {
+  align-self: flex-end;
+  max-width: 260px;
+  padding: 10px 16px;
+  border-radius: 20px 20px 6px 20px;
+  background: var(--cta-bg);
+  color: var(--cta-ink);
+}
+
+.assistant-card-slot {
+  align-self: flex-start;
+  width: 100%;
+  display: flex;
+}
+
+/* Quick taps appear on the user's side as one-tap replies. */
+.assistant-taps {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.assistant-tap {
+  padding: 10px 18px;
+  border: 1px solid var(--chip-border);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.2px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.assistant-tap:hover {
+  background: #ffffff;
+}
+
+.assistant-tap:active {
+  transform: scale(0.97);
+}
+
+.assistant-typing {
+  align-self: flex-start;
+  display: flex;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.assistant-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  animation: assistant-typing 1s ease-in-out infinite;
+}
+
+.assistant-typing span:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.assistant-typing span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes assistant-typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}

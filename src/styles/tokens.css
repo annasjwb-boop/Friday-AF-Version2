@@ -1,0 +1,264 @@
+:root {
+  /* Font stack */
+  --font-sans:
+    "DM Sans", Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "Segoe UI", sans-serif;
+
+  /* Display font for large numerals */
+  --font-display: "Space Grotesk", var(--font-sans);
+
+  /* Apple system stack (ledger variant) */
+  --font-system:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Helvetica Neue", sans-serif;
+
+  /* System mono for technical uppercase labels (ledger variant) */
+  --font-mono: ui-monospace, "SF Mono", Menlo, "Roboto Mono", monospace;
+
+  /* Backgrounds & surfaces */
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f2f3f5;
+
+  /* Desktop area outside the device */
+  --color-stage: #e9eaed;
+
+  /* Text */
+  --color-text-primary: #0b0c0f;
+  --color-text-secondary: #3c4149;
+  --color-text-muted: #8a8f98;
+  --color-text-on-primary: #ffffff;
+
+  /* Borders */
+  --color-border: #e4e6ea;
+  --color-border-strong: #d3d6db;
+
+  /* Actions */
+  --color-primary: #0a84ff;
+  --color-primary-hover: #0a78e6;
+  --color-primary-pressed: #086bcc;
+  --color-primary-soft: #e6f2ff;
+
+  /* Status */
+  --color-success: #34c759;
+  --color-warning: #ff9f0a;
+  --color-error: #ff3b30;
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 3px rgba(10, 132, 255, 0.35);
+
+  /* Spacing (8px based) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+
+  /* Border radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Typography sizes */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+  --text-3xl: 34px;
+
+  /* Line heights */
+  --leading-tight: 1.2;
+  --leading-normal: 1.4;
+  --leading-relaxed: 1.6;
+
+  /* Font weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(11, 12, 15, 0.06);
+  --shadow-md: 0 4px 12px rgba(11, 12, 15, 0.08);
+  --shadow-lg: 0 12px 32px rgba(11, 12, 15, 0.12);
+  --shadow-device: 0 24px 60px rgba(11, 12, 15, 0.24);
+
+  /* Layout heights */
+  --statusbar-height: 44px;
+  --header-height: 56px;
+  --tabbar-height: 64px;
+
+  /* Device viewport (iPhone 14 Pro Max class, 390 design width) */
+  --device-width: 390px;
+  --device-height: 844px;
+
+  /* Transitions */
+  --transition-fast: 120ms ease;
+  --transition-base: 180ms ease;
+
+  /* -------------------------------------------------------------------------
+   * Theme-adaptive tokens (light defaults; flipped by [data-theme="dark"])
+   * ----------------------------------------------------------------------- */
+
+  /* Ink: text/icon color on the screen background, strongest to faintest. */
+  --ink: #000000;
+  --ink-strong: rgba(0, 0, 0, 0.9);
+  --ink-body: rgba(0, 0, 0, 0.8);
+  --ink-secondary: rgba(0, 0, 0, 0.7);
+  --ink-muted: rgba(0, 0, 0, 0.6);
+  --ink-soft: rgba(0, 0, 0, 0.45);
+  --ink-faint: rgba(0, 0, 0, 0.35);
+
+  /* Frosted widget/card surface */
+  --surface-card: rgba(247, 247, 247, 0.55);
+  --surface-card-hover: rgba(240, 240, 240, 0.72);
+  --surface-card-border: rgba(0, 0, 0, 0.04);
+  --surface-card-inset: inset 0 0.75px 4px rgba(255, 255, 255, 0.22);
+
+  /* Subtle inset panels (callouts, insurer pill, input wells) */
+  --surface-inset: rgba(0, 0, 0, 0.05);
+
+  /* Primary pill CTA (dark pill in light mode, white pill in dark mode) */
+  --cta-bg: rgba(4, 4, 4, 0.89);
+  --cta-bg-hover: #000000;
+  --cta-ink: #ffffff;
+
+  /* Secondary pill buttons sitting on cards */
+  --pill-bg: rgba(0, 0, 0, 0.06);
+  --pill-bg-hover: rgba(0, 0, 0, 0.1);
+  --pill-ink: #000000;
+
+  /* Selected chips / filter pills */
+  --chip-border: rgba(0, 0, 0, 0.16);
+  --chip-border-hover: rgba(0, 0, 0, 0.35);
+  --chip-selected-bg: #000000;
+  --chip-selected-ink: #ffffff;
+
+  /* Distribution bar track + row dividers */
+  --bar-track: rgba(0, 0, 0, 0.12);
+  --row-divider: rgba(0, 0, 0, 0.08);
+
+  /* Funding gap accent */
+  --gap-ink: #ff2b2b;
+  --gap-dot: #ff2b2b;
+
+  /* Positive / warning accents on cards */
+  --positive-ink: #0a9d64;
+  --positive-bg: rgba(10, 157, 100, 0.12);
+  --warn-ink: #d63c1d;
+  --warn-bg: rgba(255, 82, 43, 0.12);
+
+  /* "Not covered" tag */
+  --tag-bg: rgba(255, 43, 43, 0.09);
+  --tag-ink: #ff2b2b;
+
+  /* Dark "ink" cards (assistant Risk Score card + conversation cards).
+     Values from the Figma Agent card: black base, hairline top highlight,
+     and a soft green→teal→blue aurora hugging the bottom edge. */
+  --ink-card-bg: #000000;
+  --ink-card-radius: 32px;
+  --ink-card-inset: inset 0 0.75px 4px rgba(255, 255, 255, 0.28);
+  /* Full-card coordinates, matching the Figma mask group (1217:16650):
+     soft blue bloom lower-left, green bloom on the bottom edge right of
+     center, fading out toward the right. */
+  --ink-card-glow:
+    radial-gradient(
+      55% 50% at 28% 82%,
+      rgba(110, 140, 240, 0.28),
+      transparent 100%
+    ),
+    radial-gradient(
+      45% 55% at 30% 102%,
+      rgba(64, 105, 228, 0.6),
+      transparent 100%
+    ),
+    radial-gradient(
+      26% 34% at 58% 104%,
+      rgba(66, 200, 118, 0.85),
+      transparent 100%
+    ),
+    radial-gradient(
+      18% 22% at 90% 104%,
+      rgba(112, 70, 190, 0.35),
+      transparent 100%
+    );
+}
+
+/* ---------------------------------------------------------------------------
+ * Dark theme (values pulled from the Figma dark home design)
+ * ------------------------------------------------------------------------- */
+:root[data-theme="dark"] {
+  --color-bg: #000000;
+  --color-bg-subtle: #0c0c0d;
+  --color-surface: #121214;
+  --color-surface-2: #1c1c1f;
+
+  --color-stage: #212226;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.72);
+  --color-text-muted: rgba(255, 255, 255, 0.45);
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+
+  --shadow-device: 0 24px 60px rgba(0, 0, 0, 0.65);
+
+  --ink: #ffffff;
+  --ink-strong: rgba(255, 255, 255, 0.9);
+  --ink-body: rgba(255, 255, 255, 0.8);
+  --ink-secondary: rgba(255, 255, 255, 0.72);
+  --ink-muted: rgba(255, 255, 255, 0.5);
+  --ink-soft: rgba(255, 255, 255, 0.4);
+  --ink-faint: rgba(255, 255, 255, 0.3);
+
+  --surface-card: linear-gradient(
+    130deg,
+    rgba(255, 255, 255, 0.08) 3%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  --surface-card-hover: linear-gradient(
+    130deg,
+    rgba(255, 255, 255, 0.12) 3%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  --surface-card-border: rgba(255, 255, 255, 0.05);
+  --surface-card-inset: inset 0 2px 20px rgba(255, 255, 255, 0.1);
+
+  --surface-inset: rgba(255, 255, 255, 0.06);
+
+  --cta-bg: rgba(255, 255, 255, 0.89);
+  --cta-bg-hover: #ffffff;
+  --cta-ink: #000000;
+
+  --pill-bg: rgba(255, 255, 255, 0.1);
+  --pill-bg-hover: rgba(255, 255, 255, 0.16);
+  --pill-ink: #ffffff;
+
+  --chip-border: rgba(255, 255, 255, 0.16);
+  --chip-border-hover: rgba(255, 255, 255, 0.35);
+  --chip-selected-bg: #ffffff;
+  --chip-selected-ink: #000000;
+
+  --bar-track: rgba(255, 255, 255, 0.06);
+  --row-divider: rgba(255, 255, 255, 0.1);
+
+  --gap-ink: #ff8a6e;
+  --gap-dot: #ff522b;
+
+  --positive-ink: #5ee9b5;
+  --positive-bg: rgba(94, 233, 181, 0.16);
+  --warn-ink: #ff8a6e;
+  --warn-bg: rgba(255, 82, 43, 0.14);
+
+  --tag-bg: rgba(255, 255, 255, 0.09);
+  --tag-ink: #ff522b;
+}

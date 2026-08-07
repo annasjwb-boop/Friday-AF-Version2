@@ -1,0 +1,21 @@
+.sb-paper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #ffffff;
+  pointer-events: none;
+}
+
+/* The faintest cool wash at the top — structure comes from the grey boxes,
+   not the ground. */
+.sb-paper__aura {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 34%;
+  background: linear-gradient(
+    to bottom,
+    rgba(19, 20, 23, 0.025),
+    rgba(19, 20, 23, 0)
+  );
+}

@@ -1,0 +1,20 @@
+.casita-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #0e0f11;
+  pointer-events: none;
+}
+
+/* A whisper of warm light falling across the top of the chrome, so the dark
+   header reads as a lit surface rather than flat black. */
+.casita-bg__sheen {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    130% 42% at 38% 0%,
+    rgba(214, 188, 152, 0.12) 0%,
+    rgba(214, 188, 152, 0) 68%
+  );
+}

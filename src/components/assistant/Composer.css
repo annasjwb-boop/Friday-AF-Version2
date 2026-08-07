@@ -1,0 +1,76 @@
+.composer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: var(--space-2) 20px calc(var(--space-4) + 8px);
+}
+
+.composer__field {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.composer__input {
+  width: 100%;
+  height: 56px;
+  padding: 0 48px 0 20px;
+  border: none;
+  border-radius: var(--radius-pill);
+  /* Translucent frosted fill so the ambient shader shows through. */
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  font-size: 15px;
+  letter-spacing: -0.3px;
+  color: var(--color-text-primary);
+}
+
+.composer__input::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: var(--weight-medium);
+}
+
+.composer__input:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.composer__plus {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  color: rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.composer__send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 50%;
+  /* Translucent frosted fill so the ambient shader shows through. */
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  color: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.composer__send--active {
+  background: var(--cta-bg);
+  color: var(--cta-ink);
+}
+
+.composer__send:disabled {
+  cursor: default;
+}

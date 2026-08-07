@@ -1,0 +1,291 @@
+/* ---------------------------------------------------------------------------
+ * "Your Sanctuary" story overlay. The container performs the shared-element
+ * expansion (rect + radius animated from the header avatar); the full-size
+ * screen inside is cover-cropped and scaled so the model grows continuously
+ * from miniature to hero. Layout inside mirrors the 4.C hero language.
+ * ------------------------------------------------------------------------- */
+
+.sc-story {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.sc-story__container {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: auto;
+  background: #17151280;
+  box-shadow: 0 8px 40px rgba(20, 16, 10, 0.35);
+}
+
+/* Full-viewport screen, centered in the container, scaled to cover. */
+.sc-story__stage-holder {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+.sc-story__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* The 3D scene sits above the vertical midpoint with generous air. */
+.sc-story__stage {
+  position: absolute;
+  top: 4%;
+  left: 0;
+  right: 0;
+  height: 62%;
+  z-index: 1;
+}
+
+/* Top chrome: close on the left, property swap on the right. */
+.sc-story__chrome {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  right: var(--space-4);
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sc-story__chrome-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 2px;
+  background: rgba(45, 40, 32, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #141416;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.sc-story__chrome-btn:hover {
+  background: rgba(45, 40, 32, 0.22);
+}
+
+.sc-story__chrome-btn:active {
+  transform: scale(0.93);
+}
+
+.sc-story__chrome-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Bottom narrative panel on a gradient scrim (color set inline per theme). */
+.sc-story__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: var(--space-8) var(--space-5)
+    calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+}
+
+.sc-story__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+/* Editorial voice — the story is an interpretation of a home, not an
+   instrument readout: quiet sentence-case eyebrow, calm system-sans
+   headline, no mono, no tracking. */
+.sc-story__eyebrow {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  color: rgba(28, 28, 32, 0.58);
+}
+
+.sc-story__headline {
+  font-family: var(--font-system);
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  max-width: 330px;
+  color: #141416;
+}
+
+.sc-story__body {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  max-width: 320px;
+  color: rgba(28, 28, 32, 0.72);
+}
+
+.sc-story__cta {
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: 15px 20px;
+  border: none;
+  border-radius: 2px;
+  background: #1a1a1c;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+  color: #f2f2f3;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(28, 28, 32, 0.35);
+  transition:
+    background var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.sc-story__cta:hover {
+  background: #2e2e32;
+}
+
+.sc-story__cta:active {
+  transform: scale(0.985);
+}
+
+.sc-story__cta:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.sc-story__quiet {
+  align-self: center;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.03em;
+  color: rgba(28, 28, 32, 0.7);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(28, 28, 32, 0.32);
+  cursor: pointer;
+  transition: color var(--transition-base);
+}
+
+.sc-story__quiet:hover {
+  color: #141416;
+}
+
+.sc-story__scene-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+/* Guided-scene progress: dots plus a quiet "1 of 3". */
+.sc-story__progress {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sc-story__dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  background: rgba(28, 28, 32, 0.28);
+  cursor: pointer;
+  transition:
+    background var(--transition-base),
+    transform var(--transition-base);
+}
+
+.sc-story__dot.is-active {
+  background: #141416;
+  transform: scale(1.25);
+}
+
+.sc-story__step {
+  margin-left: var(--space-1);
+  font-size: var(--text-xs);
+  color: rgba(28, 28, 32, 0.55);
+}
+
+/* Fine grain over the whole story, matching the hero treatment. */
+.sc-story__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+}
+
+/* ---------------------------------------------------------------------------
+ * Light-ink override for the deep themes (Forest, Sand, Beach): warm cream
+ * type, inverted CTA — mirroring the hero's treatment.
+ * ------------------------------------------------------------------------- */
+
+.sc-story--ink-light .sc-story__eyebrow {
+  color: rgba(243, 243, 245, 0.62);
+}
+
+.sc-story--ink-light .sc-story__headline {
+  color: #f4f4f5;
+}
+
+.sc-story--ink-light .sc-story__body {
+  color: rgba(238, 238, 240, 0.75);
+}
+
+.sc-story--ink-light .sc-story__cta {
+  background: #ececee;
+  color: #26262a;
+  box-shadow: 0 12px 30px rgba(14, 14, 18, 0.4);
+}
+
+.sc-story--ink-light .sc-story__cta:hover {
+  background: #f6f6f7;
+}
+
+.sc-story--ink-light .sc-story__quiet {
+  color: rgba(238, 238, 240, 0.72);
+  text-decoration-color: rgba(238, 238, 240, 0.35);
+}
+
+.sc-story--ink-light .sc-story__quiet:hover {
+  color: #f4f4f5;
+}
+
+.sc-story--ink-light .sc-story__chrome-btn {
+  background: rgba(244, 240, 224, 0.14);
+  color: #f4f4f5;
+}
+
+.sc-story--ink-light .sc-story__chrome-btn:hover {
+  background: rgba(244, 240, 224, 0.24);
+}
+
+.sc-story--ink-light .sc-story__dot {
+  background: rgba(238, 238, 240, 0.32);
+}
+
+.sc-story--ink-light .sc-story__dot.is-active {
+  background: #f4f4f5;
+}
+
+.sc-story--ink-light .sc-story__step {
+  color: rgba(238, 238, 240, 0.6);
+}

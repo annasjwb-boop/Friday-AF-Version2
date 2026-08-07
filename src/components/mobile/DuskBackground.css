@@ -1,0 +1,48 @@
+.dusk-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #0c0d0f;
+  pointer-events: none;
+}
+
+/* Vertical mesh sampled from the akoya reference: warm sepia glow at the top,
+   a cooler slate blue-gray band through the middle, sinking to near-black.
+   The two radial sheens keep it reading as light on a surface, not a flat
+   ramp. */
+.dusk-bg__mesh {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(
+      120% 45% at 50% 4%,
+      rgba(186, 138, 98, 0.28) 0%,
+      rgba(186, 138, 98, 0) 70%
+    ),
+    radial-gradient(
+      90% 36% at 58% 34%,
+      rgba(168, 182, 200, 0.16) 0%,
+      rgba(168, 182, 200, 0) 70%
+    ),
+    linear-gradient(
+      to bottom,
+      #66513f 0%,
+      #5f5147 14%,
+      #525763 34%,
+      #414853 52%,
+      #292d34 72%,
+      #15171b 88%,
+      #0c0d0f 100%
+    );
+}
+
+/* Heavy film grain, pushed so it clearly reads as texture over the ramp. */
+.dusk-bg__grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.3;
+  mix-blend-mode: overlay;
+}

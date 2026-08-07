@@ -1,0 +1,197 @@
+/* ---------------------------------------------------------------------------
+ * Sanctuary Lab: a workbench over the light mesh backdrop. The model stays
+ * pinned up top while every scene control scrolls beneath it. Dark ink on
+ * translucent paper cards.
+ * ------------------------------------------------------------------------- */
+
+.sanctuary-lab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.sanctuary-lab__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) 0;
+}
+
+.sanctuary-lab__back,
+.sanctuary-lab__reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(45, 42, 36, 0.08);
+  color: rgba(45, 42, 36, 0.78);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.sanctuary-lab__back:hover,
+.sanctuary-lab__reset:hover {
+  background: rgba(45, 42, 36, 0.15);
+}
+
+.sanctuary-lab__title {
+  flex: 1 1 auto;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  color: #2d2a24;
+}
+
+.sanctuary-lab__stage {
+  flex: 0 0 38%;
+  min-height: 0;
+  margin-top: calc(-1 * var(--space-3));
+}
+
+.sanctuary-lab__stage canvas {
+  display: block;
+}
+
+.sanctuary-lab__controls {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.lab-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-3) var(--space-4);
+  border: 1px solid rgba(45, 42, 36, 0.14);
+  border-radius: 10px;
+  background: rgba(252, 248, 240, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.lab-section__title {
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #a4611f;
+  margin-bottom: var(--space-1);
+}
+
+.lab-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 30px;
+}
+
+.lab-row__label {
+  flex: 0 0 118px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: rgba(58, 52, 44, 0.8);
+}
+
+.lab-row input[type="range"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  accent-color: #c07b31;
+}
+
+.lab-row__value {
+  flex: 0 0 36px;
+  text-align: right;
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: rgba(58, 52, 44, 0.62);
+}
+
+/* Switch */
+.lab-switch {
+  position: relative;
+  width: 40px;
+  height: 24px;
+  margin-left: auto;
+  border: none;
+  border-radius: 12px;
+  background: rgba(45, 42, 36, 0.18);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.lab-switch.is-on {
+  background: #c98d4b;
+}
+
+.lab-switch__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fffaf0;
+  transition: transform var(--transition-fast);
+}
+
+.lab-switch.is-on .lab-switch__thumb {
+  transform: translateX(16px);
+}
+
+/* Chips */
+.lab-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.lab-chip {
+  padding: 6px 10px;
+  border: 1px solid rgba(45, 42, 36, 0.24);
+  border-radius: 4px;
+  background: transparent;
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: rgba(58, 52, 44, 0.78);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.lab-chip.is-active {
+  background: #2d2a24;
+  border-color: #2d2a24;
+  color: #f4efe4;
+}
+
+/* Cream header ink when the active theme is deep (Forest); the control
+   cards below are paper and keep their dark ink. */
+.sanctuary-lab--ink-light .sanctuary-lab__title {
+  color: #f4f0e0;
+}
+
+.sanctuary-lab--ink-light .sanctuary-lab__back,
+.sanctuary-lab--ink-light .sanctuary-lab__reset {
+  background: rgba(242, 238, 224, 0.14);
+  color: rgba(242, 238, 224, 0.85);
+}
+
+.sanctuary-lab--ink-light .sanctuary-lab__back:hover,
+.sanctuary-lab--ink-light .sanctuary-lab__reset:hover {
+  background: rgba(242, 238, 224, 0.22);
+}

@@ -1,0 +1,291 @@
+/* ---------------------------------------------------------------------------
+ * "Your Sanctuary" story overlay. The container performs the shared-element
+ * expansion (rect + radius animated from the header avatar); the full-size
+ * screen inside is cover-cropped and scaled so the model grows continuously
+ * from miniature to hero. Layout inside mirrors the 4.B hero language.
+ * ------------------------------------------------------------------------- */
+
+.sb-story {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.sb-story__container {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: auto;
+  background: #17151280;
+  box-shadow: 0 8px 40px rgba(20, 16, 10, 0.35);
+}
+
+/* Full-viewport screen, centered in the container, scaled to cover. */
+.sb-story__stage-holder {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+.sb-story__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* The 3D scene sits above the vertical midpoint with generous air. */
+.sb-story__stage {
+  position: absolute;
+  top: 4%;
+  left: 0;
+  right: 0;
+  height: 62%;
+  z-index: 1;
+}
+
+/* Top chrome: close on the left, property swap on the right. */
+.sb-story__chrome {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  right: var(--space-4);
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sb-story__chrome-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: rgba(45, 40, 32, 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #2d2a24;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.sb-story__chrome-btn:hover {
+  background: rgba(45, 40, 32, 0.22);
+}
+
+.sb-story__chrome-btn:active {
+  transform: scale(0.93);
+}
+
+.sb-story__chrome-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Bottom narrative panel on a gradient scrim (color set inline per theme). */
+.sb-story__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: var(--space-8) var(--space-5)
+    calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+}
+
+.sb-story__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+/* Editorial voice — the story is an interpretation of a home, not an
+   instrument readout: quiet sentence-case eyebrow, calm system-sans
+   headline, no mono, no tracking. */
+.sb-story__eyebrow {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  color: rgba(58, 52, 44, 0.58);
+}
+
+.sb-story__headline {
+  font-family: var(--font-system);
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  max-width: 330px;
+  color: #2d2a24;
+}
+
+.sb-story__body {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  max-width: 320px;
+  color: rgba(58, 52, 44, 0.72);
+}
+
+.sb-story__cta {
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: 15px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #2b2620;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+  color: #f4efe4;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(62, 52, 38, 0.35);
+  transition:
+    background var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.sb-story__cta:hover {
+  background: #3a342c;
+}
+
+.sb-story__cta:active {
+  transform: scale(0.985);
+}
+
+.sb-story__cta:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.sb-story__quiet {
+  align-self: center;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.03em;
+  color: rgba(58, 52, 44, 0.7);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(58, 52, 44, 0.32);
+  cursor: pointer;
+  transition: color var(--transition-base);
+}
+
+.sb-story__quiet:hover {
+  color: #2d2a24;
+}
+
+.sb-story__scene-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+/* Guided-scene progress: dots plus a quiet "1 of 3". */
+.sb-story__progress {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sb-story__dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: rgba(58, 52, 44, 0.28);
+  cursor: pointer;
+  transition:
+    background var(--transition-base),
+    transform var(--transition-base);
+}
+
+.sb-story__dot.is-active {
+  background: #2d2a24;
+  transform: scale(1.25);
+}
+
+.sb-story__step {
+  margin-left: var(--space-1);
+  font-size: var(--text-xs);
+  color: rgba(58, 52, 44, 0.55);
+}
+
+/* Fine grain over the whole story, matching the hero treatment. */
+.sb-story__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+}
+
+/* ---------------------------------------------------------------------------
+ * Light-ink override for the deep themes (Forest, Sand, Beach): warm cream
+ * type, inverted CTA — mirroring the hero's treatment.
+ * ------------------------------------------------------------------------- */
+
+.sb-story--ink-light .sb-story__eyebrow {
+  color: rgba(242, 238, 224, 0.62);
+}
+
+.sb-story--ink-light .sb-story__headline {
+  color: #f4f0e0;
+}
+
+.sb-story--ink-light .sb-story__body {
+  color: rgba(238, 234, 218, 0.75);
+}
+
+.sb-story--ink-light .sb-story__cta {
+  background: #f0ebd9;
+  color: #2b3324;
+  box-shadow: 0 12px 30px rgba(24, 32, 20, 0.4);
+}
+
+.sb-story--ink-light .sb-story__cta:hover {
+  background: #f8f4e6;
+}
+
+.sb-story--ink-light .sb-story__quiet {
+  color: rgba(238, 234, 218, 0.72);
+  text-decoration-color: rgba(238, 234, 218, 0.35);
+}
+
+.sb-story--ink-light .sb-story__quiet:hover {
+  color: #f4f0e0;
+}
+
+.sb-story--ink-light .sb-story__chrome-btn {
+  background: rgba(244, 240, 224, 0.14);
+  color: #f4f0e0;
+}
+
+.sb-story--ink-light .sb-story__chrome-btn:hover {
+  background: rgba(244, 240, 224, 0.24);
+}
+
+.sb-story--ink-light .sb-story__dot {
+  background: rgba(238, 234, 218, 0.32);
+}
+
+.sb-story--ink-light .sb-story__dot.is-active {
+  background: #f4f0e0;
+}
+
+.sb-story--ink-light .sb-story__step {
+  color: rgba(238, 234, 218, 0.6);
+}

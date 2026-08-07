@@ -1,0 +1,445 @@
+/* ---------------------------------------------------------------------------
+ * Sanctuary hero: cinematic full-frame layout over the light mesh backdrop.
+ * Light mode — the mesh is pale paper with colorful fields, so the ink is
+ * warm charcoal throughout, with the dark CTA as the anchor.
+ * ------------------------------------------------------------------------- */
+
+.sanctuary-c {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sanctuary-c__eyebrow {
+  position: relative;
+  z-index: 2;
+  padding-top: calc(var(--header-height) + var(--space-3));
+  text-align: center;
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(28, 28, 32, 0.6);
+}
+
+/* The scene is embedded directly in the page — no card, no frame. */
+.sanctuary-c__stage {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 54%;
+  min-height: 0;
+  margin-top: calc(-1 * var(--space-4));
+  transition: flex-basis 550ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* In the risk view the model stays forward — no overlay, no dim — and the
+   readout below carries the headline, status, and compact scores. */
+.sanctuary-c__stage--risk {
+  flex-basis: 46%;
+}
+
+.sanctuary-c__stage canvas {
+  display: block;
+}
+
+.sanctuary-c__panel--risk {
+  justify-content: flex-end;
+  gap: var(--space-4);
+}
+
+/* Personalized readout: one headline insight, the synthesized status, and
+   the four compact dimension scores — never collapsed into one number. */
+.sanctuary-c-readout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.sanctuary-c-readout__headline {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.01em;
+  line-height: var(--leading-tight);
+  max-width: 300px;
+  color: #141416;
+}
+
+/* Also the hidden trigger for the profile demo control. */
+.sanctuary-c-readout__status {
+  max-width: 310px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: rgba(28, 28, 32, 0.68);
+  cursor: pointer;
+}
+
+.sanctuary-c-readout__scores {
+  display: flex;
+  gap: 6px;
+  margin-top: var(--space-2);
+}
+
+.sanctuary-c-score-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  min-width: 68px;
+  padding: 7px 8px;
+  border: 1px solid rgba(28, 28, 32, 0.24);
+  border-radius: 2px;
+}
+
+.sanctuary-c-score-chip.is-unknown {
+  border-style: solid;
+  opacity: 0.55;
+}
+
+.sanctuary-c-score-chip__label {
+  font-size: 9px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(28, 28, 32, 0.55);
+}
+
+.sanctuary-c-score-chip__value {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  line-height: 1.1;
+  color: #141416;
+}
+
+.sanctuary-c-score-chip__level {
+  font-size: 9.5px;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: #c25708;
+}
+
+.sanctuary-c-score-chip.is-unknown .sanctuary-c-score-chip__level {
+  color: rgba(28, 28, 32, 0.55);
+}
+
+/* Content zone over the deeper lower wash */
+.sanctuary-c__panel {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-5) var(--space-5);
+}
+
+.sanctuary-c-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.sanctuary-c-details__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sanctuary-c-details__title {
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: var(--leading-tight);
+  color: #141416;
+}
+
+.sanctuary-c-details__desc {
+  max-width: 290px;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: rgba(28, 28, 32, 0.7);
+}
+
+/* Descriptor chip beneath the showroom description */
+.sanctuary-c-details__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border: 1px solid rgba(28, 28, 32, 0.26);
+  border-radius: 2px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  color: rgba(28, 28, 32, 0.8);
+}
+
+.sanctuary-c-details__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e06810;
+}
+
+/* Profile demo control (four dimension sliders + unknown toggles) */
+.sanctuary-c-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  overflow: hidden;
+}
+
+.sanctuary-c-demo__slider-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 300px;
+}
+
+.sanctuary-c-demo__slider-label {
+  flex: 0 0 64px;
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: rgba(28, 28, 32, 0.72);
+}
+
+.sanctuary-c-demo__slider-row input[type="range"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  accent-color: #e06810;
+}
+
+.sanctuary-c-demo__slider-row input[type="range"]:disabled {
+  opacity: 0.35;
+}
+
+.sanctuary-c-demo__slider-value {
+  flex: 0 0 26px;
+  text-align: right;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(28, 28, 32, 0.72);
+}
+
+.sanctuary-c-demo__slider-row.is-muted .sanctuary-c-demo__slider-label,
+.sanctuary-c-demo__slider-row.is-muted .sanctuary-c-demo__slider-value,
+.sanctuary-c-demo__slider-row.is-muted input[type="range"] {
+  opacity: 0.4;
+}
+
+.sanctuary-c-demo__footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+a.sanctuary-c-demo__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+}
+
+.sanctuary-c-demo__label {
+  font-size: 10px;
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(28, 28, 32, 0.5);
+}
+
+.sanctuary-c-demo__chip {
+  padding: 5px 9px;
+  border: 1px solid rgba(28, 28, 32, 0.26);
+  border-radius: 2px;
+  background: transparent;
+  font-size: 11px;
+  font-weight: var(--weight-medium);
+  color: rgba(28, 28, 32, 0.72);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.sanctuary-c-demo__chip.is-active {
+  background: #141416;
+  border-color: #141416;
+  color: #f2f2f3;
+}
+
+/* Actions */
+.sanctuary-c__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 300px;
+  margin-top: auto;
+}
+
+.sanctuary-c__cta {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 2px;
+  background: #1a1a1c;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.01em;
+  color: #f2f2f3;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(28, 28, 32, 0.35);
+  transition:
+    background var(--transition-base),
+    transform var(--transition-fast);
+}
+
+.sanctuary-c__cta:hover {
+  background: #2e2e32;
+}
+
+.sanctuary-c__cta:active {
+  transform: scale(0.985);
+}
+
+.sanctuary-c__change {
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.03em;
+  color: rgba(28, 28, 32, 0.7);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(28, 28, 32, 0.32);
+  cursor: pointer;
+  transition: color var(--transition-base);
+}
+
+.sanctuary-c__change:hover {
+  color: #141416;
+}
+
+/* ---------------------------------------------------------------------------
+ * Light-ink override: themes deep enough that charcoal ink dies (Forest)
+ * flip the type to warm cream, like the reference's white-on-green. The
+ * CTA inverts back to a cream button with dark text so it stays the anchor.
+ * ------------------------------------------------------------------------- */
+
+.sanctuary-c--ink-light .sanctuary-c__eyebrow {
+  color: rgba(243, 243, 245, 0.62);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-readout__headline,
+.sanctuary-c--ink-light .sanctuary-c-score-chip__value,
+.sanctuary-c--ink-light .sanctuary-c-details__title {
+  color: #f4f4f5;
+}
+
+.sanctuary-c--ink-light .sanctuary-c-readout__status,
+.sanctuary-c--ink-light .sanctuary-c-details__desc {
+  color: rgba(238, 238, 240, 0.72);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-score-chip {
+  border-color: rgba(238, 238, 240, 0.28);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-score-chip__label {
+  color: rgba(238, 238, 240, 0.58);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-score-chip__level {
+  color: #ffb166;
+}
+
+.sanctuary-c--ink-light .sanctuary-c-score-chip.is-unknown .sanctuary-c-score-chip__level {
+  color: rgba(238, 238, 240, 0.58);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-details__status {
+  border-color: rgba(238, 238, 240, 0.3);
+  color: rgba(238, 238, 240, 0.82);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-details__status-dot {
+  background: #ffb166;
+}
+
+.sanctuary-c--ink-light .sanctuary-c-demo__slider-label,
+.sanctuary-c--ink-light .sanctuary-c-demo__slider-value,
+.sanctuary-c--ink-light .sanctuary-c-demo__chip {
+  color: rgba(238, 238, 240, 0.75);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-demo__label {
+  color: rgba(238, 238, 240, 0.5);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-demo__chip {
+  border-color: rgba(238, 238, 240, 0.28);
+}
+
+.sanctuary-c--ink-light .sanctuary-c-demo__chip.is-active {
+  background: #ececee;
+  border-color: #ececee;
+  color: #26262a;
+}
+
+.sanctuary-c--ink-light .sanctuary-c-demo__slider-row input[type="range"] {
+  accent-color: #ffb166;
+}
+
+.sanctuary-c--ink-light .sanctuary-c__cta {
+  background: #ececee;
+  color: #26262a;
+  box-shadow: 0 12px 30px rgba(14, 14, 18, 0.4);
+}
+
+.sanctuary-c--ink-light .sanctuary-c__cta:hover {
+  background: #f6f6f7;
+}
+
+.sanctuary-c--ink-light .sanctuary-c__change {
+  color: rgba(238, 238, 240, 0.72);
+  text-decoration-color: rgba(238, 238, 240, 0.35);
+}
+
+.sanctuary-c--ink-light .sanctuary-c__change:hover {
+  color: #f4f4f5;
+}
+
+/* Fine grain over the whole experience, matching the reference imagery. */
+.sanctuary-c__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+}

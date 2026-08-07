@@ -1,0 +1,100 @@
+.app-layout {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--color-bg-subtle);
+}
+
+@media (max-width: 500px) {
+  .app-layout > .mobile-header {
+    top: calc(var(--space-2) + env(safe-area-inset-top, 0px));
+  }
+}
+
+/* Reveal the ambient backdrops behind the interface chrome. */
+.app-layout:has(> .ambient-shader),
+.app-layout:has(> .natural-sky) {
+  background: transparent;
+}
+
+/* Dark backdrops (landscape, dusk, ledger): header chrome flips to white. */
+.app-layout:has(> .landscape-bg) .mobile-header .ui-icon-button,
+.app-layout:has(> .landscape-bg) .mobile-header__title,
+.app-layout:has(> .dusk-bg) .mobile-header .ui-icon-button,
+.app-layout:has(> .dusk-bg) .mobile-header__title,
+.app-layout:has(> .ledger-bg) .mobile-header .ui-icon-button,
+.app-layout:has(> .ledger-bg) .mobile-header__title {
+  color: #ffffff;
+}
+
+/* Sanctuary backdrop: warm cream chrome over the dark cocoa top. */
+.app-layout:has(> .sanctuary-bg) .mobile-header .ui-icon-button,
+.app-layout:has(> .sanctuary-bg) .mobile-header__title {
+  color: #f3ead8;
+}
+
+/* Dark theme: solid black behind everything; the light backdrops are hidden. */
+[data-theme="dark"] .app-layout,
+[data-theme="dark"] .app-layout:has(> .ambient-shader),
+[data-theme="dark"] .app-layout:has(> .natural-sky) {
+  background: #000;
+}
+
+[data-theme="dark"] .app-layout > .ambient-shader,
+[data-theme="dark"] .app-layout > .natural-sky {
+  display: none;
+}
+
+/* The header floats over the content so it can hide on scroll and reclaim
+   the space beneath it. */
+.app-layout > .mobile-header {
+  position: absolute;
+  top: var(--space-2);
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+/* Keep all interface content above the ambient shader backdrop. */
+.app-layout > .app-content {
+  position: relative;
+  z-index: 1;
+  transition:
+    opacity 380ms ease,
+    transform 380ms ease;
+}
+
+/* While the "Your Sanctuary" story is open, the working app recedes: header
+   and content fade and drift down as the avatar expands over them, and
+   return as the story shrinks back into the header. */
+.app-layout--story > .mobile-header,
+.app-layout--story > .app-content {
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+}
+
+.app-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  /* Clear the floating header (offset by --space-2) when scrolled to top. */
+  padding-top: calc(var(--header-height) + var(--space-2));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 500px) {
+  .app-content {
+    padding-top: calc(
+      var(--header-height) + var(--space-2) + env(safe-area-inset-top, 0px)
+    );
+  }
+}
+
+/* Chromeless routes (recovery plan flow) own their full-screen layout. */
+.app-content--chromeless {
+  padding-top: 0;
+}

@@ -1,0 +1,444 @@
+/* Asset library drill-in: stays in the ledger's dark instrument-panel world.
+   Slides up over the home screen inside the device frame. */
+
+.asset-sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #0b0c0e;
+  font-family: var(--font-system);
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 240ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.asset-sheet.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Header --------------------------------------------------------------------*/
+
+.asset-sheet__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 56px var(--space-4) var(--space-3);
+}
+
+.asset-sheet__back {
+  position: absolute;
+  left: var(--space-3);
+  bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition-fast);
+}
+
+.asset-sheet__back:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.asset-sheet__back:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.asset-sheet__heading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.asset-sheet__scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--space-3) var(--space-4) var(--space-7);
+}
+
+/* Summary --------------------------------------------------------------------*/
+
+.asset-sheet__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.asset-sheet__figure {
+  margin-top: var(--space-1);
+  font-family: var(--font-system);
+  font-size: 38px;
+  line-height: 1.05;
+  font-weight: var(--weight-bold);
+  letter-spacing: -0.8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.asset-sheet__progress {
+  height: 3px;
+  margin-top: var(--space-4);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.asset-sheet__progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  transition: width 320ms ease;
+}
+
+.asset-sheet__meta {
+  margin-top: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.asset-sheet__note {
+  margin-top: var(--space-3);
+  font-size: 13px;
+  line-height: 19px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Categories -----------------------------------------------------------------*/
+
+.asset-sheet__categories {
+  margin-top: var(--space-5);
+  list-style: none;
+}
+
+.asset-sheet__category {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.asset-sheet__category-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.asset-sheet__category-row:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+.asset-sheet__category-name {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 14px;
+  font-weight: var(--weight-medium);
+}
+
+.asset-sheet__category-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.asset-sheet__category-total {
+  font-family: var(--font-system);
+  font-size: 15px;
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.asset-sheet__category-chevron {
+  color: rgba(255, 255, 255, 0.45);
+  transition: transform 200ms ease;
+}
+
+.asset-sheet__category-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+/* Items ------------------------------------------------------------------------*/
+
+.asset-sheet__items {
+  padding: 0 0 var(--space-4);
+}
+
+.asset-sheet__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 7px 0;
+}
+
+.asset-sheet__item-name {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.asset-sheet__item-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Add-item flow ------------------------------------------------------------------*/
+
+.asset-sheet__add {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: var(--weight-medium);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color var(--transition-fast);
+}
+
+.asset-sheet__add:active {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.asset-sheet__add:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.asset-sheet__form {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.asset-sheet__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.06);
+  font-family: inherit;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.asset-sheet__input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.asset-sheet__input:focus-visible {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.asset-sheet__input--value {
+  flex: 0 0 84px;
+}
+
+/* Hide number-input spinners; estimates are typed, not stepped. */
+.asset-sheet__input--value::-webkit-inner-spin-button,
+.asset-sheet__input--value::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.asset-sheet__save {
+  flex: 0 0 auto;
+  padding: 9px 16px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: var(--weight-semibold);
+  color: #0b0c0e;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.asset-sheet__save:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .asset-sheet {
+    transition: opacity 200ms ease;
+    transform: none;
+  }
+}
+
+/* Light appearance — Sanctuary 4.B's calm system world. Drops the mono
+   treatment for quiet system-sans labels, ink on white, hairline rules,
+   and the blue accent on progress. */
+
+.asset-sheet--light {
+  background: #ffffff;
+  color: #131417;
+}
+
+.asset-sheet--light .asset-sheet__back {
+  color: #131417;
+}
+
+.asset-sheet--light .asset-sheet__back:active {
+  background: rgba(19, 20, 23, 0.05);
+}
+
+.asset-sheet--light .asset-sheet__heading {
+  font-family: var(--font-system);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: #131417;
+}
+
+.asset-sheet--light .asset-sheet__label {
+  font-family: var(--font-system);
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #6b6e73;
+}
+
+.asset-sheet--light .asset-sheet__figure {
+  font-weight: 300;
+  font-size: 44px;
+  letter-spacing: -0.02em;
+  color: #131417;
+}
+
+.asset-sheet--light .asset-sheet__progress {
+  background: #e5e7eb;
+}
+
+.asset-sheet--light .asset-sheet__progress-fill {
+  background: #0a7aff;
+}
+
+.asset-sheet--light .asset-sheet__meta {
+  font-family: var(--font-system);
+  font-size: 11.5px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #9a9da3;
+}
+
+.asset-sheet--light .asset-sheet__note {
+  color: #6b6e73;
+}
+
+.asset-sheet--light .asset-sheet__category {
+  border-top: 1px solid rgba(19, 20, 23, 0.06);
+}
+
+.asset-sheet--light .asset-sheet__category-row {
+  color: #131417;
+}
+
+.asset-sheet--light .asset-sheet__category-count {
+  font-family: var(--font-system);
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #9a9da3;
+}
+
+.asset-sheet--light .asset-sheet__category-total {
+  color: #131417;
+}
+
+.asset-sheet--light .asset-sheet__category-chevron {
+  color: #9a9da3;
+}
+
+.asset-sheet--light .asset-sheet__item-name {
+  color: #6b6e73;
+}
+
+.asset-sheet--light .asset-sheet__item-value {
+  font-family: var(--font-system);
+  color: #6b6e73;
+}
+
+.asset-sheet--light .asset-sheet__add {
+  border: none;
+  background: #f4f4f6;
+  color: #131417;
+}
+
+.asset-sheet--light .asset-sheet__add:active {
+  background: #eceef0;
+}
+
+.asset-sheet--light .asset-sheet__input {
+  border: none;
+  background: #f4f4f6;
+  color: #131417;
+}
+
+.asset-sheet--light .asset-sheet__input::placeholder {
+  color: #9a9da3;
+}
+
+.asset-sheet--light .asset-sheet__input:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 1.5px #0a7aff;
+}
+
+.asset-sheet--light .asset-sheet__save {
+  background: #111214;
+  color: #ffffff;
+}
+

@@ -1,0 +1,134 @@
+.personal-resources__heading {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
+  color: var(--ink-strong);
+}
+
+.personal-resources__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.resource-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 20px;
+  border: 1px solid var(--surface-card-border);
+  border-radius: 20px;
+  background: var(--surface-card);
+  box-shadow: var(--surface-card-inset);
+  color: var(--ink);
+  text-align: left;
+  transition: background var(--transition-fast);
+}
+
+.resource-row:hover {
+  background: var(--surface-card-hover);
+}
+
+.resource-row__copy {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.resource-row__name {
+  font-size: var(--text-md);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.resource-row__desc {
+  font-size: var(--text-md);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--ink-secondary);
+}
+
+.resource-row__amount {
+  font-size: var(--text-md);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--positive-ink);
+}
+
+.resource-row__plus {
+  flex-shrink: 0;
+  opacity: 0.2;
+}
+
+.resource-row__edit {
+  flex-shrink: 0;
+  padding: 6px var(--space-3);
+  border-radius: 32px;
+  background: var(--pill-bg);
+  font-size: var(--text-xs);
+  letter-spacing: -0.03em;
+  line-height: 16px;
+  color: var(--pill-ink);
+}
+
+/* --- Amount input sheet ------------------------------------------------- */
+
+.resource-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.resource-sheet__title {
+  max-width: 282px;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.02em;
+  line-height: 21px;
+  color: #000;
+}
+
+.resource-sheet__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 56px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.resource-sheet__field:focus-within {
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.resource-sheet__currency {
+  font-size: 24px;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.02em;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.resource-sheet__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.02em;
+  color: #000;
+}
+
+.resource-sheet__input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.resource-sheet__input::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}

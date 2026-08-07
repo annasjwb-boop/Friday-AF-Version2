@@ -1,0 +1,417 @@
+/* ---------------------------------------------------------------------------
+ * Casita: dark app chrome up top, a warm-white sheet carrying the 3D
+ * maquette, per-tab stats, one AI suggestion card, recent charges, and the
+ * product's own bottom nav. Recreates the reference screen 1:1 with the
+ * AidFinder tabs (Overview / Risk Score / Readiness / Recovery).
+ * ------------------------------------------------------------------------- */
+
+.casita {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  color: #fff;
+  font-family: var(--font-system);
+}
+
+/* --- Dark header --------------------------------------------------------- */
+
+.casita__top {
+  padding: 10px 22px 18px;
+}
+
+.casita__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 2px 0;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.casita__time {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.casita__status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.casita__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: 22px;
+}
+
+.casita__title {
+  margin: 0;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+
+.casita__address {
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.52);
+  letter-spacing: 0.01em;
+}
+
+.casita__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background:
+    radial-gradient(120% 120% at 30% 20%, #d9a06b 0%, #8a5a3b 55%, #4d3323 100%);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* --- White sheet ---------------------------------------------------------- */
+
+.casita__sheet {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  color: #111214;
+  border-radius: 26px 26px 0 0;
+  padding: 18px 0 calc(18px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* --- Tabs ----------------------------------------------------------------- */
+
+.casita__tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to right, #000 88%, transparent);
+  mask-image: linear-gradient(to right, #000 88%, transparent);
+}
+
+.casita__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.casita__tab {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  padding: 8px 15px;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 450;
+  letter-spacing: 0;
+  color: #a3a8ae;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.casita__tab.is-active {
+  background: #0e0f11;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* --- Product orbit stage (beauty-render turntable) ------------------------- */
+
+.casita__stage {
+  height: 310px;
+  margin-top: 4px;
+  touch-action: none;
+  overflow: hidden;
+}
+
+/* --- Stats row ------------------------------------------------------------ */
+
+.casita__stats {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: 4px 22px 0;
+}
+
+.casita__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.casita__stat--right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.casita__stat-label {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: #a3a8ae;
+  letter-spacing: 0.01em;
+}
+
+.casita__stat-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+}
+
+.casita__stat-note {
+  font-size: 12px;
+  font-weight: 450;
+  color: #c98a2c;
+  letter-spacing: 0;
+}
+
+.casita__stat-info {
+  color: #b7bcc2;
+}
+
+.casita__pill {
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  font-size: 10.5px;
+  font-weight: 550;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.casita__pill--green {
+  background: #3ecf6b;
+}
+
+.casita__pill--amber {
+  background: #f0a32c;
+}
+
+.casita__pill--teal {
+  background: #1fb6a2;
+}
+
+/* --- Action card stack ------------------------------------------------------ */
+
+.casita-stack {
+  overflow: hidden;
+  padding: 0 16px;
+}
+
+.casita-stack__viewport {
+  position: relative;
+  margin-top: 18px;
+  height: 184px;
+}
+
+.casita-stack__card {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 162px;
+  display: flex;
+  flex-direction: column;
+  background: #f9f9fa;
+  border: 1px solid rgba(17, 18, 20, 0.04);
+  border-radius: 20px;
+  padding: 16px;
+  touch-action: pan-y;
+}
+
+.casita-stack__card:last-child {
+  background: #f5f5f6;
+}
+
+.casita-stack__close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  padding: 4px;
+  color: #9aa0a6;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.casita-stack__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 26px;
+}
+
+.casita-stack__icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.casita-stack__icon.is-blue {
+  background: linear-gradient(135deg, #e0ebf7, #c3d8ef);
+  color: #3d7fc4;
+}
+
+.casita-stack__icon.is-slate {
+  background: linear-gradient(135deg, #e3e9f0, #c6d1dd);
+  color: #4b6076;
+}
+
+.casita-stack__icon.is-amber {
+  background: linear-gradient(135deg, #f7ead4, #ecd3a7);
+  color: #96652a;
+}
+
+.casita-stack__icon.is-teal {
+  background: linear-gradient(135deg, #ddefec, #bcded8);
+  color: #1c7d70;
+}
+
+.casita-stack__title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 550;
+  letter-spacing: 0;
+}
+
+.casita-stack__text {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #74787f;
+  font-weight: 400;
+}
+
+.casita-stack__foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.casita-stack__cta {
+  border: none;
+  border-radius: var(--radius-pill);
+  background: #17181a;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.casita-stack__count {
+  font-size: 11.5px;
+  font-weight: 450;
+  color: #a3a8ae;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Recent charges -------------------------------------------------------- */
+
+.casita-charges {
+  padding: 28px 22px 14px;
+}
+
+.casita-charges__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.casita-charges__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 520;
+  letter-spacing: -0.005em;
+}
+
+.casita-charges__all {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 450;
+  color: #a3a8ae;
+  cursor: pointer;
+}
+
+.casita-charges__list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.casita-charges__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: 14px 0;
+}
+
+.casita-charges__row + .casita-charges__row {
+  border-top: 1px solid rgba(17, 18, 20, 0.05);
+}
+
+.casita-charges__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.casita-charges__name {
+  font-size: 14px;
+  font-weight: 480;
+  letter-spacing: 0;
+}
+
+.casita-charges__meta {
+  font-size: 12px;
+  font-weight: 400;
+  color: #a3a8ae;
+}
+
+.casita-charges__status {
+  flex-shrink: 0;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background: rgba(17, 18, 20, 0.045);
+  font-size: 11.5px;
+  font-weight: 480;
+  color: #6d7278;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}

@@ -1,0 +1,76 @@
+.sanctuary-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #0c0d0f;
+  pointer-events: none;
+}
+
+/* Dusk Grain mesh, layer one: big soft color fields blurred into each other —
+   warm sepia bleeding in from the top corners, slate blue pooling through
+   the middle. This layer is heavily blurred so the fields melt like fabric. */
+.sanctuary-bg__mesh-soft {
+  position: absolute;
+  inset: -12%;
+  filter: blur(46px);
+  background-image:
+    radial-gradient(
+      60% 34% at 16% 2%,
+      rgba(186, 138, 98, 0.5) 0%,
+      rgba(186, 138, 98, 0) 70%
+    ),
+    radial-gradient(
+      55% 30% at 86% 6%,
+      rgba(158, 112, 88, 0.42) 0%,
+      rgba(158, 112, 88, 0) 70%
+    ),
+    radial-gradient(
+      70% 34% at 62% 36%,
+      rgba(148, 164, 186, 0.34) 0%,
+      rgba(148, 164, 186, 0) 72%
+    ),
+    radial-gradient(
+      58% 30% at 26% 50%,
+      rgba(108, 124, 148, 0.26) 0%,
+      rgba(108, 124, 148, 0) 70%
+    );
+}
+
+/* Layer two: the vertical dusk ramp plus sharper sheens that keep it reading
+   as light falling on a surface rather than a flat fade. */
+.sanctuary-bg__mesh {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(
+      120% 45% at 50% 4%,
+      rgba(186, 138, 98, 0.24) 0%,
+      rgba(186, 138, 98, 0) 70%
+    ),
+    radial-gradient(
+      90% 36% at 58% 32%,
+      rgba(168, 182, 200, 0.14) 0%,
+      rgba(168, 182, 200, 0) 70%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(102, 81, 63, 0.9) 0%,
+      rgba(95, 81, 71, 0.82) 14%,
+      rgba(82, 87, 99, 0.78) 34%,
+      rgba(65, 72, 83, 0.85) 52%,
+      rgba(41, 45, 52, 0.94) 72%,
+      rgba(21, 23, 27, 0.98) 88%,
+      #0c0d0f 100%
+    );
+}
+
+/* Heavy film grain, pushed so it clearly reads as texture over the mesh. */
+.sanctuary-bg__grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  opacity: 0.3;
+  mix-blend-mode: overlay;
+}
