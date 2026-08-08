@@ -7,30 +7,23 @@ import "./FloridaMap.css";
 /* ---------------------------------------------------------------------------
  * Florida choropleth, on real Mapbox tiles.
  *
- * The custom style ships as the default; the token is per-environment:
+ * Token and style are resolved in vite.config.ts and injected at build time.
+ * That indirection exists because the token lives in a Vercel shared variable
+ * named `MapBoxBluePurple`, and Vite only exposes VITE_-prefixed variables to
+ * client code — so it would never reach the browser otherwise. See the note
+ * there for how the two values are told apart.
  *
- *   VITE_MAPBOX_TOKEN   required — no map without it
- *   VITE_MAPBOX_STYLE   optional — overrides the default style
- *
- * Note that Vite inlines env vars at build time, so the token still ends up
- * in the JS bundle. Keeping it out of source stops it being scraped from this
- * public repo, but what actually protects it is a URL restriction set on the
- * token in the Mapbox account.
+ * The token still ends up in the JS bundle, as it must for a browser map.
+ * Keeping it out of source stops it being scraped from this public repo; what
+ * actually protects it is a URL restriction set on the token in the Mapbox
+ * account.
  * ------------------------------------------------------------------------- */
 
-/* The project's custom style. Style URLs aren't credentials — this one only
-   resolves for someone holding a token on the same account. */
-const DEFAULT_STYLE = "mapbox://styles/argtlsj85/cmjesqgz3001y01s1gx990dix";
+/* Empty when no token was configured at build time, which sends the caller
+   to the SVG fallback rather than rendering a broken map. */
+export const MAPBOX_TOKEN = __MAPBOX_TOKEN__ || undefined;
 
-/* Token stays out of source. GitHub push protection rejects Mapbox tokens
-   committed to a repo, and this repo is public — so it's set per environment
-   and the map degrades to the SVG silhouette when it's absent. */
-export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN as
-  | string
-  | undefined;
-
-const MAPBOX_STYLE =
-  (import.meta.env.VITE_MAPBOX_STYLE as string | undefined) || DEFAULT_STYLE;
+const MAPBOX_STYLE = __MAPBOX_STYLE__;
 
 /**
  * Fifteen county centres, ordered panhandle → Keys to match the ordering the
