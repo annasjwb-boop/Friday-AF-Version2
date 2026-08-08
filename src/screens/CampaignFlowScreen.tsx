@@ -1,4 +1,7 @@
-import { StateHomepageMock, DOORS } from "../components/campaign/StateHomepageMock";
+import {
+  StateHomepageMock,
+  LAYERS,
+} from "../components/campaign/StateHomepageMock";
 import "./CampaignFlowScreen.css";
 
 /* ---------------------------------------------------------------------------
@@ -129,25 +132,20 @@ export function CampaignFlowScreen() {
           claim being mapped.
         </p>
 
+        {/* The mock carries its own prototype chrome bar, so this frame
+            contributes the address and nothing that would stack under it. */}
+        <p className="cf__addr">usaidfinder.com/fl</p>
         <div className="cf__browser">
-          <div className="cf__chrome">
-            <span className="cf__dots">
-              <i />
-              <i />
-              <i />
-            </span>
-            <span className="cf__addr">usaidfinder.com/fl</span>
-          </div>
           <StateHomepageMock />
         </div>
 
         <div className="cf__doors">
-          {DOORS.map((d) => (
-            <div className="door" key={d.cta}>
+          {LAYERS.map((d) => (
+            <div className="door" key={d.key}>
               <p className="door__cta">{d.cta}</p>
               <p className="door__layer">
                 <b>Map layer</b>
-                {d.layer}
+                {d.layerName}
               </p>
               <div className="door__foot">
                 <span>{d.dest}</span>
@@ -190,11 +188,13 @@ export function CampaignFlowScreen() {
             could enter, and right now that door leads somewhere unbuilt.
           </p>
           <p className="cf__note cf__note--warn">
-            <b>Before any of this goes public.</b> The figures in the creative
-            and in the map layers are unverified — the $8.2B, the 16%
-            underinsurance gap, and every county value on the homepage map are
-            placeholders. They read as authoritative, which is exactly why they
-            need sourcing before a real visitor sees them.
+            <b>Before any of this goes public.</b> Every figure here is a
+            placeholder — the $8.2B, the 16% underinsurance gap, the 14
+            documents, and all 60 county values across the four map layers.
+            Intended sources are named on the homepage footer (OpenFEMA, FEMA
+            NFHL, ZIP-level aggregates), but nothing has been pulled or checked
+            yet. These read as authoritative, which is exactly why they need
+            sourcing before a real visitor sees them.
           </p>
         </div>
       </div>

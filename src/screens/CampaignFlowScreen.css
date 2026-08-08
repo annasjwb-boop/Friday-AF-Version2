@@ -210,35 +210,15 @@
   border-radius: 14px;
 }
 
-.cf__chrome {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  padding: 10px 16px;
-  background: #f2f3f5;
-  border-bottom: 1px solid rgb(11 12 15 / 7%);
-}
-
-.cf__dots {
-  display: flex;
-  gap: 6px;
-}
-
-.cf__dots i {
-  display: block;
-  width: 9px;
-  height: 9px;
-  background: rgb(11 12 15 / 14%);
-  border-radius: 50%;
-}
-
 .cf__addr {
-  padding: 4px 12px;
+  display: inline-block;
+  padding: 5px 13px;
+  margin-bottom: 10px;
   font-size: 12px;
   color: #8a8f98;
   background: #fff;
-  border: 1px solid rgb(11 12 15 / 7%);
-  border-radius: 5px;
+  border: 1px solid rgb(11 12 15 / 8%);
+  border-radius: 6px;
 }
 
 .cf__doors {
