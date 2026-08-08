@@ -15,13 +15,26 @@ const DEFAULT_STYLE = "mapbox://styles/argtlsj85/cmjesqgz3001y01s1gx990dix";
  * renaming the variable, or pointing it at the other value, keeps working.
  */
 function resolveMapbox(env: Record<string, string | undefined>) {
-  const candidates = [
-    env.MapBoxBluePurple,
+  // Named variables first, then any other variable whose name mentions
+  // Mapbox. The fallback exists because the value has already travelled under
+  // two different names (VITE_MAPBOX_TOKEN, MapBoxBluePurple), and a rename
+  // shouldn't silently drop the map back to the SVG. Matching is scoped to
+  // Mapbox-named variables so nothing unrelated is forwarded into the bundle.
+  const named = [
     env.VITE_MAPBOX_TOKEN,
+    env.MapBoxBluePurple,
     env.MAPBOX_TOKEN,
     env.VITE_MAPBOX_STYLE,
     env.MAPBOX_STYLE,
-  ].filter((v): v is string => typeof v === "string" && v.length > 0);
+  ];
+
+  const others = Object.entries(env)
+    .filter(([k]) => /mapbox/i.test(k))
+    .map(([, v]) => v);
+
+  const candidates = [...named, ...others].filter(
+    (v): v is string => typeof v === "string" && v.length > 0,
+  );
 
   return {
     token: candidates.find((v) => v.startsWith("pk.")) ?? "",
