@@ -1,0 +1,434 @@
+/* ---------------------------------------------------------------------------
+ * Campaign flow. The original deck was charcoal-navy with amber/coral/cyan;
+ * this is the same information in the product's current language — light
+ * surfaces, near-black ink, a single blue accent, Space Grotesk for display.
+ *
+ * This page sits outside the phone simulator, so it owns its own scroll.
+ * ------------------------------------------------------------------------- */
+
+.cf {
+  height: 100dvh;
+  overflow-y: auto;
+  background: #e9eaed;
+}
+
+.cf__wrap {
+  max-width: 1240px;
+  padding: 44px 32px 90px;
+  margin: 0 auto;
+}
+
+.cf__head {
+  margin-bottom: 38px;
+}
+
+.cf__title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #0b0c0f;
+}
+
+.cf__lede {
+  max-width: 74ch;
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #3c4149;
+}
+
+.cf__lede--tight {
+  margin: -14px 0 24px;
+}
+
+.cf__sect {
+  padding-bottom: 12px;
+  margin: 58px 0 26px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #8a8f98;
+  border-bottom: 1px solid rgb(11 12 15 / 9%);
+}
+
+.cf__head + .cf__sect {
+  margin-top: 0;
+}
+
+/* --- Ads ------------------------------------------------------------------ */
+
+.cf__ads {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.ad {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgb(11 12 15 / 8%);
+  border-radius: 13px;
+}
+
+.ad__top {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  padding: 12px 14px 10px;
+}
+
+.ad__av {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: #16161a;
+  border-radius: 50%;
+}
+
+.ad__who {
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #0b0c0f;
+}
+
+.ad__who em {
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 400;
+  color: #8a8f98;
+}
+
+.ad__n {
+  padding: 3px 7px;
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: #0a84ff;
+  background: rgb(10 132 255 / 10%);
+  border-radius: 5px;
+}
+
+/* The creative. Flat and typographic rather than a fake photo — it's clearer
+   that this is placeholder, and the hook is the only part that's real. */
+.ad__creative {
+  display: grid;
+  padding: 20px 16px;
+  aspect-ratio: 1.91 / 1;
+  place-items: center;
+  text-align: center;
+  background: #16161a;
+}
+
+.ad__stat {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: rgb(255 255 255 / 76%);
+}
+
+.ad__stat strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.ad__cta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  background: #f2f3f5;
+  border-top: 1px solid rgb(11 12 15 / 7%);
+}
+
+.ad__url {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: #8a8f98;
+}
+
+.ad__url strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3c4149;
+}
+
+.ad__go {
+  flex: none;
+  padding: 6px 11px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #3c4149;
+  white-space: nowrap;
+  background: rgb(11 12 15 / 7%);
+  border-radius: 6px;
+}
+
+.ad__foot {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 14px;
+  font-size: 11.5px;
+  color: #3c4149;
+  border-top: 1px solid rgb(11 12 15 / 7%);
+}
+
+.ad__state {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8f98;
+}
+
+/* --- Homepage ------------------------------------------------------------- */
+
+.cf__browser {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgb(11 12 15 / 9%);
+  border-radius: 14px;
+}
+
+.cf__chrome {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 16px;
+  background: #f2f3f5;
+  border-bottom: 1px solid rgb(11 12 15 / 7%);
+}
+
+.cf__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.cf__dots i {
+  display: block;
+  width: 9px;
+  height: 9px;
+  background: rgb(11 12 15 / 14%);
+  border-radius: 50%;
+}
+
+.cf__addr {
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #8a8f98;
+  background: #fff;
+  border: 1px solid rgb(11 12 15 / 7%);
+  border-radius: 5px;
+}
+
+.cf__doors {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.door {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 19px;
+  background: #fff;
+  border: 1px solid rgb(11 12 15 / 8%);
+  border-radius: 13px;
+}
+
+.door__cta {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: #0b0c0f;
+}
+
+.door__layer {
+  padding-left: 12px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #8a8f98;
+  border-left: 2px solid rgb(11 12 15 / 10%);
+}
+
+.door__layer b {
+  display: block;
+  margin-bottom: 3px;
+  font-weight: 500;
+  color: #3c4149;
+}
+
+.door__foot {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding-top: 12px;
+  margin-top: auto;
+  font-size: 11.5px;
+  color: #3c4149;
+  border-top: 1px solid rgb(11 12 15 / 7%);
+}
+
+.door__state {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8f98;
+}
+
+/* --- Routing -------------------------------------------------------------- */
+
+.cf__routes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.route {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.route__from {
+  display: flex;
+  gap: 6px;
+}
+
+.route__pill {
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #0a84ff;
+  background: rgb(10 132 255 / 10%);
+  border-radius: 999px;
+}
+
+.route__box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  padding: 18px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid rgb(11 12 15 / 9%);
+  border-radius: 13px;
+}
+
+.route__name {
+  font-family: var(--font-display);
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: #0b0c0f;
+}
+
+.route__sub {
+  font-size: 12px;
+  color: #8a8f98;
+}
+
+.cf__shared {
+  max-width: 70ch;
+  margin: 20px auto 0;
+  font-size: 12.5px;
+  color: #8a8f98;
+  text-align: center;
+}
+
+/* --- Notes ---------------------------------------------------------------- */
+
+.cf__notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 40px;
+}
+
+.cf__note {
+  padding: 17px 19px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #3c4149;
+  background: #fff;
+  border: 1px solid rgb(11 12 15 / 8%);
+  border-radius: 11px;
+}
+
+.cf__note b {
+  font-weight: 600;
+  color: #0b0c0f;
+}
+
+/* The sourcing warning gets the one bit of colour on the page. */
+.cf__note--warn {
+  background: rgb(212 84 48 / 5%);
+  border-color: rgb(212 84 48 / 22%);
+}
+
+.cf__note--warn b {
+  color: #a3341c;
+}
+
+/* --- Responsive ----------------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .cf__ads {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cf__doors {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .cf__ads,
+  .cf__routes,
+  .cf__notes {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .cf__wrap {
+    padding: 32px 20px 64px;
+  }
+
+  .cf__ads,
+  .cf__doors,
+  .cf__routes,
+  .cf__notes {
+    grid-template-columns: 1fr;
+  }
+}

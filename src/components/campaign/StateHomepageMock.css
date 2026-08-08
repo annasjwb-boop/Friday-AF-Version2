@@ -1,0 +1,193 @@
+/* ---------------------------------------------------------------------------
+ * State homepage mock. Same language as the app: warm-white surfaces,
+ * near-black ink, one blue accent, Space Grotesk for display.
+ * ------------------------------------------------------------------------- */
+
+.shp {
+  overflow: hidden;
+  background: var(--color-surface, #fff);
+  border-radius: 14px;
+}
+
+.shp__nav {
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  padding: 16px 26px;
+  background: #16161a;
+}
+
+.shp__brand {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.shp__links {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: rgb(255 255 255 / 52%);
+}
+
+.shp__state {
+  margin-left: auto;
+  padding: 4px 11px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgb(255 255 255 / 78%);
+  background: rgb(255 255 255 / 10%);
+  border-radius: 999px;
+}
+
+.shp__body {
+  display: grid;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 34px;
+  align-items: center;
+  padding: 40px 34px;
+}
+
+.shp__cta {
+  max-width: 15ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: #0b0c0f;
+}
+
+.shp__sub {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #3c4149;
+}
+
+.shp__search {
+  display: flex;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.shp__input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 16px;
+  font: inherit;
+  font-size: 14px;
+  color: #0b0c0f;
+  background: #f2f3f5;
+  border: 1px solid rgb(11 12 15 / 8%);
+  border-radius: 10px;
+}
+
+.shp__go {
+  padding: 13px 22px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: #0a84ff;
+  border: none;
+  border-radius: 10px;
+}
+
+.shp__dots {
+  display: flex;
+  gap: 7px;
+  margin-top: 24px;
+}
+
+.shp__dot {
+  width: 26px;
+  height: 4px;
+  padding: 0;
+  cursor: pointer;
+  background: rgb(11 12 15 / 14%);
+  border: none;
+  border-radius: 999px;
+  transition: background 0.3s ease;
+}
+
+.shp__dot.is-on {
+  background: #0a84ff;
+}
+
+.shp__dot:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 3px;
+}
+
+/* --- Map ------------------------------------------------------------------ */
+
+.shp__map svg {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.shp__outline {
+  fill: #f2f3f5;
+  stroke: rgb(11 12 15 / 14%);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+}
+
+.shp__pt {
+  fill: #0a84ff;
+}
+
+.shp__legend {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.shp__layer {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #0b0c0f;
+}
+
+.shp__legend-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: #8a8f98;
+}
+
+.shp__foot {
+  padding: 13px 26px;
+  font-size: 12px;
+  color: #8a8f98;
+  background: #f2f3f5;
+  border-top: 1px solid rgb(11 12 15 / 7%);
+}
+
+.shp__foot strong {
+  font-weight: 600;
+  color: #3c4149;
+}
+
+@media (max-width: 900px) {
+  .shp__body {
+    grid-template-columns: 1fr;
+    padding: 30px 24px;
+  }
+
+  .shp__cta {
+    font-size: 27px;
+  }
+
+  .shp__links {
+    display: none;
+  }
+}

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Routes, Route, useLocation, matchPath } from "react-router-dom";
+import { CampaignFlowScreen } from "../screens/CampaignFlowScreen";
 import { MobileSimulator } from "../components/mobile/MobileSimulator";
 import { MobileHeader } from "../components/mobile/MobileHeader";
 import { AmbientShaderBackground } from "../components/mobile/AmbientShaderBackground";
@@ -152,6 +153,17 @@ function AppLayout() {
 }
 
 export default function App() {
+  return (
+    <Routes>
+      {/* The campaign flow is a wide planning surface, not a phone screen, so
+          it renders outside the simulator and owns its own scroll. */}
+      <Route path="/campaigns" element={<CampaignFlowScreen />} />
+      <Route path="*" element={<SimulatorApp />} />
+    </Routes>
+  );
+}
+
+function SimulatorApp() {
   return (
     <RecoveryPlanProvider>
       <BackgroundProvider>
