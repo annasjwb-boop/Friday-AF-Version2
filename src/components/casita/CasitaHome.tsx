@@ -18,6 +18,9 @@ import { CasitaHomePicker } from "./CasitaHomePicker";
 import { CasitaRecovery } from "./CasitaRecovery";
 import { CasitaReadiness } from "./CasitaReadiness";
 import { CasitaRisk } from "./CasitaRisk";
+import { PerilOverlay } from "./PerilOverlay";
+import { PerilCaption, PerilSelector } from "./PerilSelector";
+import type { PerilId } from "./perils";
 import "./CasitaHome.css";
 
 const ProductOrbit = lazy(() =>
@@ -169,6 +172,8 @@ const ACTIVITY = [
 export function CasitaHome() {
   const [metaphor, setMetaphor] = useState<MetaphorId>(loadMetaphor);
   const [pickerOpen, setPickerOpen] = useState(false);
+  /* Lifted so the section below the stage can respond to the condition. */
+  const [peril, setPeril] = useState<PerilId>("clear");
   const [activeTab, setActiveTab] = useState<TabId>("overview");
   const [actionIds, setActionIds] = useState(() => ACTIONS.map((a) => a.id));
   const stageTap = useRef<{ x: number; y: number; t: number } | null>(null);
@@ -255,7 +260,15 @@ export function CasitaHome() {
               alt={`Studio rendering of your ${METAPHOR_LABELS[metaphor]}. Tap to change your home.`}
             />
           </Suspense>
+
+          <AnimatePresence initial={false}>
+            {peril !== "clear" && <PerilOverlay key={peril} peril={peril} />}
+          </AnimatePresence>
+
+          <PerilSelector active={peril} onChange={setPeril} />
         </div>
+
+        <PerilCaption active={peril} />
 
         <AnimatePresence mode="wait" initial={false}>
           <motion.div

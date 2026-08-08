@@ -1,0 +1,95 @@
+/* ---------------------------------------------------------------------------
+ * Peril control strip + condition caption.
+ * ------------------------------------------------------------------------- */
+
+.peril-strip {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  transform: translateX(-50%);
+  background: rgb(255 255 255 / 72%);
+  border: 1px solid rgb(22 22 24 / 6%);
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgb(22 22 24 / 10%);
+  backdrop-filter: blur(14px) saturate(1.4);
+}
+
+.peril-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: rgb(52 52 58 / 62%);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.peril-btn:hover {
+  color: rgb(22 22 24 / 88%);
+  background: rgb(22 22 24 / 5%);
+}
+
+.peril-btn:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 1px;
+}
+
+.peril-btn.is-active {
+  color: #fff;
+  background: #16161a;
+}
+
+/* --- Caption --------------------------------------------------------------- */
+
+.peril-caption {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 22px 0;
+}
+
+.peril-caption__name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #16161a;
+}
+
+.peril-caption__tag {
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: 999px;
+}
+
+.peril-caption__tag--yes {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 14%);
+}
+
+.peril-caption__tag--no {
+  color: #a3341c;
+  background: rgb(212 84 48 / 14%);
+}
+
+.peril-caption__tag--unknown {
+  color: #5c5c66;
+  background: rgb(22 22 24 / 7%);
+}
+
+@media (max-width: 500px) {
+  .peril-strip {
+    bottom: 6px;
+  }
+}

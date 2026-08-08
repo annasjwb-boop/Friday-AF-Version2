@@ -139,6 +139,7 @@
 /* --- Product orbit stage (beauty-render turntable) ------------------------- */
 
 .casita__stage {
+  position: relative;
   height: 310px;
   margin-top: 4px;
   touch-action: none;
