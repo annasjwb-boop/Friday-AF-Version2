@@ -51,14 +51,14 @@ const ADS: Ad[] = [
     n: "04",
     stat: "Every",
     hook: "document the state already holds about you — want access to it?",
-    url: "Pull your records",
+    url: "Pull your records here",
     dest: "Doc vault",
   },
   {
     n: "05",
     stat: "Ready?",
     hook: "Find out whether your household is, before the next major disaster.",
-    url: "Check your risk",
+    url: "Check your risk score",
     dest: "Risk score",
   },
 ];
