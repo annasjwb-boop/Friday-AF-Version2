@@ -7,23 +7,30 @@ import "./FloridaMap.css";
 /* ---------------------------------------------------------------------------
  * Florida choropleth, on real Mapbox tiles.
  *
- * Configured entirely through env vars so the token never lands in the repo:
+ * The custom style ships as the default; the token is per-environment:
  *
- *   VITE_MAPBOX_TOKEN   required — the map does not render without it
- *   VITE_MAPBOX_STYLE   optional — defaults to Mapbox Light
+ *   VITE_MAPBOX_TOKEN   required — no map without it
+ *   VITE_MAPBOX_STYLE   optional — overrides the default style
  *
- * With no token this renders nothing and the caller falls back to the SVG
- * silhouette. That's deliberate: a missing env var on a preview deploy should
- * degrade the map, not break the page.
+ * Note that Vite inlines env vars at build time, so the token still ends up
+ * in the JS bundle. Keeping it out of source stops it being scraped from this
+ * public repo, but what actually protects it is a URL restriction set on the
+ * token in the Mapbox account.
  * ------------------------------------------------------------------------- */
 
+/* The project's custom style. Style URLs aren't credentials — this one only
+   resolves for someone holding a token on the same account. */
+const DEFAULT_STYLE = "mapbox://styles/argtlsj85/cmjesqgz3001y01s1gx990dix";
+
+/* Token stays out of source. GitHub push protection rejects Mapbox tokens
+   committed to a repo, and this repo is public — so it's set per environment
+   and the map degrades to the SVG silhouette when it's absent. */
 export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN as
   | string
   | undefined;
 
 const MAPBOX_STYLE =
-  (import.meta.env.VITE_MAPBOX_STYLE as string | undefined) ??
-  "mapbox://styles/mapbox/light-v11";
+  (import.meta.env.VITE_MAPBOX_STYLE as string | undefined) || DEFAULT_STYLE;
 
 /**
  * Fifteen county centres, ordered panhandle → Keys to match the ordering the
