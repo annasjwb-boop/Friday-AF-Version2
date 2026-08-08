@@ -18,7 +18,6 @@ import { CasitaHomePicker } from "./CasitaHomePicker";
 import { CasitaRecovery } from "./CasitaRecovery";
 import { CasitaReadiness } from "./CasitaReadiness";
 import { CasitaRisk } from "./CasitaRisk";
-import { CoverageDome } from "./CoverageDome";
 import { PerilOverlay } from "./PerilOverlay";
 import { PerilCaption, PerilSelector } from "./PerilSelector";
 import type { PerilId } from "./perils";
@@ -265,8 +264,6 @@ export function CasitaHome() {
           <AnimatePresence initial={false}>
             {peril !== "clear" && <PerilOverlay key={peril} peril={peril} />}
           </AnimatePresence>
-
-          <CoverageDome key={`dome-${peril}`} peril={peril} />
 
           <PerilSelector active={peril} onChange={setPeril} />
         </div>
