@@ -1,2 +1,7 @@
 node_modules/
 dist/
+
+# Local env files. .env.example is the tracked template.
+.env
+.env.local
+.env.*.local

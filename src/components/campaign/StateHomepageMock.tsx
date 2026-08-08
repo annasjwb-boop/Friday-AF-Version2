@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MapPin, ArrowRight } from "lucide-react";
+import { FloridaMap, MAPBOX_TOKEN } from "./FloridaMap";
 import "./StateHomepageMock.css";
 
 /* ---------------------------------------------------------------------------
@@ -282,39 +283,45 @@ export function StateHomepageMock() {
             </div>
 
             <div className="shp__mapbox">
-              <svg viewBox="0 0 600 520" role="img" aria-label={L.layerName}>
-                <path className="shp__fl" d={FL_BODY} />
-                <g opacity="0.5">
-                  {KEYS.map(([x, y], n) => (
-                    <circle key={n} cx={x} cy={y} r="2.5" fill="#c9ccd2" />
-                  ))}
-                </g>
-                {GEO.map(([x, y], n) => {
-                  const v = L.values[n];
-                  return (
-                    <g key={n}>
-                      <circle
-                        className="shp__ring"
-                        cx={x}
-                        cy={y}
-                        r={7 + v * 19}
-                        fill="none"
-                        stroke={L.accent}
-                        strokeWidth="1.2"
-                        opacity={0.1 + v * 0.28}
-                      />
-                      <circle
-                        className="shp__county"
-                        cx={x}
-                        cy={y}
-                        r={4 + v * 13}
-                        fill={L.accent}
-                        opacity={0.22 + v * 0.6}
-                      />
-                    </g>
-                  );
-                })}
-              </svg>
+              {MAPBOX_TOKEN ? (
+                <FloridaMap accent={L.accent} values={L.values} />
+              ) : (
+                /* No token configured — the SVG silhouette keeps the page
+                   whole rather than leaving a hole where the map goes. */
+                <svg viewBox="0 0 600 520" role="img" aria-label={L.layerName}>
+                  <path className="shp__fl" d={FL_BODY} />
+                  <g opacity="0.5">
+                    {KEYS.map(([x, y], n) => (
+                      <circle key={n} cx={x} cy={y} r="2.5" fill="#c9ccd2" />
+                    ))}
+                  </g>
+                  {GEO.map(([x, y], n) => {
+                    const v = L.values[n];
+                    return (
+                      <g key={n}>
+                        <circle
+                          className="shp__ring"
+                          cx={x}
+                          cy={y}
+                          r={7 + v * 19}
+                          fill="none"
+                          stroke={L.accent}
+                          strokeWidth="1.2"
+                          opacity={0.1 + v * 0.28}
+                        />
+                        <circle
+                          className="shp__county"
+                          cx={x}
+                          cy={y}
+                          r={4 + v * 13}
+                          fill={L.accent}
+                          opacity={0.22 + v * 0.6}
+                        />
+                      </g>
+                    );
+                  })}
+                </svg>
+              )}
 
               <div className="shp__readout">
                 <p className="shp__rl">{L.readLabel}</p>
