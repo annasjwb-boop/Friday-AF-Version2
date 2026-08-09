@@ -54,6 +54,8 @@ export function OnboardingFlow() {
   );
 
   const [entries, setEntries] = useState<Entry[]>([]);
+  /* Keyed by step id, so a later step can branch on an earlier answer. */
+  const [answers, setAnswers] = useState<Record<string, string>>({});
   const [cursor, setCursor] = useState(0);
   const [typing, setTyping] = useState(false);
   const [instant, setInstant] = useState(reduced);
@@ -65,6 +67,7 @@ export function OnboardingFlow() {
   /* Reset when switching between flows. */
   useEffect(() => {
     setEntries([]);
+    setAnswers({});
     setCursor(0);
   }, [script.id]);
 
@@ -90,6 +93,9 @@ export function OnboardingFlow() {
 
   const answer = (v: string) => {
     if (!current) return;
+    if ("id" in current && current.id) {
+      setAnswers((a) => ({ ...a, [current.id]: v }));
+    }
     setEntries((e) => [...e, { step: current, answer: v }]);
     setCursor((c) => c + 1);
   };
@@ -143,7 +149,12 @@ export function OnboardingFlow() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Interactive step={current} onDone={answer} onGo={navigate} />
+              <Interactive
+                step={current}
+                answers={answers}
+                onDone={answer}
+                onGo={navigate}
+              />
             </motion.div>
           )}
 
@@ -178,10 +189,12 @@ function StepView({ entry }: { entry: Entry }) {
 
 function Interactive({
   step,
+  answers,
   onDone,
   onGo,
 }: {
   step: Step;
+  answers: Record<string, string>;
   onDone: (v: string) => void;
   onGo: (to: string) => void;
 }) {
@@ -206,7 +219,13 @@ function Interactive({
       return <AccountStep onDone={onDone} />;
     case "goto":
       return (
-        <button type="button" className="ob-go" onClick={() => onGo(step.to)}>
+        <button
+          type="button"
+          className="ob-go"
+          onClick={() =>
+            onGo(typeof step.to === "function" ? step.to(answers) : step.to)
+          }
+        >
           {step.label}
           <ArrowRight size={17} strokeWidth={2} aria-hidden="true" />
         </button>

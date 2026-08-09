@@ -36,8 +36,13 @@ export type Step =
   | { kind: "text"; id: string; placeholder: string }
   /** Account creation. */
   | { kind: "account" }
-  /** Terminal step — hands off into the app. */
-  | { kind: "goto"; to: string; label: string };
+  /** Terminal step — hands off into the app. `to` may read the answers so a
+      flow can land somewhere specific to what the user told us. */
+  | {
+      kind: "goto";
+      to: string | ((answers: Record<string, string>) => string);
+      label: string;
+    };
 
 export interface Script {
   id: string;
@@ -120,14 +125,10 @@ export const SCRIPTS: Record<string, Script> = {
         id: "metaphor",
         placeholder: "A castle, a cabin, a secret lair…",
       },
-      {
-        kind: "say",
-        /* SPEC: account step added. This flow collects property edits, risk
-           adjustments and a policy — losing that to a closed tab would be
-           worse than losing what flow 1 collects, which does ask. */
-        text: "Before I show you the breakdown, let's save all of this to an account so none of it is lost.",
-      },
-      { kind: "account" },
+      /* No account step: flows 2 and 3 are the conversion test, and every
+         field before the payoff costs completions. The cost is that a closed
+         tab loses the property edits, risk adjustments and policy collected
+         above — worth asking for once the user has seen the breakdown. */
       { kind: "goto", to: "/?tab=risk", label: "See your risk breakdown" },
     ],
   },
@@ -163,17 +164,22 @@ export const SCRIPTS: Record<string, Script> = {
       },
       {
         kind: "say",
-        text: "Let's save this to an account so your uploads have somewhere to live.",
-      },
-      { kind: "account" },
-      {
-        kind: "say",
         /* SPEC: the written closing line promised "your risk breakdown and
            coverage gaps", which belongs to flow 2 — this flow ends at the
            vault. Rewritten to describe where the user is actually going. */
         text: "I'll take you to your vault now. You can keep uploading there, or tap the assistant any time and we'll work through it together.",
       },
-      { kind: "goto", to: "/?tab=readiness", label: "Open your vault" },
+      {
+        kind: "goto",
+        /* Branches on the intent question rather than dropping everyone in the
+           same place: someone who said "document my property" wants the rooms,
+           not a document checklist. */
+        to: (a) =>
+          a.intent === "Document my property"
+            ? "/?tab=readiness&vault=rooms"
+            : "/?tab=readiness&vault=docs",
+        label: "Open your vault",
+      },
     ],
   },
 };

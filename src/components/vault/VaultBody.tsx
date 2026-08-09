@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BedDouble,
@@ -56,7 +57,11 @@ export function VaultBody() {
   const [documents, setDocuments] = useState<VaultDocument[]>(VAULT_DOCUMENTS);
   const [rooms, setRooms] = useState<VaultRoom[]>(VAULT_ROOMS);
   const [openRoomId, setOpenRoomId] = useState<string | null>(null);
-  const [docsOpen, setDocsOpen] = useState(false);
+  /* Onboarding hands off with ?vault=docs or ?vault=rooms, so the prepare
+     flow lands on whichever half of the vault the user said they wanted
+     rather than the top of the page. */
+  const [params] = useSearchParams();
+  const [docsOpen, setDocsOpen] = useState(() => params.get("vault") === "docs");
   const [uploadDoc, setUploadDoc] = useState<VaultDocument | null>(null);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
 
