@@ -1,4 +1,5 @@
 import { lazy, Suspense, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BatteryFull,
@@ -174,7 +175,13 @@ export function CasitaHome() {
   const [pickerOpen, setPickerOpen] = useState(false);
   /* Lifted so the section below the stage can respond to the condition. */
   const [peril, setPeril] = useState<PerilId>("clear");
-  const [activeTab, setActiveTab] = useState<TabId>("overview");
+  /* Onboarding hands off with ?tab=risk or ?tab=readiness, so a flow can land
+     the user on the view it just spent five minutes talking about. */
+  const [params] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const t = params.get("tab");
+    return TABS.some((x) => x.id === t) ? (t as TabId) : "overview";
+  });
   const [actionIds, setActionIds] = useState(() => ACTIONS.map((a) => a.id));
   const stageTap = useRef<{ x: number; y: number; t: number } | null>(null);
 

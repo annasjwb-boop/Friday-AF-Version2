@@ -412,3 +412,17 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Ad footer is now the link into the flow. */
+a.ad__foot {
+  text-decoration: none;
+  transition: background 0.18s ease;
+}
+
+a.ad__foot:hover {
+  background: rgb(10 132 255 / 6%);
+}
+
+a.ad__foot:hover .ad__state {
+  color: #0a84ff;
+}

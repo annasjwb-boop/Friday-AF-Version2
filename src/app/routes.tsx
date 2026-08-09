@@ -5,6 +5,7 @@ import { AssistantScreen } from "../screens/AssistantScreen";
 import { ExploreScreen } from "../screens/ExploreScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
 import { RecoverySetupScreen } from "../screens/RecoverySetupScreen";
+import { OnboardingFlow } from "../onboarding/OnboardingFlow";
 
 // Lazy: the lab carries the whole three.js scene, so it loads on demand
 // like the sanctuary heroes do.
@@ -67,6 +68,14 @@ export const routes: AppRoute[] = [
     ),
     chromeless: true,
     backdrop: "sanctuary-b",
+  },
+  {
+    /* Campaign onboarding. Chromeless: the flow draws its own header, and the
+       app tab bar would imply the user is already inside the product. */
+    path: "/start/:flow",
+    title: "Get started",
+    element: <OnboardingFlow />,
+    chromeless: true,
   },
   { path: "/explore", title: "Explore", element: <ExploreScreen /> },
   { path: "/profile", title: "Profile", element: <ProfileScreen /> },

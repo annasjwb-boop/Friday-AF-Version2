@@ -1,0 +1,217 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowRight, ChevronLeft } from "lucide-react";
+import { SCRIPTS, type Step } from "./scripts";
+import {
+  AccountStep,
+  ChoiceStep,
+  GrantsStep,
+  InsuranceStep,
+  MapStep,
+  PickGrantsStep,
+  PropertyStep,
+  ResiliencyStep,
+  RisksStep,
+  TextStep,
+} from "./steps";
+import "./OnboardingFlow.css";
+
+/* ---------------------------------------------------------------------------
+ * Campaign onboarding.
+ *
+ * Plays a script from scripts.ts one step at a time: assistant lines advance
+ * on a timer, interactive steps wait for the user. Answers echo back as user
+ * bubbles so the transcript reads as a conversation rather than a form.
+ *
+ * The spec asks for a pause before each line so the typing feels human. That's
+ * built, with two escapes — a skip control, and automatic disabling under
+ * prefers-reduced-motion. Someone opening this after a storm shouldn't be made
+ * to sit through eight seconds of simulated typing to reach a grant deadline.
+ * ------------------------------------------------------------------------- */
+
+const DELAY = 900;
+
+/** Steps that display and move on without waiting for input. */
+const PASSIVE: Step["kind"][] = ["say", "map", "grants"];
+
+interface Entry {
+  step: Step;
+  /** The user's reply, echoed under the step that asked for it. */
+  answer?: string;
+}
+
+export function OnboardingFlow() {
+  const { flow } = useParams<{ flow: string }>();
+  const navigate = useNavigate();
+  const script = SCRIPTS[flow ?? "aid"] ?? SCRIPTS.aid;
+
+  const reduced = useMemo(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    [],
+  );
+
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [cursor, setCursor] = useState(0);
+  const [typing, setTyping] = useState(false);
+  const [instant, setInstant] = useState(reduced);
+  const endRef = useRef<HTMLDivElement>(null);
+
+  const current = script.steps[cursor];
+  const waiting = current && !PASSIVE.includes(current.kind);
+
+  /* Reset when switching between flows. */
+  useEffect(() => {
+    setEntries([]);
+    setCursor(0);
+  }, [script.id]);
+
+  /* Advance through passive steps on a timer. */
+  useEffect(() => {
+    if (!current || waiting) return;
+    const wait = instant ? 0 : current.kind === "say" ? DELAY : 260;
+    if (current.kind === "say" && !instant) setTyping(true);
+    const t = setTimeout(() => {
+      setTyping(false);
+      setEntries((e) => [...e, { step: current }]);
+      setCursor((c) => c + 1);
+    }, wait);
+    return () => clearTimeout(t);
+  }, [cursor, current, waiting, instant]);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({
+      behavior: instant ? "auto" : "smooth",
+      block: "end",
+    });
+  }, [entries.length, typing, instant]);
+
+  const answer = (v: string) => {
+    if (!current) return;
+    setEntries((e) => [...e, { step: current, answer: v }]);
+    setCursor((c) => c + 1);
+  };
+
+  const done = cursor >= script.steps.length;
+
+  return (
+    <div className="ob">
+      <header className="ob__top">
+        <button
+          type="button"
+          className="ob__back"
+          onClick={() => navigate("/campaigns")}
+          aria-label="Back to campaigns"
+        >
+          <ChevronLeft size={20} strokeWidth={2} aria-hidden="true" />
+        </button>
+        <div>
+          <p className="ob__title">AidFinder</p>
+          <p className="ob__src">{script.source}</p>
+        </div>
+        {!instant && !done && (
+          <button
+            type="button"
+            className="ob__skip"
+            onClick={() => setInstant(true)}
+          >
+            Skip typing
+          </button>
+        )}
+      </header>
+
+      <div className="ob__scroll">
+        <div className="ob__thread">
+          {entries.map((e, i) => (
+            <StepView key={i} entry={e} />
+          ))}
+
+          {typing && (
+            <div className="ob-bubble ob-bubble--typing" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </div>
+          )}
+
+          {waiting && current && (
+            <motion.div
+              className="ob__active"
+              initial={instant ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Interactive step={current} onDone={answer} onGo={navigate} />
+            </motion.div>
+          )}
+
+          <div ref={endRef} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** A settled entry: whatever the step rendered, plus the reply it drew. */
+function StepView({ entry }: { entry: Entry }) {
+  const { step, answer } = entry;
+  return (
+    <>
+      {step.kind === "say" && (
+        <motion.div
+          className="ob-bubble"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {step.text}
+        </motion.div>
+      )}
+      {step.kind === "map" && <MapStep />}
+      {step.kind === "grants" && <GrantsStep />}
+      {answer && <div className="ob-reply">{answer}</div>}
+    </>
+  );
+}
+
+function Interactive({
+  step,
+  onDone,
+  onGo,
+}: {
+  step: Step;
+  onDone: (v: string) => void;
+  onGo: (to: string) => void;
+}) {
+  switch (step.kind) {
+    case "pickGrants":
+      return <PickGrantsStep onDone={onDone} />;
+    case "resiliency":
+      return <ResiliencyStep onDone={onDone} />;
+    case "choice":
+      return (
+        <ChoiceStep options={step.options} other={step.other} onDone={onDone} />
+      );
+    case "property":
+      return <PropertyStep onDone={onDone} />;
+    case "risks":
+      return <RisksStep onDone={onDone} />;
+    case "insurance":
+      return <InsuranceStep onDone={onDone} />;
+    case "text":
+      return <TextStep placeholder={step.placeholder} onDone={onDone} />;
+    case "account":
+      return <AccountStep onDone={onDone} />;
+    case "goto":
+      return (
+        <button type="button" className="ob-go" onClick={() => onGo(step.to)}>
+          {step.label}
+          <ArrowRight size={17} strokeWidth={2} aria-hidden="true" />
+        </button>
+      );
+    default:
+      return null;
+  }
+}

@@ -2,6 +2,8 @@ import {
   StateHomepageMock,
   LAYERS,
 } from "../components/campaign/StateHomepageMock";
+import { Link } from "react-router-dom";
+import { AD_TO_SCRIPT } from "../onboarding/scripts";
 import "./CampaignFlowScreen.css";
 
 /* ---------------------------------------------------------------------------
@@ -114,10 +116,10 @@ export function CampaignFlowScreen() {
                 <span className="ad__go">Learn more</span>
               </div>
 
-              <div className="ad__foot">
+              <Link className="ad__foot" to={`/start/${AD_TO_SCRIPT[ad.n]}`}>
                 <span className="ad__dest">{ad.dest}</span>
-                <span className="ad__state">Flow to build</span>
-              </div>
+                <span className="ad__state">Open flow</span>
+              </Link>
             </article>
           ))}
         </div>
