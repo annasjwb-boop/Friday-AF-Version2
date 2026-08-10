@@ -382,3 +382,42 @@
   font-weight: 600;
   color: #16161a;
 }
+
+/* --- Hero ring ---------------------------------------------------------------
+ * The headline chart gets room to breathe and a larger circle; the carousel
+ * below it reads as secondary by contrast.
+ * -------------------------------------------------------------------------- */
+
+.xv--hero {
+  margin-bottom: 10px;
+}
+
+.xv__panel--hero {
+  min-width: 0;
+  padding: 0 16px;
+}
+
+.xv--hero .xv-ring {
+  max-width: 268px;
+  margin-top: 4px;
+}
+
+.xv--hero .xv__lede {
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.xv--hero .xv-ring__key li {
+  padding: 7px 0;
+}
+
+.xv--hero .xv-ring__name,
+.xv--hero .xv-ring__pct {
+  font-size: 13px;
+}
+
+.xv__title--sub {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(52 52 58 / 62%);
+}

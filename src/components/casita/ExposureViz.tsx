@@ -30,7 +30,6 @@ import "./ExposureViz.css";
  * ------------------------------------------------------------------------- */
 
 const VIEWS = [
-  { id: "rings", label: "Rings" },
   { id: "worst", label: "Worst case" },
   { id: "matrix", label: "Matrix" },
   { id: "expected", label: "Per year" },
@@ -57,35 +56,47 @@ export function ExposureViz() {
   };
 
   return (
-    <section className="xv" aria-label="Uninsured exposure">
-      <header className="xv__top">
-        <h2 className="xv__title">Uninsured exposure</h2>
-        <span className="xv__view">{VIEWS[active].label}</span>
-      </header>
+    <>
+      {/* The headline chart. Everything below is an alternate reading of the
+          same numbers, kept swipeable but clearly secondary. */}
+      <section className="xv xv--hero" aria-label="Uninsured exposure">
+        <header className="xv__top">
+          <h2 className="xv__title">Uninsured exposure</h2>
+        </header>
+        <div className="xv__panel xv__panel--hero">
+          <Rings />
+        </div>
+      </section>
 
-      <div className="xv__scroll" ref={scroller} onScroll={onScroll}>
-        <Panel><Rings /></Panel>
-        <Panel><WorstCase /></Panel>
-        <Panel><Matrix /></Panel>
-        <Panel><Expected /></Panel>
-        <Panel><Multiples /></Panel>
-        <Panel><DotGrid /></Panel>
-        <Panel><Ranked /></Panel>
-      </div>
+      <section className="xv" aria-label="Other views of your exposure">
+        <header className="xv__top">
+          <h2 className="xv__title xv__title--sub">Other ways to read this</h2>
+          <span className="xv__view">{VIEWS[active].label}</span>
+        </header>
 
-      <div className="xv__dots">
-        {VIEWS.map((v, i) => (
-          <button
-            key={v.id}
-            type="button"
-            aria-label={v.label}
-            aria-current={i === active}
-            className={`xv__dot${i === active ? " is-on" : ""}`}
-            onClick={() => goTo(i)}
-          />
-        ))}
-      </div>
-    </section>
+        <div className="xv__scroll" ref={scroller} onScroll={onScroll}>
+          <Panel><WorstCase /></Panel>
+          <Panel><Matrix /></Panel>
+          <Panel><Expected /></Panel>
+          <Panel><Multiples /></Panel>
+          <Panel><DotGrid /></Panel>
+          <Panel><Ranked /></Panel>
+        </div>
+
+        <div className="xv__dots">
+          {VIEWS.map((v, i) => (
+            <button
+              key={v.id}
+              type="button"
+              aria-label={v.label}
+              aria-current={i === active}
+              className={`xv__dot${i === active ? " is-on" : ""}`}
+              onClick={() => goTo(i)}
+            />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
 
