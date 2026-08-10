@@ -12,6 +12,7 @@ import {
 import { ExposureViz } from "./ExposureViz";
 import { RiskRow } from "./RiskRow";
 import { RiskTune } from "./RiskTune";
+import { allDefaults } from "../../data/perilFields";
 import "./CasitaRisk.css";
 
 /* Derived from the perils rather than declared, so the gauge, the list and
@@ -100,6 +101,8 @@ export function CasitaRisk() {
   const [perils, setPerils] = useState<RiskPeril[]>(RISK_PERILS);
   const [openId, setOpenId] = useState<string | null>(null);
   const [tuneOpen, setTuneOpen] = useState(false);
+  /* Lifted out of the sheet so an edit isn't thrown away on close. */
+  const [fields, setFields] = useState(allDefaults);
 
   const score = totalScore(perils);
   const uninsured = useMemo(
@@ -259,7 +262,9 @@ export function CasitaRisk() {
         {tuneOpen && (
           <RiskTune
             perils={perils}
+            fields={fields}
             onChange={setPerils}
+            onFields={setFields}
             onClose={() => setTuneOpen(false)}
           />
         )}

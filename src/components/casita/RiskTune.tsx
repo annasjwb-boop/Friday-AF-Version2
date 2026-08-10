@@ -1,12 +1,20 @@
+import { useState } from "react";
 import { createPortal } from "react-dom";
+import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import {
   SEVERITY_LABELS,
   perilPoints,
   totalScore,
   type RiskPeril,
 } from "../../data/risks";
+import {
+  PERIL_FIELDS,
+  suggestSeverity,
+  type FieldValue,
+  type PerilField,
+} from "../../data/perilFields";
 import "./RiskTune.css";
 
 /* ---------------------------------------------------------------------------
@@ -25,17 +33,29 @@ import "./RiskTune.css";
 
 export function RiskTune({
   perils,
+  fields,
   onChange,
+  onFields,
   onClose,
 }: {
   perils: RiskPeril[];
+  /** Per-peril physical figures, lifted so edits survive closing the sheet. */
+  fields: Record<string, Record<string, FieldValue>>;
   onChange: (next: RiskPeril[]) => void;
+  onFields: (next: Record<string, Record<string, FieldValue>>) => void;
   onClose: () => void;
 }) {
+  const [openId, setOpenId] = useState<string | null>(null);
   const score = totalScore(perils);
 
   const setSeverity = (id: string, severity: number) =>
     onChange(perils.map((p) => (p.id === id ? { ...p, severity } : p)));
+
+  const setField = (perilId: string, fieldId: string, value: FieldValue) =>
+    onFields({
+      ...fields,
+      [perilId]: { ...fields[perilId], [fieldId]: value },
+    });
 
   /* Every other sheet in the app mounts into #app-viewport, which is the phone
      frame. Portaling to document.body instead made `position: absolute` resolve
@@ -79,7 +99,12 @@ export function RiskTune({
       <div className="risk-tune__list">
         {perils.map((p) => {
           const covered = p.status === "covered";
-          return (
+            const defs = PERIL_FIELDS[p.id] ?? [];
+            const vals = fields[p.id] ?? {};
+            const open = openId === p.id;
+            const suggested = suggestSeverity(p.id, vals);
+
+            return (
             <section className="risk-tune__row" key={p.id}>
               <div className="risk-tune__rowhead">
                 <p className="risk-tune__name">{p.name}</p>
@@ -118,6 +143,62 @@ export function RiskTune({
                   however likely it is.
                 </p>
               )}
+
+              {defs.length > 0 && (
+                <>
+                  <button
+                    type="button"
+                    className="risk-tune__more"
+                    aria-expanded={open}
+                    onClick={() => setOpenId(open ? null : p.id)}
+                  >
+                    {open ? "Hide details" : "What we assumed"}
+                    <ChevronDown
+                      size={14}
+                      strokeWidth={2}
+                      className={open ? "is-open" : undefined}
+                    />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <motion.div
+                        className="risk-tune__detail"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+                      >
+                        <div className="risk-tune__fields">
+                          {defs.map((f) => (
+                            <Field
+                              key={f.id}
+                              def={f}
+                              value={vals[f.id] ?? f.default}
+                              onChange={(v: FieldValue) =>
+                                setField(p.id, f.id, v)
+                              }
+                            />
+                          ))}
+
+                          {!covered &&
+                            suggested !== null &&
+                            suggested !== p.severity && (
+                              <button
+                                type="button"
+                                className="risk-tune__suggest"
+                                onClick={() => setSeverity(p.id, suggested)}
+                              >
+                                These figures suggest{" "}
+                                <b>{SEVERITY_LABELS[suggested]}</b> — apply
+                              </button>
+                            )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              )}
             </section>
           );
         })}
@@ -135,4 +216,82 @@ export function RiskTune({
   );
 
   return host ? createPortal(panel, host) : panel;
+}
+
+/* ---------------------------------------------------------------------------
+ * One editable figure. Sliders rather than text inputs for the numbers: this
+ * is someone adjusting an estimate on a phone, not entering a known value, and
+ * a slider makes the plausible range visible while they do it.
+ * ------------------------------------------------------------------------- */
+
+function fmt(def: PerilField, v: FieldValue): string {
+  if (def.unit === "$") return `$${Number(v).toLocaleString()}`;
+  return `${v}${def.unit ? `\u2009${def.unit}` : ""}`;
+}
+
+function Field({
+  def,
+  value,
+  onChange,
+}: {
+  def: PerilField;
+  value: FieldValue;
+  onChange: (v: FieldValue) => void;
+}) {
+  return (
+    <div className="rt-field">
+      <div className="rt-field__head">
+        <span className="rt-field__label">{def.label}</span>
+        {def.kind === "number" && (
+          <span className="rt-field__val">{fmt(def, value)}</span>
+        )}
+      </div>
+
+      {def.kind === "number" && (
+        <input
+          type="range"
+          min={def.min}
+          max={def.max}
+          step={def.step}
+          value={Number(value)}
+          aria-label={def.label}
+          onChange={(e) => onChange(Number(e.target.value))}
+        />
+      )}
+
+      {def.kind === "toggle" && (
+        <div className="rt-field__toggle">
+          {[true, false].map((b) => (
+            <button
+              key={String(b)}
+              type="button"
+              aria-pressed={value === b}
+              className={value === b ? "is-on" : undefined}
+              onClick={() => onChange(b)}
+            >
+              {b ? "Yes" : "No"}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {def.kind === "choice" && (
+        <div className="rt-field__toggle">
+          {(def.options ?? []).map((o) => (
+            <button
+              key={o}
+              type="button"
+              aria-pressed={value === o}
+              className={value === o ? "is-on" : undefined}
+              onClick={() => onChange(o)}
+            >
+              {o}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {def.note && <p className="rt-field__note">{def.note}</p>}
+    </div>
+  );
 }

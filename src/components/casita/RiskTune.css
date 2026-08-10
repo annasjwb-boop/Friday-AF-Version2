@@ -183,3 +183,127 @@
   border: none;
   border-radius: 12px;
 }
+
+/* --- Expanded detail ---------------------------------------------------------- */
+
+.risk-tune__more {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 8px 0 0;
+  margin-top: 4px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 62%);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.risk-tune__more svg {
+  transition: transform 0.26s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.risk-tune__more svg.is-open {
+  transform: rotate(180deg);
+}
+
+.risk-tune__detail {
+  overflow: hidden;
+}
+
+.risk-tune__fields {
+  padding: 14px;
+  margin-top: 10px;
+  background: #f7f8f9;
+  border-radius: 12px;
+}
+
+.rt-field {
+  padding-bottom: 13px;
+  margin-bottom: 13px;
+  border-bottom: 1px solid rgb(22 22 24 / 7%);
+}
+
+.rt-field:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.rt-field__head {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.rt-field__label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #16161a;
+}
+
+.rt-field__val {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #16161a;
+}
+
+.rt-field input[type="range"] {
+  width: 100%;
+  accent-color: #16161a;
+}
+
+.rt-field__toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rt-field__toggle button {
+  padding: 6px 13px;
+  font: inherit;
+  font-size: 12px;
+  color: rgb(52 52 58 / 70%);
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 12%);
+  border-radius: 999px;
+}
+
+.rt-field__toggle button.is-on {
+  color: #fff;
+  background: #16161a;
+  border-color: #16161a;
+}
+
+.rt-field__note {
+  margin-top: 7px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 55%);
+}
+
+/* The suggestion is offered, never applied silently — see perilFields.ts. */
+.risk-tune__suggest {
+  width: 100%;
+  padding: 11px;
+  margin-top: 14px;
+  font: inherit;
+  font-size: 12.5px;
+  color: #16161a;
+  cursor: pointer;
+  background: rgb(10 132 255 / 8%);
+  border: 1px solid rgb(10 132 255 / 30%);
+  border-radius: 10px;
+}
+
+.risk-tune__suggest b {
+  font-weight: 600;
+}
