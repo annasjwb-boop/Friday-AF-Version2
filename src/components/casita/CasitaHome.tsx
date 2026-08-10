@@ -17,6 +17,7 @@ import { METAPHOR_LABELS, METAPHORS, type MetaphorId } from "./metaphors";
 import { getTurntableFrames } from "./turntableFrames";
 import { CasitaHomePicker } from "./CasitaHomePicker";
 import { CasitaRecovery } from "./CasitaRecovery";
+import { CasitaOverview } from "./CasitaOverview";
 import { CasitaReadiness } from "./CasitaReadiness";
 import { CasitaRisk } from "./CasitaRisk";
 import { PerilOverlay } from "./PerilOverlay";
@@ -316,6 +317,8 @@ export function CasitaHome() {
             </div>
           </motion.div>
         </AnimatePresence>
+
+        <CasitaOverview peril={peril} />
 
         <AnimatePresence initial={false}>
           {orderedActions.length > 0 && (

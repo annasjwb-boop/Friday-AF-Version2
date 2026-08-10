@@ -1,0 +1,253 @@
+/* ---------------------------------------------------------------------------
+ * Blue-sky overview stack. Casita's language throughout: white cards on the
+ * warm-white sheet, near-black ink, coral reserved for exposure.
+ * ------------------------------------------------------------------------- */
+
+.cov {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 16px 0;
+}
+
+/* --- Protected value / gap -------------------------------------------------- */
+
+.cov__totals {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 15px 16px;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 7%);
+  border-radius: 14px;
+}
+
+.cov__right {
+  text-align: right;
+}
+
+.cov__label {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 62%);
+}
+
+.cov__value {
+  margin-top: 3px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: #16161a;
+}
+
+.cov__value--gap {
+  color: #c0341c;
+}
+
+.cov__sub {
+  margin-top: 4px;
+  font-size: 11px;
+  color: rgb(52 52 58 / 52%);
+}
+
+/* --- Score tiles ------------------------------------------------------------ */
+
+.cov__tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cov-tile {
+  padding: 14px 15px;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 7%);
+  border-radius: 14px;
+}
+
+.cov-tile__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 9px;
+  color: #3c4149;
+  background: rgb(22 22 24 / 5%);
+  border-radius: 8px;
+}
+
+.cov-tile__label {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 62%);
+}
+
+.cov-tile__num {
+  margin-top: 3px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: #16161a;
+}
+
+.cov-tile__num span {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 45%);
+}
+
+.cov-tile__sub {
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: rgb(52 52 58 / 58%);
+}
+
+.cov-tile__meter {
+  height: 4px;
+  margin-top: 10px;
+  overflow: hidden;
+  background: rgb(22 22 24 / 8%);
+  border-radius: 999px;
+}
+
+.cov-tile__meter i {
+  display: block;
+  height: 100%;
+  background: #16161a;
+  border-radius: 999px;
+}
+
+/* --- Next best action ------------------------------------------------------- */
+
+.cov-next {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: #16161a;
+  border: none;
+  border-radius: 14px;
+}
+
+.cov-next__kicker {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 48%);
+}
+
+.cov-next__title {
+  margin-top: 7px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: #fff;
+}
+
+.cov-next__body {
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 62%);
+}
+
+.cov-next__go {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 9px 15px;
+  margin-top: 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #16161a;
+  background: #fff;
+  border-radius: 999px;
+}
+
+/* --- Gap bar ---------------------------------------------------------------- */
+
+.cov-bar {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 7%);
+  border-radius: 14px;
+}
+
+.cov-bar__head {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.cov-bar__head span {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 55%);
+}
+
+.cov-bar__track {
+  display: flex;
+  gap: 2px;
+  height: 26px;
+  overflow: hidden;
+  border-radius: 7px;
+}
+
+.cov-bar__seg--ins { background: #2f7d55; }
+.cov-bar__seg--ded { background: #d99b32; }
+.cov-bar__seg--gap { background: #c0341c; }
+
+.cov-bar__key {
+  margin-top: 13px;
+  list-style: none;
+}
+
+.cov-bar__key li {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  padding: 7px 0;
+  border-top: 1px solid rgb(22 22 24 / 6%);
+}
+
+.cov-bar__key li:first-child {
+  border-top: none;
+}
+
+.cov-bar__dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+
+.cov-bar__dot--ins { background: #2f7d55; }
+.cov-bar__dot--ded { background: #d99b32; }
+.cov-bar__dot--gap { background: #c0341c; }
+
+.cov-bar__name {
+  font-size: 13px;
+  color: #3c4149;
+}
+
+.cov-bar__amt {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: #16161a;
+}
