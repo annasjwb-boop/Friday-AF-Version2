@@ -1,4 +1,4 @@
-import { policyCoverages, riskScore } from "../../data/home";
+import { coverageItems, policyCoverages, riskScore } from "../../data/home";
 
 /* ---------------------------------------------------------------------------
  * Blue-sky protection figures, derived from the policy on file.
@@ -53,4 +53,121 @@ export function money(n: number): string {
     return `$${m % 1 === 0 ? m : m.toFixed(2).replace(/0$/, "")}M`;
   }
   return `$${Math.round(n / 1000)}K`;
+}
+
+/* ---------------------------------------------------------------------------
+ * Per-peril coverage.
+ *
+ * A covered peril pays to the limits and leaves the deductible plus whatever
+ * rebuild cost sits above the dwelling limit. An excluded peril pays nothing
+ * at all — no deductible either, because you don't pay one on a loss the
+ * policy never covers. That's why the bar collapses to a single band rather
+ * than merely getting worse.
+ *
+ * Covered/excluded is read from coverageItems and policyExclusions, not
+ * restated, so this can't drift from the policy screens.
+ * ------------------------------------------------------------------------- */
+
+export interface Segment {
+  id: "ins" | "ded" | "gap";
+  label: string;
+  value: number;
+}
+
+export interface PerilCoverage {
+  covered: boolean;
+  segments: Segment[];
+  /** Everything the household would have to find themselves. */
+  gap: number;
+  /** Sits under the gap figure. */
+  note: string;
+}
+
+const COVERED_SEGMENTS: Segment[] = [
+  { id: "ins", label: "Insurance pays", value: INSURANCE_PAYS },
+  { id: "ded", label: "Your deductible", value: DEDUCTIBLE },
+  { id: "gap", label: "Above your limit", value: SHORTFALL },
+];
+
+const UNCOVERED_SEGMENTS: Segment[] = [
+  { id: "gap", label: "Not covered at all", value: PROTECTED_VALUE },
+];
+
+export function coverageForPeril(peril: string): PerilCoverage {
+  const covered =
+    peril === "clear" ||
+    coverageItems.find((c) => c.id === peril)?.status === "covered";
+
+  if (!covered) {
+    return {
+      covered: false,
+      segments: UNCOVERED_SEGMENTS,
+      gap: PROTECTED_VALUE,
+      note: "Nothing would be paid",
+    };
+  }
+
+  return {
+    covered: true,
+    segments: COVERED_SEGMENTS,
+    gap: GAP,
+    note: "Deductible plus shortfall",
+  };
+}
+
+/* --- Next best action ------------------------------------------------------ */
+
+export interface NextAction {
+  title: string;
+  body: string;
+  cta: string;
+}
+
+/**
+ * One action per condition, chosen by what's actually wrong.
+ *
+ * Where a peril is entirely uncovered the action is to buy the cover, because
+ * no amount of mitigation closes a gap of the full replacement value. Where
+ * it's covered, the gap is the shortfall above the limit, so the action is
+ * either to raise the limit or to take grant money that reduces the loss.
+ */
+export function nextActionForPeril(peril: string): NextAction {
+  switch (peril) {
+    case "flood":
+      return {
+        title: "Add a flood policy",
+        body: `Standard homeowners policies never cover flood — that's true everywhere, not a quirk of yours. A separate NFIP or private policy is the only thing that closes this ${money(PROTECTED_VALUE)}.`,
+        cta: "Look at flood options",
+      };
+    case "earthquake":
+      return {
+        title: "Add earthquake coverage",
+        body: `Earthquake is excluded from your policy, so a shake leaves the full ${money(PROTECTED_VALUE)} with you. It's usually added as an endorsement rather than a separate policy.`,
+        cta: "Price an endorsement",
+      };
+    case "sinkhole":
+      return {
+        title: "Ask about sinkhole coverage",
+        body: "Earth movement is excluded. Some states require insurers to offer catastrophic ground collapse separately from full sinkhole cover, and the two are not the same thing.",
+        cta: "Check what's offered",
+      };
+    case "wind":
+      return {
+        title: "Apply for a wind mitigation grant",
+        body: `Wind is covered, but ${money(GAP)} still falls to you. State mitigation programs pay toward roof and opening upgrades, which cut both the damage and usually the premium.`,
+        cta: "See if you qualify",
+      };
+    case "fire":
+      return {
+        title: "Raise your dwelling limit",
+        body: `Fire is covered, but your ${money(DWELLING_LIMIT)} limit is ${money(SHORTFALL)} short of rebuild cost. Extended replacement cost closes that for a small premium change.`,
+        cta: "Review your limit",
+      };
+    default:
+      return {
+        title: "Build a plan to cover the gap",
+        body: `${money(GAP)} of a total loss would fall to you today. A plan closes that with coverage changes, mitigation grants, and savings.`,
+        cta: "Start the plan",
+      };
+  }
 }
