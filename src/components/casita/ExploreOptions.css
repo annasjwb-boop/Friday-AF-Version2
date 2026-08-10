@@ -89,6 +89,16 @@
   align-items: flex-start;
 }
 
+/* Without this the description can squeeze the price into wrapping, since
+   flex items default to min-width: auto. */
+.xo-card__head > div {
+  min-width: 0;
+}
+
+.xo-card__price {
+  flex: none;
+}
+
 .xo-card__name {
   font-size: 15px;
   font-weight: 600;
@@ -96,7 +106,6 @@
 }
 
 .xo-card__kind {
-  max-width: 30ch;
   margin-top: 2px;
   font-size: 11.5px;
   line-height: 1.4;
@@ -123,16 +132,25 @@
 }
 
 .xo-card__nums {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 12px 0;
+  padding: 4px 0;
   margin: 13px 0;
   border-top: 1px solid rgb(22 22 24 / 7%);
   border-bottom: 1px solid rgb(22 22 24 / 7%);
 }
 
+/* Label left, value right. Three columns would leave ~102px each inside the
+   390px frame, which wraps "$250K building · $100K contents" onto three
+   lines and leaves the row ragged. */
+.xo-card__nums > div {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 7px 0;
+}
+
 .xo-card__k {
+  flex: none;
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -141,11 +159,31 @@
 }
 
 .xo-card__v {
-  margin-top: 4px;
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 500;
   line-height: 1.35;
   color: #16161a;
+  text-align: right;
+}
+
+/* Wider frames have room for the original three-up row. */
+@media (min-width: 520px) {
+  .xo-card__nums {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 12px 0;
+  }
+
+  .xo-card__nums > div {
+    display: block;
+    padding: 0;
+  }
+
+  .xo-card__v {
+    margin-top: 4px;
+    text-align: left;
+  }
 }
 
 .xo-card__list {
