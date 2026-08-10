@@ -124,50 +124,113 @@ export interface NextAction {
 }
 
 /**
- * One action per condition, chosen by what's actually wrong.
+ * Actions for a condition, best first.
  *
- * Where a peril is entirely uncovered the action is to buy the cover, because
- * no amount of mitigation closes a gap of the full replacement value. Where
- * it's covered, the gap is the shortfall above the limit, so the action is
- * either to raise the limit or to take grant money that reduces the loss.
+ * Ordered by what would actually move the number most, not by variety. Where a
+ * peril is entirely uncovered the first action is to buy the cover, because no
+ * amount of mitigation closes a gap of the full replacement value. Where it's
+ * covered, the gap is the shortfall above the limit, so raising the limit or
+ * taking grant money that reduces the loss comes first.
  */
-export function nextActionForPeril(peril: string): NextAction {
+export function nextActionsForPeril(peril: string): NextAction[] {
   switch (peril) {
     case "flood":
-      return {
-        title: "Add a flood policy",
-        body: `Standard homeowners policies never cover flood — that's true everywhere, not a quirk of yours. A separate NFIP or private policy is the only thing that closes this ${money(PROTECTED_VALUE)}.`,
-        cta: "Look at flood options",
-      };
+      return [
+        {
+          title: "Add a flood policy",
+          body: `Standard homeowners policies never cover flood — that's true everywhere, not a quirk of yours. A separate NFIP or private policy is the only thing that closes this ${money(PROTECTED_VALUE)}.`,
+          cta: "Look at flood options",
+        },
+        {
+          title: "Confirm your flood zone",
+          body: "Your rate and whether cover is even required both hinge on the flood zone on record. Zones get redrawn, and an old one can cost you either way.",
+          cta: "Check the map",
+        },
+        {
+          title: "Ask about elevation grants",
+          body: "Mitigation programs pay toward elevating utilities and living space. It's the one flood fix that lowers both the damage and the premium.",
+          cta: "See what's funded",
+        },
+      ];
     case "earthquake":
-      return {
-        title: "Add earthquake coverage",
-        body: `Earthquake is excluded from your policy, so a shake leaves the full ${money(PROTECTED_VALUE)} with you. It's usually added as an endorsement rather than a separate policy.`,
-        cta: "Price an endorsement",
-      };
+      return [
+        {
+          title: "Add earthquake coverage",
+          body: `Earthquake is excluded from your policy, so a shake leaves the full ${money(PROTECTED_VALUE)} with you. It's usually added as an endorsement rather than a separate policy.`,
+          cta: "Price an endorsement",
+        },
+        {
+          title: "Anchor the heavy things",
+          body: "Strapping the water heater and securing tall furniture costs very little and prevents the injuries and water damage that follow most moderate quakes.",
+          cta: "See the checklist",
+        },
+      ];
     case "sinkhole":
-      return {
-        title: "Ask about sinkhole coverage",
-        body: "Earth movement is excluded. Some states require insurers to offer catastrophic ground collapse separately from full sinkhole cover, and the two are not the same thing.",
-        cta: "Check what's offered",
-      };
+      return [
+        {
+          title: "Ask about sinkhole coverage",
+          body: "Earth movement is excluded. Some states require insurers to offer catastrophic ground collapse separately from full sinkhole cover, and the two are not the same thing.",
+          cta: "Check what's offered",
+        },
+        {
+          title: "Get the ground surveyed",
+          body: "A subsurface survey before there's visible damage is far cheaper than one during a claim, and it's what an insurer will ask for either way.",
+          cta: "Find a surveyor",
+        },
+      ];
     case "wind":
-      return {
-        title: "Apply for a wind mitigation grant",
-        body: `Wind is covered, but ${money(GAP)} still falls to you. State mitigation programs pay toward roof and opening upgrades, which cut both the damage and usually the premium.`,
-        cta: "See if you qualify",
-      };
+      return [
+        {
+          title: "Apply for a wind mitigation grant",
+          body: `Wind is covered, but ${money(GAP)} still falls to you. State mitigation programs pay toward roof and opening upgrades, which cut both the damage and usually the premium.`,
+          cta: "See if you qualify",
+        },
+        {
+          title: "Check your named-storm terms",
+          body: "Everyday wind and a named storm are often covered on different terms, with a separate and much larger deductible. Worth knowing which one you have.",
+          cta: "Read your policy",
+        },
+        {
+          title: "Raise your dwelling limit",
+          body: `Your ${money(DWELLING_LIMIT)} limit is ${money(SHORTFALL)} short of rebuild cost, whatever caused the damage.`,
+          cta: "Review your limit",
+        },
+      ];
     case "fire":
-      return {
-        title: "Raise your dwelling limit",
-        body: `Fire is covered, but your ${money(DWELLING_LIMIT)} limit is ${money(SHORTFALL)} short of rebuild cost. Extended replacement cost closes that for a small premium change.`,
-        cta: "Review your limit",
-      };
+      return [
+        {
+          title: "Raise your dwelling limit",
+          body: `Fire is covered, but your ${money(DWELLING_LIMIT)} limit is ${money(SHORTFALL)} short of rebuild cost. Extended replacement cost closes that for a small premium change.`,
+          cta: "Review your limit",
+        },
+        {
+          title: "Document what you own",
+          body: `Personal property is capped at ${money(PERSONAL_PROPERTY)}, and after a fire you have to prove what was there. Photographs now are worth more than receipts later.`,
+          cta: "Open your vault",
+        },
+      ];
     default:
-      return {
-        title: "Build a plan to cover the gap",
-        body: `${money(GAP)} of a total loss would fall to you today. A plan closes that with coverage changes, mitigation grants, and savings.`,
-        cta: "Start the plan",
-      };
+      return [
+        {
+          title: "Build a plan to cover the gap",
+          body: `${money(GAP)} of a total loss would fall to you today. A plan closes that with coverage changes, mitigation grants, and savings.`,
+          cta: "Start the plan",
+        },
+        {
+          title: "Raise your dwelling limit",
+          body: `Rebuilding is estimated at ${money(REBUILD_COST)} against a ${money(DWELLING_LIMIT)} limit — ${money(SHORTFALL)} you'd fund yourself before anything else goes wrong.`,
+          cta: "Review your limit",
+        },
+        {
+          title: "Know your deductible",
+          body: `${money(DEDUCTIBLE)} comes out before the policy pays anything. Worth checking that's money you could reach in a week.`,
+          cta: "See the terms",
+        },
+        {
+          title: "Document what you own",
+          body: "Your vault is 35% complete. The room-by-room record is what turns a personal property claim from an argument into a form.",
+          cta: "Open your vault",
+        },
+      ];
   }
 }

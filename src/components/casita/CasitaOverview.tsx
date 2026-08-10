@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Gauge, ShieldCheck } from "lucide-react";
 import { readinessProgress } from "../../data/home";
 import {
@@ -7,7 +8,7 @@ import {
   RISK_OUT_OF_100,
   coverageForPeril,
   money,
-  nextActionForPeril,
+  nextActionsForPeril,
 } from "./protection";
 import type { PerilId } from "./perils";
 import "./CasitaOverview.css";
@@ -33,7 +34,13 @@ export function CasitaOverview({
      peril strip is that the exposure changes with it. Protected value is the
      one constant: it's the same house whatever the weather. */
   const cover = coverageForPeril(peril);
-  const action = nextActionForPeril(peril);
+  const actions = nextActionsForPeril(peril);
+
+  /* The black card is a deck: skip cycles to the next action for this
+     condition. Reset on peril change, since the deck itself is different. */
+  const [idx, setIdx] = useState(0);
+  useEffect(() => setIdx(0), [peril]);
+  const action = actions[idx % actions.length];
 
   return (
     <div className="cov">
@@ -97,15 +104,50 @@ export function CasitaOverview({
         </button>
       </div>
 
-      <button type="button" className="cov-next">
-        <span className="cov-next__kicker">Next best action</span>
-        <span className="cov-next__title">{action.title}</span>
-        <span className="cov-next__body">{action.body}</span>
-        <span className="cov-next__go">
-          {action.cta}
-          <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
-        </span>
-      </button>
+      <div className="cov-deck">
+        <AnimatePresence mode="wait">
+          <motion.button
+            key={`${peril}-${idx}`}
+            type="button"
+            className="cov-next"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+          >
+            <span className="cov-next__kicker">Next best action</span>
+            <span className="cov-next__title">{action.title}</span>
+            <span className="cov-next__body">{action.body}</span>
+            <span className="cov-next__go">
+              {action.cta}
+              <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+            </span>
+          </motion.button>
+        </AnimatePresence>
+
+        {actions.length > 1 && (
+          <div className="cov-deck__foot">
+            <button
+              type="button"
+              className="cov-deck__skip"
+              onClick={() => setIdx((n) => n + 1)}
+            >
+              Skip
+            </button>
+            <span className="cov-deck__dots" aria-hidden="true">
+              {actions.map((a, n) => (
+                <i
+                  key={a.title}
+                  className={n === idx % actions.length ? "is-on" : undefined}
+                />
+              ))}
+            </span>
+            <span className="cov-deck__count">
+              {(idx % actions.length) + 1} of {actions.length}
+            </span>
+          </div>
+        )}
+      </div>
 
       <section className="cov-bar" aria-label="Coverage gap breakdown">
         <p className="cov-bar__head">

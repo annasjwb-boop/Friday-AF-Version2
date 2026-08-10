@@ -1,15 +1,10 @@
 import { lazy, Suspense, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
   BatteryFull,
-  Camera,
-  CloudRainWind,
-  Gauge,
-  Landmark,
   Signal,
   Wifi,
-  X,
 } from "lucide-react";
 import { readinessProgress, riskScore } from "../../data/home";
 import { METAPHOR_LABELS, METAPHORS, type MetaphorId } from "./metaphors";
@@ -105,49 +100,6 @@ const TABS: TabConfig[] = [
   },
 ];
 
-type ActionCard = {
-  id: string;
-  icon: typeof Landmark;
-  iconClass: string;
-  title: string;
-  body: string;
-  cta: string;
-};
-
-const ACTIONS: ActionCard[] = [
-  {
-    id: "records",
-    icon: Landmark,
-    iconClass: "is-slate",
-    title: "Connect your state records",
-    body: "Link Georgia property records to pre-fill grant and aid applications automatically.",
-    cta: "Connect",
-  },
-  {
-    id: "risk",
-    icon: Gauge,
-    iconClass: "is-amber",
-    title: "Improve your risk score",
-    body: "Gutter guards, smoke sensors, and a sump check could add 12 points.",
-    cta: "View Fixes",
-  },
-  {
-    id: "photos",
-    icon: Camera,
-    iconClass: "is-blue",
-    title: "Upload images of your home",
-    body: "Current room-by-room photos speed up claims and strengthen aid applications.",
-    cta: "Upload Photos",
-  },
-  {
-    id: "alerts",
-    icon: CloudRainWind,
-    iconClass: "is-teal",
-    title: "Turn on storm alerts",
-    body: "Get notified 48 hours before severe weather is expected near your address.",
-    cta: "Enable Alerts",
-  },
-];
 
 const ACTIVITY = [
   {
@@ -182,16 +134,9 @@ export function CasitaHome() {
     const t = params.get("tab");
     return TABS.some((x) => x.id === t) ? (t as TabId) : "overview";
   });
-  const [actionIds, setActionIds] = useState(() => ACTIONS.map((a) => a.id));
   const stageTap = useRef<{ x: number; y: number; t: number } | null>(null);
 
-  const orderedActions = actionIds
-    .map((id) => ACTIONS.find((a) => a.id === id))
-    .filter((a): a is ActionCard => Boolean(a));
   const frames = getTurntableFrames(metaphor);
-
-  const cycleAction = () =>
-    setActionIds(([first, ...rest]) => [...rest, first]);
 
   const chooseMetaphor = (next: MetaphorId) => {
     setMetaphor(next);
@@ -277,110 +222,6 @@ export function CasitaHome() {
         <PerilCaption active={peril} />
 
         <CasitaOverview peril={peril} onOpen={setActiveTab} />
-
-        <AnimatePresence initial={false}>
-          {orderedActions.length > 0 && (
-            <motion.section
-              className="casita-stack"
-              aria-label="Suggested actions"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-            >
-              <div className="casita-stack__viewport">
-                <AnimatePresence>
-                  {orderedActions
-                    .slice(0, 3)
-                    .reverse()
-                    .map((action, idx, arr) => {
-                      const i = arr.length - 1 - idx;
-                      const isTop = i === 0;
-                      const ActionIcon = action.icon;
-                      return (
-                        <motion.article
-                          key={action.id}
-                          className="casita-stack__card"
-                          initial={{
-                            y: (i + 1) * 11,
-                            scale: 1 - (i + 1) * 0.045,
-                            opacity: 0,
-                          }}
-                          animate={{
-                            y: i * 11,
-                            scale: 1 - i * 0.045,
-                            opacity: 1,
-                          }}
-                          exit={{
-                            x: 340,
-                            rotate: 5,
-                            opacity: 0,
-                            transition: {
-                              duration: 0.28,
-                              ease: [0.32, 0.72, 0, 1],
-                            },
-                          }}
-                          transition={{
-                            duration: 0.3,
-                            ease: [0.32, 0.72, 0, 1],
-                          }}
-                          drag={isTop ? "x" : false}
-                          dragConstraints={{ left: 0, right: 0 }}
-                          dragElastic={0.7}
-                          onDragEnd={(_, info) => {
-                            if (
-                              Math.abs(info.offset.x) > 90 ||
-                              Math.abs(info.velocity.x) > 600
-                            ) {
-                              cycleAction();
-                            }
-                          }}
-                        >
-                          <button
-                            type="button"
-                            className="casita-stack__close"
-                            aria-label="Next suggestion"
-                            tabIndex={isTop ? 0 : -1}
-                            onClick={cycleAction}
-                          >
-                            <X size={14} strokeWidth={2.2} />
-                          </button>
-                          <div className="casita-stack__head">
-                            <span
-                              className={`casita-stack__icon ${action.iconClass}`}
-                            >
-                              <ActionIcon size={16} strokeWidth={2} />
-                            </span>
-                            <p className="casita-stack__title">
-                              {action.title}
-                            </p>
-                          </div>
-                          <p className="casita-stack__text">{action.body}</p>
-                          <div className="casita-stack__foot">
-                            <button
-                              type="button"
-                              className="casita-stack__cta"
-                              tabIndex={isTop ? 0 : -1}
-                            >
-                              {action.cta}
-                            </button>
-                            {isTop && (
-                              <span className="casita-stack__count">
-                                {ACTIONS.findIndex(
-                                  (a) => a.id === action.id,
-                                ) + 1}
-                                /{ACTIONS.length}
-                              </span>
-                            )}
-                          </div>
-                        </motion.article>
-                      );
-                    })}
-                </AnimatePresence>
-              </div>
-            </motion.section>
-          )}
-        </AnimatePresence>
 
         <section className="casita-charges">
           <header className="casita-charges__head">
