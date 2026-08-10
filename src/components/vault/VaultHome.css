@@ -426,6 +426,17 @@
   }
 }
 
+/* The dial replaces the old stacked label/value/meter, so the hero just needs
+   to centre the two supporting lines under it. */
+.vault-hero__sub {
+  margin-top: -6px;
+  text-align: center;
+}
+
+.vault-hero__value2 {
+  text-align: center;
+}
+
 /* Documented value moves below the readiness figure — the percentage is the
    headline now, and the value is what backs it up. */
 .vault-hero__value2 {

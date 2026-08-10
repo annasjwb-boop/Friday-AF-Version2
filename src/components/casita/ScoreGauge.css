@@ -1,0 +1,34 @@
+/* ---------------------------------------------------------------------------
+ * Shared dial. Type inherits the host's font so the same instrument reads
+ * correctly in the risk view and in the vault.
+ * ------------------------------------------------------------------------- */
+
+.sg {
+  display: block;
+  width: 100%;
+}
+
+.sg__label {
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 450;
+  letter-spacing: 0.01em;
+  fill: #a3a8ae;
+}
+
+.sg__value {
+  font-family: inherit;
+  font-size: 47px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  fill: #17181a;
+}
+
+.sg__scale {
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  fill: #a3a8ae;
+}

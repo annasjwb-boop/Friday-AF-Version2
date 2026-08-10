@@ -27,6 +27,10 @@ import {
   buildSections,
   readinessPercent,
 } from "../../data/vaultSections";
+import {
+  ScoreGauge,
+  READINESS_ZONES,
+} from "../casita/ScoreGauge";
 import { VaultSections } from "./VaultSections";
 import { VaultDocsSheet } from "./VaultDocs";
 import { VaultUpload } from "./VaultUpload";
@@ -136,33 +140,20 @@ export function VaultBody() {
   return (
     <div className="vault-body">
       {/* --- Documented value hero ------------------------------------- */}
+      {/* Same dial as the risk score, with the zones mirrored: readiness is
+          higher-is-better, so the warning band sits at the empty end. */}
       <section className="vault-hero" aria-label="Readiness">
-        <span className="vault-hero__label">Ready to file</span>
-        <motion.span
-          key={ready.pct}
-          className="vault-hero__value"
-          initial={{ opacity: 0.4 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-        >
-          {ready.pct}%
-        </motion.span>
-        <span className="vault-hero__sub">
+        <ScoreGauge
+          score={ready.pct}
+          label="Readiness"
+          zones={READINESS_ZONES}
+          suffix="of 100"
+          idPrefix="ready"
+        />
+        <p className="vault-hero__sub">
           {ready.docsDone} of {ready.docsTotal} documents ·{" "}
           {ready.assetsDone} of {ready.assetsTotal} assets documented
-        </span>
-        <div className="vault-hero__progress">
-          <div
-            className="vault-hero__meter"
-            role="img"
-            aria-label={`Readiness ${ready.pct}%`}
-          >
-            <motion.i
-              animate={{ width: `${ready.pct}%` }}
-              transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
-            />
-          </div>
-        </div>
+        </p>
         <p className="vault-hero__value2">
           <b>{formatValue(totalValue)}</b> documented across {totalItems} items
         </p>
