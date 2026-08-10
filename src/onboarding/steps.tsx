@@ -46,6 +46,84 @@ export function MapStep() {
   );
 }
 
+/**
+ * Confirming the matched address, with the unit number asked for at the moment
+ * it's cheapest to give — a missing apartment number is one of the commonest
+ * reasons an application can't be matched to a property record later.
+ *
+ * "Not my address" is offered because address matching does fail, and a flow
+ * that only accepts yes teaches people to click yes.
+ */
+export function ConfirmAddressStep({ onDone }: { onDone: (v: string) => void }) {
+  const [unit, setUnit] = useState("");
+  const [adding, setAdding] = useState(false);
+
+  return (
+    <div className="ob-confirm">
+      <div className="ob-confirm__card">
+        <MapPin size={16} strokeWidth={1.9} aria-hidden="true" />
+        <span>
+          {ADDRESS}
+          {unit.trim() && <b>{`Unit ${unit.trim()}`}</b>}
+        </span>
+      </div>
+
+      {adding ? (
+        <div className="ob-free">
+          <input
+            autoFocus
+            value={unit}
+            placeholder="Apartment or unit number"
+            aria-label="Apartment or unit number"
+            onChange={(e) => setUnit(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") setAdding(false);
+            }}
+          />
+          <button
+            type="button"
+            className="ob-send"
+            onClick={() => setAdding(false)}
+          >
+            Save
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="ob-chip ob-chip--wide"
+          onClick={() => setAdding(true)}
+        >
+          {unit.trim() ? "Change unit number" : "Add an apartment or unit number"}
+        </button>
+      )}
+
+      <div className="ob-chips">
+        <button
+          type="button"
+          className="ob-chip"
+          onClick={() => onDone("That's not my address")}
+        >
+          That's not my address
+        </button>
+        <button
+          type="button"
+          className="ob-send"
+          onClick={() =>
+            onDone(
+              unit.trim()
+                ? `Yes — unit ${unit.trim()}`
+                : "Yes, that's my home",
+            )
+          }
+        >
+          Yes, that's my home
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function GrantsStep() {
   return (
     <div className="ob-grants">

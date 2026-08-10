@@ -13,6 +13,8 @@ export type Step =
   | { kind: "say"; text: string }
   /** Map tile zooming to the property, boxed. */
   | { kind: "map" }
+  /** Confirm the matched address, and add a unit number if there is one. */
+  | { kind: "confirmAddress" }
   /** Open programs, grouped by disaster. */
   | { kind: "grants" }
   /** Multi-select over the storm grants. */
@@ -64,6 +66,17 @@ export const SCRIPTS: Record<string, Script> = {
       { kind: "map" },
       {
         kind: "say",
+        text: "Is this the right place? If there's an apartment or unit number, add it now — records are matched on the exact address, and a missing unit is one of the most common reasons an application stalls.",
+      },
+      { kind: "confirmAddress" },
+      { kind: "say", text: "And do you own or rent?" },
+      {
+        kind: "choice",
+        id: "tenure",
+        options: ["I own", "I rent", "Something else"],
+      },
+      {
+        kind: "say",
         text: "There are 4 programs open for your address right now. Three are for damage from past storms and are still accepting applications. One is for improvements that make your home stand up better to the next one.",
       },
       { kind: "grants" },
@@ -96,6 +109,17 @@ export const SCRIPTS: Record<string, Script> = {
     steps: [
       { kind: "say", text: "Thanks for your address." },
       { kind: "map" },
+      {
+        kind: "say",
+        text: "Is this the right place? If there's an apartment or unit number, add it now — records are matched on the exact address, and a missing unit is one of the most common reasons an application stalls.",
+      },
+      { kind: "confirmAddress" },
+      { kind: "say", text: "And do you own or rent?" },
+      {
+        kind: "choice",
+        id: "tenure",
+        options: ["I own", "I rent", "Something else"],
+      },
       {
         kind: "say",
         text: "I've pulled what public records hold about your property — size, age, materials, sale history — to estimate what it would cost to rebuild.",
@@ -142,10 +166,19 @@ export const SCRIPTS: Record<string, Script> = {
       { kind: "map" },
       {
         kind: "say",
+        text: "Is this the right place? If there's an apartment or unit number, add it now — records are matched on the exact address, and a missing unit is one of the most common reasons an application stalls.",
+      },
+      { kind: "confirmAddress" },
+      { kind: "say", text: "And do you own or rent?" },
+      {
+        kind: "choice",
+        id: "tenure",
+        options: ["I own", "I rent", "Something else"],
+      },
+      {
+        kind: "say",
         text: "I've pulled what public records hold about your property — size, age, materials, history. That all goes into your profile and you'll get a chance to review it.",
       },
-      { kind: "say", text: "Do you rent or own?" },
-      { kind: "choice", id: "tenure", options: ["I rent", "I own", "Other"] },
       {
         kind: "say",
         text: "What would you rather start with — pulling together the documents you'd need to file a claim or apply for aid, or documenting what's in your home so you can put it on a claim later?",

@@ -6,6 +6,7 @@ import { SCRIPTS, type Step } from "./scripts";
 import {
   AccountStep,
   ChoiceStep,
+  ConfirmAddressStep,
   GrantsStep,
   InsuranceStep,
   MapStep,
@@ -199,6 +200,8 @@ function Interactive({
   onGo: (to: string) => void;
 }) {
   switch (step.kind) {
+    case "confirmAddress":
+      return <ConfirmAddressStep onDone={onDone} />;
     case "pickGrants":
       return <PickGrantsStep onDone={onDone} />;
     case "resiliency":
