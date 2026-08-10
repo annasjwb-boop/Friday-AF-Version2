@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { animate, motion } from "framer-motion";
+import { CoverageBar } from "./CoverageBar";
 import "./CasitaRisk.css";
 
 const SCORE = 72;
@@ -205,6 +206,8 @@ export function CasitaRisk() {
         <span className="casita-risk__summary-dot" aria-hidden="true" />
         Elevated risk · Improved 4% this month
       </motion.p>
+
+      <CoverageBar />
 
       {EXPOSURES.map((exposure, i) => (
         <motion.section
