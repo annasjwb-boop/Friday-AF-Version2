@@ -26,7 +26,12 @@ export function ExploreOptions({
 }) {
   const options = PROVIDERS[peril.id] ?? [];
 
-  return createPortal(
+  /* Every other sheet in the app mounts into #app-viewport, which is the phone
+     frame. Portaling to document.body instead made `position: absolute` resolve
+     against the page, so the sheet escaped the device on desktop. */
+  const host = document.getElementById("app-viewport");
+
+  const panel = (
     <motion.div
       className="xo"
       initial={{ y: "100%" }}
@@ -127,7 +132,8 @@ export function ExploreOptions({
           premium and claim nothing. That's what you're buying.
         </p>
       </div>
-    </motion.div>,
-    document.body,
+    </motion.div>
   );
+
+  return host ? createPortal(panel, host) : panel;
 }

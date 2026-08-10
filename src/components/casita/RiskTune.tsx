@@ -37,7 +37,12 @@ export function RiskTune({
   const setSeverity = (id: string, severity: number) =>
     onChange(perils.map((p) => (p.id === id ? { ...p, severity } : p)));
 
-  return createPortal(
+  /* Every other sheet in the app mounts into #app-viewport, which is the phone
+     frame. Portaling to document.body instead made `position: absolute` resolve
+     against the page, so the sheet escaped the device on desktop. */
+  const host = document.getElementById("app-viewport");
+
+  const panel = (
     <motion.div
       className="risk-tune"
       initial={{ y: "100%" }}
@@ -126,7 +131,8 @@ export function RiskTune({
           Done
         </button>
       </footer>
-    </motion.div>,
-    document.body,
+    </motion.div>
   );
+
+  return host ? createPortal(panel, host) : panel;
 }
