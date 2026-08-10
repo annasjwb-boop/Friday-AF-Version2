@@ -9,7 +9,7 @@ import {
   totalScore,
   type RiskPeril,
 } from "../../data/risks";
-import { CoverageBar } from "./CoverageBar";
+import { ExposureViz } from "./ExposureViz";
 import { RiskRow } from "./RiskRow";
 import { RiskTune } from "./RiskTune";
 import "./CasitaRisk.css";
@@ -216,7 +216,7 @@ export function CasitaRisk() {
         {uninsured.length} uninsured perils
       </motion.p>
 
-      <CoverageBar />
+      <ExposureViz />
 
       <div className="casita-risk__listhead">
         <h2 className="casita-risk__listtitle">How your exposure breaks down</h2>
