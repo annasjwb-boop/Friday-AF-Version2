@@ -425,3 +425,16 @@
     padding-top: calc(6px + env(safe-area-inset-top, 0px));
   }
 }
+
+/* Documented value moves below the readiness figure — the percentage is the
+   headline now, and the value is what backs it up. */
+.vault-hero__value2 {
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: rgb(52 52 58 / 62%);
+}
+
+.vault-hero__value2 b {
+  font-weight: 600;
+  color: #16161a;
+}

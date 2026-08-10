@@ -6,7 +6,6 @@ import {
   Boxes,
   ChevronRight,
   CookingPot,
-  FolderClosed,
   Laptop,
   Mic,
   Plus,
@@ -24,6 +23,11 @@ import {
   type VaultRoom,
   type WalkthroughBatch,
 } from "../../data/vault";
+import {
+  buildSections,
+  readinessPercent,
+} from "../../data/vaultSections";
+import { VaultSections } from "./VaultSections";
 import { VaultDocsSheet } from "./VaultDocs";
 import { VaultUpload } from "./VaultUpload";
 import { VaultRoomSheet } from "./VaultRoom";
@@ -73,11 +77,17 @@ export function VaultBody() {
     () => rooms.reduce((sum, room) => sum + room.items.length, 0),
     [rooms],
   );
-  const verifiedDocs = documents.filter((d) => d.status === "verified").length;
   const roomsStarted = rooms.filter((r) => r.items.length > 0).length;
-  const readiness = Math.round(
-    (verifiedDocs / documents.length) * 55 + (roomsStarted / rooms.length) * 45,
+
+  /* One figure across documents and assets alike, as a plain count of what's
+     done over what's needed. It replaces a 55/45 weighting that had no stated
+     reason behind it; a count is something the person can check against what
+     they can see on screen. */
+  const sections = useMemo(
+    () => buildSections(documents, rooms),
+    [documents, rooms],
   );
+  const ready = readinessPercent(sections);
 
   /* One task at a time: the next missing document first, then the room
      with the most undocumented items. */
@@ -126,33 +136,36 @@ export function VaultBody() {
   return (
     <div className="vault-body">
       {/* --- Documented value hero ------------------------------------- */}
-      <section className="vault-hero" aria-label="Documented value">
-        <span className="vault-hero__label">Documented value</span>
+      <section className="vault-hero" aria-label="Readiness">
+        <span className="vault-hero__label">Ready to file</span>
         <motion.span
-          key={totalValue}
+          key={ready.pct}
           className="vault-hero__value"
           initial={{ opacity: 0.4 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
         >
-          {formatValue(totalValue)}
+          {ready.pct}%
         </motion.span>
         <span className="vault-hero__sub">
-          {totalItems} items · proof on file if you ever need to claim
+          {ready.docsDone} of {ready.docsTotal} documents ·{" "}
+          {ready.assetsDone} of {ready.assetsTotal} assets documented
         </span>
         <div className="vault-hero__progress">
           <div
             className="vault-hero__meter"
             role="img"
-            aria-label={`Readiness ${readiness}%`}
+            aria-label={`Readiness ${ready.pct}%`}
           >
             <motion.i
-              animate={{ width: `${readiness}%` }}
+              animate={{ width: `${ready.pct}%` }}
               transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
             />
           </div>
-          <span className="vault-hero__percent">{readiness}% ready</span>
         </div>
+        <p className="vault-hero__value2">
+          <b>{formatValue(totalValue)}</b> documented across {totalItems} items
+        </p>
       </section>
 
       {/* --- One task at a time ----------------------------------------- */}
@@ -208,29 +221,9 @@ export function VaultBody() {
       </AnimatePresence>
 
       {/* --- Documents, collapsed ---------------------------------------- */}
-      <section className="vault-links" aria-label="Documents">
-        <button
-          type="button"
-          className="vault-link"
-          onClick={() => setDocsOpen(true)}
-        >
-          <span className="vault-link__icon" aria-hidden="true">
-            <FolderClosed size={17} strokeWidth={1.9} />
-          </span>
-          <span className="vault-link__body">
-            <span className="vault-link__name">Documents</span>
-            <span className="vault-link__meta">
-              {verifiedDocs} of {documents.length} on file
-            </span>
-          </span>
-          <ChevronRight
-            size={16}
-            strokeWidth={2}
-            className="vault-link__chev"
-            aria-hidden="true"
-          />
-        </button>
+      <VaultSections sections={sections} onOpenDocs={() => setDocsOpen(true)} />
 
+      <section className="vault-links" aria-label="Tools">
         <button
           type="button"
           className="vault-link vault-link--walk"

@@ -1,0 +1,214 @@
+/* ---------------------------------------------------------------------------
+ * Readiness sections. The reference used a navy/blue scheme; this keeps the
+ * app's own language — white cards, near-black ink, green for complete.
+ * ------------------------------------------------------------------------- */
+
+.vs {
+  margin: 0 16px;
+}
+
+.vs__top {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 11px;
+}
+
+.vs__title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.vs__count {
+  margin-left: auto;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 52%);
+}
+
+.vs-row {
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 8%);
+  border-radius: 13px;
+}
+
+.vs-row__head {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  width: 100%;
+  padding: 13px 14px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.vs-row__id {
+  flex: 1;
+  min-width: 0;
+}
+
+.vs-row__name {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.vs-row__sub {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: 11px;
+  color: rgb(52 52 58 / 58%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Narrow on a phone — the pill and count carry the meaning, the bar is a
+   glance. */
+.vs-row__meter {
+  display: none;
+  flex: none;
+  width: 44px;
+  height: 4px;
+  overflow: hidden;
+  background: rgb(22 22 24 / 9%);
+  border-radius: 999px;
+}
+
+.vs-row__meter i {
+  display: block;
+  height: 100%;
+  background: #2f7d55;
+  border-radius: 999px;
+}
+
+@media (min-width: 380px) {
+  .vs-row__meter {
+    display: block;
+  }
+}
+
+.vs-row__pill {
+  flex: none;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: 999px;
+}
+
+.vs-row--complete .vs-row__pill {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 15%);
+}
+
+.vs-row--started .vs-row__pill {
+  color: #8a6412;
+  background: rgb(217 155 50 / 18%);
+}
+
+.vs-row--empty .vs-row__pill {
+  color: rgb(52 52 58 / 62%);
+  background: rgb(22 22 24 / 7%);
+}
+
+.vs-row__chev {
+  flex: none;
+  color: rgb(52 52 58 / 40%);
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.vs-row[class*="--"] .vs-row__head[aria-expanded="true"] .vs-row__chev {
+  transform: rotate(180deg);
+}
+
+/* --- Expanded ----------------------------------------------------------------- */
+
+.vs-row__inner {
+  padding: 0 14px 12px;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.vs-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid rgb(22 22 24 / 6%);
+}
+
+.vs-item__id {
+  flex: 1;
+  min-width: 140px;
+}
+
+.vs-item__name {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #16161a;
+}
+
+.vs-item__meta {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: rgb(52 52 58 / 55%);
+}
+
+.vs-item__acts {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+
+.vs-item__acts button {
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #16161a;
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(22 22 24 / 14%);
+  border-radius: 999px;
+}
+
+.vs-item__acts button.is-primary {
+  color: #fff;
+  background: #16161a;
+  border-color: #16161a;
+}
+
+.vs-row__share {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 12px 0 0;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--vault-accent, #f4581d);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.vs__foot {
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 52%);
+}
