@@ -1,0 +1,289 @@
+/* ---------------------------------------------------------------------------
+ * Expandable peril row. White card, near-black ink, coral for exposure and
+ * amber for partial — same palette as the coverage bar so a colour means the
+ * same thing on both screens.
+ * ------------------------------------------------------------------------- */
+
+.rr {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 8%);
+  border-radius: 14px;
+}
+
+.rr.is-open {
+  border-color: rgb(22 22 24 / 16%);
+}
+
+.rr__head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding: 14px 15px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.rr__id {
+  flex: 1;
+  min-width: 0;
+}
+
+.rr__name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.rr__sub {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: 11.5px;
+  color: rgb(52 52 58 / 60%);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rr__meter {
+  display: none;
+}
+
+.rr__pill {
+  flex: none;
+  padding: 3px 9px;
+  font-size: 10.5px;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.rr--uninsured .rr__pill {
+  color: #a3341c;
+  background: rgb(212 84 48 / 14%);
+}
+
+.rr--partial .rr__pill {
+  color: #8a6412;
+  background: rgb(217 155 50 / 20%);
+}
+
+.rr--covered .rr__pill {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 15%);
+}
+
+.rr__pts {
+  flex: none;
+  min-width: 26px;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.rr--uninsured .rr__pts { color: #c0341c; }
+.rr--partial .rr__pts { color: #8a6412; }
+.rr--covered .rr__pts { color: rgb(52 52 58 / 40%); }
+
+.rr__chev {
+  flex: none;
+  color: rgb(52 52 58 / 40%);
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.rr.is-open .rr__chev {
+  transform: rotate(180deg);
+}
+
+/* --- Expanded --------------------------------------------------------------- */
+
+.rr__inner {
+  padding: 2px 15px 16px;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.rr__blurb {
+  padding-top: 13px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #3c4149;
+}
+
+.rr__facts {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.rr__fact {
+  padding: 11px 13px;
+  background: #f7f8f9;
+  border-radius: 10px;
+}
+
+.rr__fact-k {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 52%);
+}
+
+.rr__fact-v {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.rr__fact-n {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 58%);
+}
+
+.rr__label {
+  margin: 18px 0 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 52%);
+}
+
+.rr__pay {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.rr__pay-seg--0 { background: #2f7d55; }
+.rr__pay-seg--1 { background: #5b7fc4; }
+.rr__pay-seg--2 { background: #c0341c; }
+
+.rr__key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 9px;
+  font-size: 11.5px;
+  color: #3c4149;
+  list-style: none;
+}
+
+.rr__key li {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.rr__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.rr__dot--0 { background: #2f7d55; }
+.rr__dot--1 { background: #5b7fc4; }
+.rr__dot--2 { background: #c0341c; }
+
+/* --- Fix --------------------------------------------------------------------- */
+
+.rr__fix {
+  padding-top: 15px;
+  margin-top: 18px;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.rr__fix-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.rr__fix-head span {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 58%);
+}
+
+.rr__opt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 11px 13px;
+  margin-bottom: 7px;
+  border: 1px solid rgb(22 22 24 / 10%);
+  border-radius: 10px;
+}
+
+.rr__opt-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #16161a;
+}
+
+.rr__opt-note {
+  font-size: 11.5px;
+  color: rgb(52 52 58 / 58%);
+}
+
+.rr__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 11px;
+}
+
+.rr__act {
+  padding: 10px 15px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #16161a;
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(22 22 24 / 14%);
+  border-radius: 999px;
+}
+
+.rr__act--primary {
+  color: #fff;
+  background: #16161a;
+  border-color: #16161a;
+}
+
+.rr__src {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 15px;
+  list-style: none;
+}
+
+.rr__src li {
+  padding: 4px 9px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 55%);
+  border: 1px solid rgb(22 22 24 / 10%);
+  border-radius: 5px;
+}

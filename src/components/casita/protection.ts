@@ -1,4 +1,5 @@
-import { coverageItems, policyCoverages, riskScore } from "../../data/home";
+import { coverageItems, policyCoverages } from "../../data/home";
+import { RISK_PERILS, scoreBand, totalScore } from "../../data/risks";
 
 /* ---------------------------------------------------------------------------
  * Blue-sky protection figures, derived from the policy on file.
@@ -39,12 +40,12 @@ export const SHORTFALL = REBUILD_COST - DWELLING_LIMIT;
 export const GAP = DEDUCTIBLE + SHORTFALL;
 
 /**
- * The stored score is 0–1,000; this view asks for 0–100. Divided rather than
- * rescaled so the two stay in step — but note the Risk Score tab still shows
- * the raw 560, so the same score appears two ways in one product.
+ * Same score the Risk Score tab shows, summed from the perils. Previously this
+ * rescaled data/home.ts's 0–1,000 value to 56 while the risk gauge showed a
+ * hardcoded 72 — one property, two scores, one tap apart.
  */
-export const RISK_OUT_OF_100 = Math.round(riskScore.value / 10);
-export const RISK_LABEL = riskScore.label;
+export const RISK_OUT_OF_100 = totalScore(RISK_PERILS);
+export const RISK_LABEL = scoreBand(RISK_OUT_OF_100);
 
 /** Compact currency, e.g. $1.1M / $245K. */
 export function money(n: number): string {

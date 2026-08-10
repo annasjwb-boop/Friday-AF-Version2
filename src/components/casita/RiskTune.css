@@ -1,0 +1,185 @@
+/* ---------------------------------------------------------------------------
+ * Risk tuning sheet. Mirrors the recovery view's Tune: full-screen white,
+ * rising from the bottom, closed with an X.
+ * ------------------------------------------------------------------------- */
+
+.risk-tune {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  color: #111214;
+  background: #fff;
+}
+
+.risk-tune__top {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 6px 18px 14px;
+}
+
+.risk-tune__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.risk-tune__sub {
+  max-width: 32ch;
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 62%);
+}
+
+.risk-tune__close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  color: #3c4149;
+  cursor: pointer;
+  background: rgb(22 22 24 / 5%);
+  border: none;
+  border-radius: 50%;
+}
+
+.risk-tune__score {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  padding: 13px 18px;
+  margin: 0 18px;
+  background: #f7f8f9;
+  border-radius: 12px;
+}
+
+.risk-tune__score > span {
+  font-size: 12.5px;
+  color: rgb(52 52 58 / 62%);
+}
+
+.risk-tune__score b {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.risk-tune__of {
+  font-size: 12px;
+}
+
+.risk-tune__list {
+  flex: 1;
+  min-height: 0;
+  padding: 16px 18px;
+  overflow-y: auto;
+}
+
+.risk-tune__list::-webkit-scrollbar {
+  display: none;
+}
+
+.risk-tune__row {
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgb(22 22 24 / 7%);
+}
+
+.risk-tune__rowhead {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 9px;
+}
+
+.risk-tune__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.risk-tune__pts {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c0341c;
+}
+
+.risk-tune__pts--none {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1d6b3f;
+}
+
+.risk-tune__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.risk-tune__step {
+  padding: 7px 11px;
+  font: inherit;
+  font-size: 12px;
+  color: rgb(52 52 58 / 70%);
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(22 22 24 / 12%);
+  border-radius: 999px;
+}
+
+.risk-tune__step.is-on {
+  color: #fff;
+  background: #16161a;
+  border-color: #16161a;
+}
+
+.risk-tune__step:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.risk-tune__locked {
+  margin-top: 9px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 55%);
+}
+
+.risk-tune__foot {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgb(22 22 24 / 8%);
+}
+
+.risk-tune__note {
+  flex: 1;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: rgb(52 52 58 / 55%);
+}
+
+.risk-tune__done {
+  padding: 12px 24px;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: #16161a;
+  border: none;
+  border-radius: 12px;
+}

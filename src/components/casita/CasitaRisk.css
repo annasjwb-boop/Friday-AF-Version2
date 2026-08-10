@@ -120,3 +120,93 @@
   color: #a3a8ae;
   letter-spacing: 0.005em;
 }
+
+/* --- Peril list + cap ------------------------------------------------------- */
+
+.casita-risk__listhead {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0 2px;
+  margin: 22px 0 12px;
+}
+
+.casita-risk__listtitle {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.casita-risk__tune {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 7px 13px;
+  margin-left: auto;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #16161a;
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(22 22 24 / 14%);
+  border-radius: 999px;
+}
+
+.casita-risk__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.risk-cap {
+  padding: 18px 16px;
+  margin-top: 14px;
+  color: #fff;
+  background: #16161a;
+  border-radius: 16px;
+}
+
+.risk-cap__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 50%);
+}
+
+.risk-cap__nums {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  margin-top: 10px;
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.risk-cap__from {
+  font-size: 30px;
+  font-weight: 600;
+  color: rgb(255 255 255 / 40%);
+  text-decoration: line-through;
+}
+
+.risk-cap__arrow {
+  font-size: 18px;
+  color: rgb(255 255 255 / 40%);
+}
+
+.risk-cap__to {
+  font-size: 38px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.risk-cap__note {
+  margin-top: 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: rgb(255 255 255 / 62%);
+}

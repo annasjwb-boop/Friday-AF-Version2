@@ -1,33 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { animate, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import { SlidersHorizontal } from "lucide-react";
+import {
+  RISK_PERILS,
+  perilPoints,
+  scoreBand,
+  totalScore,
+  type RiskPeril,
+} from "../../data/risks";
 import { CoverageBar } from "./CoverageBar";
+import { RiskRow } from "./RiskRow";
+import { RiskTune } from "./RiskTune";
 import "./CasitaRisk.css";
 
-const SCORE = 72;
+/* Derived from the perils rather than declared, so the gauge, the list and
+   the tile on the overview can never disagree. */
+const SCORE = totalScore(RISK_PERILS);
 
-const EXPOSURES = [
-  {
-    id: "storm",
-    title: "Storm & Wind",
-    share: 44,
-    text: "Wind uplift is your top structural risk. Hurricane straps and a sealed roof deck would qualify this home for a wind-mitigation credit.",
-    meta: "12 of 32 mitigations complete",
-  },
-  {
-    id: "flood",
-    title: "Flood",
-    share: 32,
-    text: "Part of your parcel sits in zone AE and isn’t covered by your current policy. A separate NFIP policy would close the gap.",
-    meta: "Not covered by current policy",
-  },
-  {
-    id: "fire",
-    title: "Fire & Everything Else",
-    share: 24,
-    text: "Fire, hail, and the remaining hazards for your area. Well covered by your current policy with no open gaps.",
-    meta: "Fully covered",
-  },
-];
 
 /* Gauge geometry: a thin arc sweeping over the top with ticks outside it. */
 const CX = 170;
@@ -79,17 +69,17 @@ const TICKS = Array.from({ length: TICK_COUNT }, (_, i) => {
 });
 
 /** Sweeps the score from 0 to its final value on mount. */
-function useAnimatedScore() {
+function useAnimatedScore(target: number) {
   const [value, setValue] = useState(0);
   useEffect(() => {
-    const controls = animate(0, SCORE, {
+    const controls = animate(0, target, {
       duration: 1.3,
       delay: 0.2,
       ease: [0.3, 0.75, 0.25, 1],
       onUpdate: setValue,
     });
     return () => controls.stop();
-  }, []);
+  }, [target]);
   return value;
 }
 
@@ -104,7 +94,25 @@ const cardMotion = (index: number) => ({
 });
 
 export function CasitaRisk() {
-  const value = useAnimatedScore();
+  /* Perils are state because Tune edits them, and the score is derived from
+     them rather than stored — so an edit can't leave the gauge and the list
+     disagreeing. */
+  const [perils, setPerils] = useState<RiskPeril[]>(RISK_PERILS);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [tuneOpen, setTuneOpen] = useState(false);
+
+  const score = totalScore(perils);
+  const uninsured = useMemo(
+    () => perils.filter((p) => p.status === "uninsured"),
+    [perils],
+  );
+  const uninsuredPoints = uninsured.reduce((n, p) => n + perilPoints(p), 0);
+  /* What the score would be with the uninsured perils covered — the ceiling
+     on what buying coverage can do, and the honest limit of this screen's
+     advice. */
+  const floor = score - uninsuredPoints;
+
+  const value = useAnimatedScore(score);
   const dotAngle = START_ANGLE - SWEEP * (value / 100);
   const [dotX, dotY] = polar(R, dotAngle);
 
@@ -121,7 +129,7 @@ export function CasitaRisk() {
           className="casita-risk__gauge"
           viewBox="0 0 340 218"
           role="img"
-          aria-label={`Risk score ${SCORE} of 100`}
+          aria-label={`Risk score ${score} of 100`}
         >
           <defs>
             <linearGradient
@@ -204,30 +212,59 @@ export function CasitaRisk() {
 
       <motion.p className="casita-risk__summary" {...cardMotion(-1)}>
         <span className="casita-risk__summary-dot" aria-hidden="true" />
-        Elevated risk · Improved 4% this month
+        {scoreBand(score)} · {uninsuredPoints} of {score} points from{" "}
+        {uninsured.length} uninsured perils
       </motion.p>
 
       <CoverageBar />
 
-      {EXPOSURES.map((exposure, i) => (
-        <motion.section
-          key={exposure.id}
-          className="casita-risk__card"
-          aria-label={`${exposure.title} exposure`}
-          {...cardMotion(i)}
+      <div className="casita-risk__listhead">
+        <h2 className="casita-risk__listtitle">How your exposure breaks down</h2>
+        <button
+          type="button"
+          className="casita-risk__tune"
+          onClick={() => setTuneOpen(true)}
         >
-          <div className="casita-risk__card-head">
-            <h2 className="casita-risk__card-title">{exposure.title}</h2>
-            <p className="casita-risk__card-share">
-              {exposure.share}
-              <span>%</span>
-            </p>
-          </div>
-          <div className="casita-risk__card-divider" />
-          <p className="casita-risk__card-text">{exposure.text}</p>
-          <p className="casita-risk__card-meta">{exposure.meta}</p>
-        </motion.section>
-      ))}
+          <SlidersHorizontal size={14} strokeWidth={2} aria-hidden="true" />
+          Tune
+        </button>
+      </div>
+
+      <div className="casita-risk__list">
+        {perils.map((p) => (
+          <RiskRow
+            key={p.id}
+            peril={p}
+            open={openId === p.id}
+            onToggle={() => setOpenId(openId === p.id ? null : p.id)}
+          />
+        ))}
+      </div>
+
+      <section className="risk-cap">
+        <p className="risk-cap__label">If you closed every uninsured gap</p>
+        <p className="risk-cap__nums">
+          <span className="risk-cap__from">{score}</span>
+          <span className="risk-cap__arrow">→</span>
+          <span className="risk-cap__to">{floor}</span>
+        </p>
+        <p className="risk-cap__note">
+          {floor} is the floor coverage alone can reach. What remains is your
+          deductible and the shortfall above your dwelling limit — money you
+          hold rather than risk you carry.
+        </p>
+      </section>
+
+      <AnimatePresence>
+        {tuneOpen && (
+          <RiskTune
+            perils={perils}
+            onChange={setPerils}
+            onClose={() => setTuneOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
