@@ -19,8 +19,12 @@ export const REBUILD_COST = 1_050_000;
 export const DWELLING_LIMIT = limit("dwelling", 850_000);
 export const PERSONAL_PROPERTY = limit("personal-property", 50_000);
 
-/** Everything a total loss would have to replace. */
-export const PROTECTED_VALUE = REBUILD_COST + PERSONAL_PROPERTY;
+/**
+ * What a total loss would cost: the home plus its contents. Named for the
+ * amount at stake rather than the amount protected — only part of it is
+ * covered, which is the point of every figure derived from it.
+ */
+export const TOTAL_LOSS_ESTIMATE = REBUILD_COST + PERSONAL_PROPERTY;
 
 /** Out of pocket before the policy pays anything. */
 export const DEDUCTIBLE = 45_000;
@@ -91,7 +95,7 @@ const COVERED_SEGMENTS: Segment[] = [
 ];
 
 const UNCOVERED_SEGMENTS: Segment[] = [
-  { id: "gap", label: "Not covered at all", value: PROTECTED_VALUE },
+  { id: "gap", label: "Not covered at all", value: TOTAL_LOSS_ESTIMATE },
 ];
 
 export function coverageForPeril(peril: string): PerilCoverage {
@@ -103,7 +107,7 @@ export function coverageForPeril(peril: string): PerilCoverage {
     return {
       covered: false,
       segments: UNCOVERED_SEGMENTS,
-      gap: PROTECTED_VALUE,
+      gap: TOTAL_LOSS_ESTIMATE,
       note: "Nothing would be paid",
     };
   }
@@ -139,7 +143,7 @@ export function nextActionsForPeril(peril: string): NextAction[] {
       return [
         {
           title: "Add a flood policy",
-          body: `Standard homeowners policies never cover flood — that's true everywhere, not a quirk of yours. A separate NFIP or private policy is the only thing that closes this ${money(PROTECTED_VALUE)}.`,
+          body: `Standard homeowners policies never cover flood — that's true everywhere, not a quirk of yours. A separate NFIP or private policy is the only thing that closes this ${money(TOTAL_LOSS_ESTIMATE)}.`,
           cta: "Look at flood options",
         },
         {
@@ -157,7 +161,7 @@ export function nextActionsForPeril(peril: string): NextAction[] {
       return [
         {
           title: "Add earthquake coverage",
-          body: `Earthquake is excluded from your policy, so a shake leaves the full ${money(PROTECTED_VALUE)} with you. It's usually added as an endorsement rather than a separate policy.`,
+          body: `Earthquake is excluded from your policy, so a shake leaves the full ${money(TOTAL_LOSS_ESTIMATE)} with you. It's usually added as an endorsement rather than a separate policy.`,
           cta: "Price an endorsement",
         },
         {

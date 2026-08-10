@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Gauge, ShieldCheck } from "lucide-react";
 import { readinessProgress } from "../../data/home";
 import {
-  PROTECTED_VALUE,
+  TOTAL_LOSS_ESTIMATE,
   RISK_LABEL,
   RISK_OUT_OF_100,
   coverageForPeril,
@@ -46,9 +46,9 @@ export function CasitaOverview({
     <div className="cov">
       <div className="cov__totals">
         <div>
-          <p className="cov__label">Total protected value</p>
-          <p className="cov__value">{money(PROTECTED_VALUE)}</p>
-          <p className="cov__sub">Rebuild cost plus belongings</p>
+          <p className="cov__label">Total loss estimate</p>
+          <p className="cov__value">{money(TOTAL_LOSS_ESTIMATE)}</p>
+          <p className="cov__sub">Home + Personal Property</p>
         </div>
         <div className="cov__right">
           <p className="cov__label">Coverage gap</p>

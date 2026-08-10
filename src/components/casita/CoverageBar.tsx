@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { PROTECTED_VALUE, coverageForPeril, money } from "./protection";
+import { TOTAL_LOSS_ESTIMATE, coverageForPeril, money } from "./protection";
 import type { PerilId } from "./perils";
 import "./CoverageBar.css";
 
@@ -22,7 +22,7 @@ export function CoverageBar({ peril = "clear" }: { peril?: PerilId }) {
     <section className="cov-bar" aria-label="Coverage gap breakdown">
       <p className="cov-bar__head">
         {cover.covered ? "If you lost everything today" : "If this happened"}
-        <span>{money(PROTECTED_VALUE)} to replace</span>
+        <span>{money(TOTAL_LOSS_ESTIMATE)} to replace</span>
       </p>
 
       <div className="cov-bar__track">
@@ -31,7 +31,7 @@ export function CoverageBar({ peril = "clear" }: { peril?: PerilId }) {
             key={seg.id}
             className={`cov-bar__seg cov-bar__seg--${seg.id}`}
             initial={{ width: 0 }}
-            animate={{ width: `${(seg.value / PROTECTED_VALUE) * 100}%` }}
+            animate={{ width: `${(seg.value / TOTAL_LOSS_ESTIMATE) * 100}%` }}
             transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
           />
         ))}
