@@ -442,3 +442,23 @@
     height: min(310px, 34dvh);
   }
 }
+
+/* Help buttons sit beside the avatar in the header. */
+.casita__actions {
+  display: flex;
+  flex: none;
+  gap: 7px;
+  align-items: center;
+}
+
+/* Two buttons plus the avatar leave ~220px for the identity block at 390px.
+   The address is close to that, so it truncates rather than shoving them. */
+.casita__identity {
+  min-width: 0;
+}
+
+.casita__identity .casita__address {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

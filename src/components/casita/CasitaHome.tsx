@@ -11,6 +11,7 @@ import { METAPHOR_LABELS, METAPHORS, type MetaphorId } from "./metaphors";
 import { getTurntableFrames } from "./turntableFrames";
 import { CasitaHomePicker } from "./CasitaHomePicker";
 import { CasitaRecovery } from "./CasitaRecovery";
+import { CasitaHelp } from "./CasitaHelp";
 import { CasitaOverview } from "./CasitaOverview";
 import { CasitaReadiness } from "./CasitaReadiness";
 import { CasitaRisk } from "./CasitaRisk";
@@ -160,9 +161,14 @@ export function CasitaHome() {
             <h1 className="casita__title">Casita</h1>
             <p className="casita__address">123 Prado Rd NE, Atlanta, GA</p>
           </div>
-          <button type="button" className="casita__avatar" aria-label="Profile">
-            <span aria-hidden="true">JB</span>
-          </button>
+          <div className="casita__actions">
+            {/* Help follows whichever tab is open, so the explainers and
+                questions match what's on screen. */}
+            <CasitaHelp context={activeTab} />
+            <button type="button" className="casita__avatar" aria-label="Profile">
+              <span aria-hidden="true">JB</span>
+            </button>
+          </div>
         </div>
       </header>
 

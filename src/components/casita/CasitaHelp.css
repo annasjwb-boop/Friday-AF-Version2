@@ -1,0 +1,196 @@
+/* ---------------------------------------------------------------------------
+ * Header help buttons and their sheets.
+ * ------------------------------------------------------------------------- */
+
+.ch-btn {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  color: rgb(255 255 255 / 72%);
+  cursor: pointer;
+  background: rgb(255 255 255 / 10%);
+  border: none;
+  border-radius: 50%;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.ch-btn:hover {
+  color: #fff;
+  background: rgb(255 255 255 / 18%);
+}
+
+.ch-btn:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 2px;
+}
+
+/* --- Sheet -------------------------------------------------------------------- */
+
+.ch {
+  position: absolute;
+  inset: 0;
+  z-index: 46;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  color: #111214;
+  background: #fff;
+}
+
+.ch__top {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 6px 18px 14px;
+}
+
+.ch__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.ch__close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  color: #3c4149;
+  cursor: pointer;
+  background: rgb(22 22 24 / 5%);
+  border: none;
+  border-radius: 50%;
+}
+
+.ch__scroll {
+  flex: 1;
+  min-height: 0;
+  padding: 0 18px calc(24px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+}
+
+.ch__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.ch__lede {
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgb(52 52 58 / 66%);
+}
+
+.ch__note {
+  padding: 12px 13px;
+  margin-top: 14px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: rgb(52 52 58 / 62%);
+  background: #f7f8f9;
+  border-radius: 10px;
+}
+
+/* --- Videos ------------------------------------------------------------------- */
+
+.ch-vid {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 13px 14px;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 9%);
+  border-radius: 13px;
+}
+
+.ch-vid__thumb {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: rgb(52 52 58 / 45%);
+  background: #f2f3f5;
+  border-radius: 10px;
+}
+
+.ch-vid__title {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #16161a;
+}
+
+.ch-vid__blurb {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 62%);
+}
+
+.ch-vid__meta {
+  display: block;
+  margin-top: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 45%);
+}
+
+/* --- Chat --------------------------------------------------------------------- */
+
+.ch-chat__q {
+  max-width: 88%;
+  padding: 10px 14px;
+  margin-left: auto;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: #fff;
+  background: #0a84ff;
+  border-radius: 15px 15px 5px 15px;
+}
+
+.ch-chat__a {
+  max-width: 92%;
+  padding: 12px 15px;
+  margin: 9px 0 16px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #16161a;
+  background: #f7f8f9;
+  border-radius: 15px 15px 15px 5px;
+}
+
+.ch-chat__asks {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-items: flex-end;
+}
+
+.ch-chat__asks button {
+  padding: 10px 15px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0a84ff;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(10 132 255 / 32%);
+  border-radius: 999px;
+}
+
+.ch-chat__asks button:hover {
+  background: rgb(10 132 255 / 6%);
+}
