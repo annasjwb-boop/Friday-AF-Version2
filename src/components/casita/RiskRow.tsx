@@ -67,6 +67,33 @@ export function RiskRow({
             <div className="rr__inner">
               <p className="rr__blurb">{peril.blurb}</p>
 
+              {peril.fix && (
+                <div className="rr__fix">
+                  <p className="rr__fix-head">
+                    Recommended fix · {peril.fix.title}
+                    <span>{peril.fix.est}</span>
+                  </p>
+                  {peril.fix.options.map((o) => (
+                    <div className="rr__opt" key={o.name}>
+                      <span className="rr__opt-name">{o.name}</span>
+                      <span className="rr__opt-note">{o.note}</span>
+                    </div>
+                  ))}
+                  <div className="rr__acts">
+                    <button type="button" className="rr__act rr__act--primary">
+                      Preview score impact
+                    </button>
+                    <button
+                      type="button"
+                      className="rr__act"
+                      onClick={() => setExploring(true)}
+                    >
+                      Explore options
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="rr__facts">
                 {[
                   { k: "How often", ...peril.howOften },
@@ -99,33 +126,6 @@ export function RiskRow({
                   </li>
                 ))}
               </ul>
-
-              {peril.fix && (
-                <div className="rr__fix">
-                  <p className="rr__fix-head">
-                    Recommended fix · {peril.fix.title}
-                    <span>{peril.fix.est}</span>
-                  </p>
-                  {peril.fix.options.map((o) => (
-                    <div className="rr__opt" key={o.name}>
-                      <span className="rr__opt-name">{o.name}</span>
-                      <span className="rr__opt-note">{o.note}</span>
-                    </div>
-                  ))}
-                  <div className="rr__acts">
-                    <button type="button" className="rr__act rr__act--primary">
-                      Preview score impact
-                    </button>
-                    <button
-                      type="button"
-                      className="rr__act"
-                      onClick={() => setExploring(true)}
-                    >
-                      Explore options
-                    </button>
-                  </div>
-                </div>
-              )}
 
               <ul className="rr__src">
                 {peril.sources.map((s) => (

@@ -222,15 +222,15 @@
 
 .xo-card__cta {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   margin-top: 13px;
   font: inherit;
   font-size: 13.5px;
   font-weight: 600;
-  color: #16161a;
+  color: #fff;
   cursor: pointer;
-  background: none;
-  border: 1px solid rgb(22 22 24 / 16%);
+  background: #16161a;
+  border: 1px solid #16161a;
   border-radius: 11px;
 }
 
