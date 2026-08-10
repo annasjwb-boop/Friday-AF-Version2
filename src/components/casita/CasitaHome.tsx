@@ -6,7 +6,6 @@ import {
   Camera,
   CloudRainWind,
   Gauge,
-  Info,
   Landmark,
   Signal,
   Wifi,
@@ -186,7 +185,6 @@ export function CasitaHome() {
   const [actionIds, setActionIds] = useState(() => ACTIONS.map((a) => a.id));
   const stageTap = useRef<{ x: number; y: number; t: number } | null>(null);
 
-  const tab = TABS.find((t) => t.id === activeTab) ?? TABS[0];
   const orderedActions = actionIds
     .map((id) => ACTIONS.find((a) => a.id === id))
     .filter((a): a is ActionCard => Boolean(a));
@@ -278,47 +276,7 @@ export function CasitaHome() {
 
         <PerilCaption active={peril} />
 
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={tab.id}
-            className="casita__stats"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
-          >
-            <div className="casita__stat">
-              <span className="casita__stat-label">{tab.left.label}</span>
-              <span className="casita__stat-value">
-                {tab.left.value}
-                {tab.left.note && (
-                  <span className="casita__stat-note">{tab.left.note}</span>
-                )}
-                {tab.left.info && (
-                  <Info
-                    size={13}
-                    strokeWidth={2}
-                    className="casita__stat-info"
-                    aria-label="How this estimate is calculated"
-                  />
-                )}
-              </span>
-            </div>
-            <div className="casita__stat casita__stat--right">
-              <span className="casita__stat-label">{tab.right.label}</span>
-              <span className="casita__stat-value">
-                {tab.right.value}
-                <span
-                  className={`casita__pill casita__pill--${tab.right.pillTone}`}
-                >
-                  {tab.right.pill}
-                </span>
-              </span>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        <CasitaOverview peril={peril} />
+        <CasitaOverview peril={peril} onOpen={setActiveTab} />
 
         <AnimatePresence initial={false}>
           {orderedActions.length > 0 && (

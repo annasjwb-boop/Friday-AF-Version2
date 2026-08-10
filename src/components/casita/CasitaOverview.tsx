@@ -8,6 +8,7 @@ import {
   PROTECTED_VALUE,
   RISK_LABEL,
   RISK_OUT_OF_100,
+  SHORTFALL,
   money,
 } from "./protection";
 import type { PerilId } from "./perils";
@@ -27,10 +28,17 @@ import "./CasitaOverview.css";
 const SEGMENTS = [
   { id: "ins", label: "Insurance pays", value: INSURANCE_PAYS },
   { id: "ded", label: "Your deductible", value: DEDUCTIBLE },
-  { id: "gap", label: "Gap to rebuild", value: GAP },
+  { id: "gap", label: "Above your limit", value: SHORTFALL },
 ];
 
-export function CasitaOverview({ peril }: { peril: PerilId }) {
+export function CasitaOverview({
+  peril,
+  onOpen,
+}: {
+  peril: PerilId;
+  /** Tiles jump to the tab that explains them. */
+  onOpen: (tab: "risk" | "readiness") => void;
+}) {
   const blueSky = peril === "clear";
 
   return (
@@ -45,13 +53,17 @@ export function CasitaOverview({ peril }: { peril: PerilId }) {
           <div className="cov__right">
             <p className="cov__label">Coverage gap</p>
             <p className="cov__value cov__value--gap">{money(GAP)}</p>
-            <p className="cov__sub">You would cover this</p>
+            <p className="cov__sub">Deductible plus shortfall</p>
           </div>
         </div>
       )}
 
       <div className="cov__tiles">
-        <div className="cov-tile">
+        <button
+          type="button"
+          className="cov-tile"
+          onClick={() => onOpen("risk")}
+        >
           <span className="cov-tile__icon" aria-hidden="true">
             <Gauge size={15} strokeWidth={1.9} />
           </span>
@@ -61,9 +73,13 @@ export function CasitaOverview({ peril }: { peril: PerilId }) {
             <span>/100</span>
           </p>
           <p className="cov-tile__sub">{RISK_LABEL}</p>
-        </div>
+        </button>
 
-        <div className="cov-tile">
+        <button
+          type="button"
+          className="cov-tile"
+          onClick={() => onOpen("readiness")}
+        >
           <span className="cov-tile__icon" aria-hidden="true">
             <ShieldCheck size={15} strokeWidth={1.9} />
           </span>
@@ -78,7 +94,7 @@ export function CasitaOverview({ peril }: { peril: PerilId }) {
               transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
             />
           </div>
-        </div>
+        </button>
       </div>
 
       {blueSky && (

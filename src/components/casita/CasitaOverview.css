@@ -251,3 +251,25 @@
   font-weight: 600;
   color: #16161a;
 }
+
+/* Tiles are buttons — they jump to the tab that explains the number. */
+button.cov-tile {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+button.cov-tile:hover {
+  border-color: rgb(22 22 24 / 18%);
+  transform: translateY(-1px);
+}
+
+button.cov-tile:active {
+  transform: translateY(0);
+}
+
+button.cov-tile:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 2px;
+}
