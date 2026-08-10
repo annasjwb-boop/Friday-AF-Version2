@@ -6,9 +6,12 @@ import { RISK_PERILS } from "./risks";
  * ⚠ The one thing not to do with this data: stack the per-peril figures. Flood
  * and sinkhole each threaten the whole structure, so adding them gives $2.4M
  * of uncovered exposure on a $1.05M house. They're alternative scenarios, not
- * components of one. Every view built on this either shows them side by side,
- * or uses the probability-weighted figures below, which do add up because an
- * expected annual loss is a rate rather than an amount.
+ * components of one.
+ *
+ * The probability-weighted figures (ANNUAL_P, expected, EXPECTED_BY_ASSET) are
+ * currently unused — the views that read them were removed. They are the only
+ * safe way to add exposure across perils, so they are kept for whatever needs
+ * that next rather than deleted and rediscovered later.
  *
  * SAMPLE DATA — damage shares and frequencies are illustrative. Asset values
  * come from data/home.ts where they exist.
