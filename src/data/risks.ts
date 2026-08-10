@@ -320,3 +320,220 @@ export const RISK_PERILS: RiskPeril[] = [
     sources: ["Policy declarations"],
   },
 ];
+
+/* ---------------------------------------------------------------------------
+ * Market options for closing a gap.
+ *
+ * ⚠ Carrier names are shown so the layout reads realistically. Every premium
+ * here is illustrative — none is a quote, and none came from a rating API.
+ * Attaching invented prices to named companies is the thing most likely to
+ * cause real harm on this screen, so the sheet says so on its face.
+ *
+ * On payback: the obvious calculation — premium divided by the expected annual
+ * loss avoided — returns under a month for every option here, because the
+ * modelled exposures are unsourced and far exceed what carriers charge. That
+ * would read as a sales pitch and wouldn't survive scrutiny. So payback is
+ * instead the coverage amount over the annual premium: how many years of
+ * premiums a single claim returns. It's arithmetic on two numbers already on
+ * screen, and it's the honest shape of the trade — insurance transfers loss,
+ * it doesn't earn a return.
+ * ------------------------------------------------------------------------- */
+
+export interface Provider {
+  name: string;
+  /** How it's bought — program, endorsement, standalone policy. */
+  kind: string;
+  /** Illustrative monthly premium. */
+  monthly: number;
+  /** What one claim could pay, used for the payback figure. */
+  covers: number;
+  coversLabel: string;
+  upsides: string[];
+  downsides: string[];
+}
+
+/** Years of premiums a single full claim would return. */
+export function paybackYears(p: Provider): number {
+  return p.covers / (p.monthly * 12);
+}
+
+export const PROVIDERS: Record<string, Provider[]> = {
+  flood: [
+    {
+      name: "NFIP",
+      kind: "Federal program, sold through a Write-Your-Own carrier",
+      monthly: 115,
+      covers: 250_000,
+      coversLabel: "$250K building · $100K contents",
+      upsides: [
+        "Available regardless of claims history or carrier appetite",
+        "Rates and terms are set federally, so they don't vary by seller",
+        "Can't be non-renewed because you filed",
+      ],
+      downsides: [
+        "Caps at $250K — well below your $1.05M rebuild cost",
+        "30-day wait before it takes effect, so it can't be bought ahead of a storm",
+        "Contents cover is separate and limited",
+      ],
+    },
+    {
+      name: "Neptune Flood",
+      kind: "Private standalone policy",
+      monthly: 195,
+      covers: 1_100_000,
+      coversLabel: "Up to full replacement value",
+      upsides: [
+        "Limits high enough to cover the whole rebuild",
+        "No elevation certificate needed to bind",
+        "10-day wait rather than 30",
+      ],
+      downsides: [
+        "Private carriers can non-renew or re-rate after a bad season",
+        "Less rate stability than the federal program",
+      ],
+    },
+    {
+      name: "Wright Flood excess",
+      kind: "Excess layer above an NFIP policy",
+      monthly: 95,
+      covers: 850_000,
+      coversLabel: "The remainder above NFIP's $250K",
+      upsides: [
+        "Cheapest route to full-value cover if you keep NFIP underneath",
+        "Keeps the federal policy's stability for the first $250K",
+      ],
+      downsides: [
+        "Requires the NFIP policy to stay in force",
+        "Two policies, two renewals, two claims processes",
+      ],
+    },
+  ],
+  sinkhole: [
+    {
+      name: "Sinkhole endorsement",
+      kind: "Added to your existing policy",
+      monthly: 92,
+      covers: 1_050_000,
+      coversLabel: "To your dwelling limit",
+      upsides: [
+        "Same carrier and adjuster as the rest of your claim",
+        "Covers subsidence damage, not just total collapse",
+      ],
+      downsides: [
+        "Usually requires an inspection before it's offered",
+        "Often carries its own higher deductible",
+      ],
+    },
+    {
+      name: "Catastrophic ground cover collapse",
+      kind: "Statutory offer from your carrier",
+      monthly: 14,
+      covers: 1_050_000,
+      coversLabel: "Only if the home is condemned",
+      upsides: [
+        "Very cheap, and carriers must offer it in some states",
+        "No inspection required",
+      ],
+      downsides: [
+        "Pays only when the home is legally condemned",
+        "Most sinkhole damage never meets that bar — this is the narrow one",
+      ],
+    },
+  ],
+  backup: [
+    {
+      name: "Water backup rider",
+      kind: "Added to your existing policy",
+      monthly: 5,
+      covers: 25_000,
+      coversLabel: "$25K of backup damage",
+      upsides: [
+        "The cheapest gap on your list to close, by a wide margin",
+        "No inspection, effective at next renewal",
+      ],
+      downsides: [
+        "Limits are low relative to a finished lower floor",
+        "Doesn't cover flooding from outside the home",
+      ],
+    },
+    {
+      name: "Backflow valve",
+      kind: "One-time plumbing fix",
+      monthly: 9,
+      covers: 25_000,
+      coversLabel: "Prevents rather than pays",
+      upsides: [
+        "Stops the damage happening instead of reimbursing it",
+        "Some carriers discount the rider once it's fitted",
+      ],
+      downsides: [
+        "Upfront cost around $1,100 rather than a monthly premium",
+        "Needs maintenance to keep working",
+      ],
+    },
+  ],
+  dwelling: [
+    {
+      name: "Extended replacement cost",
+      kind: "Endorsement on your existing policy",
+      monthly: 28,
+      covers: 212_500,
+      coversLabel: "25% above your $850K limit",
+      upsides: [
+        "Closes most of the $200K shortfall for a small premium change",
+        "Applies to every covered peril at once",
+      ],
+      downsides: [
+        "Capped at a percentage, so it can still fall short if costs spike",
+        "Doesn't help with perils that aren't covered at all",
+      ],
+    },
+    {
+      name: "Guaranteed replacement cost",
+      kind: "Endorsement on your existing policy",
+      monthly: 46,
+      covers: 1_050_000,
+      coversLabel: "Whatever rebuilding actually costs",
+      upsides: [
+        "Removes the shortfall entirely, whatever construction costs do",
+        "The only option that survives a post-disaster price surge",
+      ],
+      downsides: [
+        "Not offered by every carrier, and often needs a current appraisal",
+        "Costs more than the extended version for a risk you may not hit",
+      ],
+    },
+  ],
+  deductible: [
+    {
+      name: "Lower to 2% of dwelling",
+      kind: "Change to your existing policy",
+      monthly: 37,
+      covers: 28_000,
+      coversLabel: "Cuts the deductible from $45K to $17K",
+      upsides: [
+        "Reduces what you must find in cash before anything pays",
+        "Takes effect at renewal with no inspection",
+      ],
+      downsides: [
+        "Raises your premium every year, claim or not",
+        "Doesn't increase what the policy pays overall",
+      ],
+    },
+    {
+      name: "Hold it in cash",
+      kind: "No policy change",
+      monthly: 0,
+      covers: 45_000,
+      coversLabel: "You fund the deductible yourself",
+      upsides: [
+        "Costs nothing in premium",
+        "The money stays yours if no storm comes",
+      ],
+      downsides: [
+        "$45K has to be reachable within about a week",
+        "It's the same money whether you set it aside or not",
+      ],
+    },
+  ],
+};

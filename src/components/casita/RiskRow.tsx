@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { perilPoints, type RiskPeril } from "../../data/risks";
+import { ExploreOptions } from "./ExploreOptions";
 import "./RiskRow.css";
 
 /* ---------------------------------------------------------------------------
@@ -27,6 +29,7 @@ export function RiskRow({
   open: boolean;
   onToggle: () => void;
 }) {
+  const [exploring, setExploring] = useState(false);
   const pts = perilPoints(peril);
   const fill = peril.status === "covered" ? 100 : (peril.severity / 4) * 100;
 
@@ -113,7 +116,11 @@ export function RiskRow({
                     <button type="button" className="rr__act rr__act--primary">
                       Preview score impact
                     </button>
-                    <button type="button" className="rr__act">
+                    <button
+                      type="button"
+                      className="rr__act"
+                      onClick={() => setExploring(true)}
+                    >
                       Explore options
                     </button>
                   </div>
@@ -127,6 +134,15 @@ export function RiskRow({
               </ul>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {exploring && (
+          <ExploreOptions
+            peril={peril}
+            onClose={() => setExploring(false)}
+          />
         )}
       </AnimatePresence>
     </section>
