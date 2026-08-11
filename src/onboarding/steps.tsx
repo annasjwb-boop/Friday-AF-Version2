@@ -667,6 +667,13 @@ export function RisksStep({ onDone }: { onDone: (v: string) => void }) {
         </button>
       )}
 
+      {/* Sets expectation before the ask closes: this isn't the only chance to
+          name a hazard, which makes it easier to move on. */}
+      <p className="ob-panel__src">
+        You can add other risks to your profile once we get your account set up,
+        if there's anything else you want to scan your policy for.
+      </p>
+
       <button
         type="button"
         className="ob-send"
