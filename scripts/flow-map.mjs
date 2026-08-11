@@ -50,6 +50,7 @@ const out = [
   "Also viewable in the app at `/flows/:id`, from the campaign page.",
   "",
   "`!` in the left column marks a step no path reaches.",
+  "`◆` marks copy that changes with an earlier answer, with each form listed.",
   "",
 ];
 
@@ -72,6 +73,11 @@ for (const r of analyseAll()) {
     const label = n.label ? ` [${n.label}]` : "";
     const pause = n.pause ? ` (${n.pause}ms)` : "";
     out.push(`${mark}${num}  ${kind}${label}${pause} ${n.summary}`.trimEnd());
+    for (const v of n.variants) {
+      const p = v.pause ? ` (${v.pause}ms)` : "";
+      out.push(`             ◆ when ${v.when}${p}`);
+      out.push(`               "${v.text ?? ""}"`);
+    }
     for (const e of n.edges) {
       if (e.exit) out.push("             └─ ends the flow");
       else if (e.broken) out.push(`             └─ BROKEN JUMP on "${e.on}"`);

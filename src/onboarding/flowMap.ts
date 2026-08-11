@@ -1,4 +1,10 @@
-import { AD_TO_SCRIPT, SCRIPTS, type Script, type Step } from "./scripts";
+import {
+  AD_TO_SCRIPT,
+  NO_STORMS,
+  SCRIPTS,
+  type Script,
+  type Step,
+} from "./scripts";
 
 /* ---------------------------------------------------------------------------
  * Walking a flow.
@@ -33,6 +39,14 @@ export interface Edge {
   broken?: boolean;
 }
 
+/** One resolved form of a step whose copy or timing depends on an answer. */
+export interface Variant {
+  /** What produces this form, e.g. `storms = Neither of these damaged…`. */
+  when: string;
+  text?: string;
+  pause?: number;
+}
+
 export interface Node {
   index: number;
   step: Step;
@@ -41,6 +55,8 @@ export interface Node {
   summary: string;
   edges: Edge[];
   reachable: boolean;
+  /** Populated when the step's text or pause is a function of the answers. */
+  variants: Variant[];
 }
 
 export interface FlowReport {
@@ -93,6 +109,80 @@ export function edgesOf(steps: Step[], i: number): Edge[] {
     default:
       return [{ on: null, to: next }];
   }
+}
+
+/**
+ * What each earlier step can put into the answers, so conditional copy can be
+ * resolved rather than shown as "(depends on answers)".
+ *
+ * Free-text steps are deliberately absent: their values can't be enumerated,
+ * and guessing one would make the diagram assert a branch that may not exist.
+ */
+function answerSources(steps: Step[]): { id: string; values: string[] }[] {
+  const out: { id: string; values: string[] }[] = [];
+  for (const step of steps) {
+    if (step.kind === "choice") {
+      out.push({
+        id: step.id,
+        values: step.options.concat(step.other ? ["Something else"] : []),
+      });
+    } else if (step.kind === "pickGrants") {
+      out.push({ id: step.id, values: ["one or more storms", NO_STORMS] });
+    }
+  }
+  return out;
+}
+
+/**
+ * Resolve a conditional step by varying one answer at a time from a baseline.
+ *
+ * One at a time rather than every combination: flows here branch on a single
+ * answer, and the full cartesian product would grow past the point where the
+ * diagram is readable while adding nothing.
+ */
+function variantsOf(step: Step, steps: Step[]): Variant[] {
+  const isFn =
+    step.kind === "say" &&
+    (typeof step.text === "function" || Boolean(step.pauseFrom));
+  if (!isFn) return [];
+
+  const sources = answerSources(steps);
+  const baseline: Record<string, string> = {};
+  for (const s of sources) baseline[s.id] = s.values[0];
+
+  const resolve = (a: Record<string, string>): Variant => ({
+    when: "",
+    text:
+      step.kind === "say" && typeof step.text === "function"
+        ? step.text(a)
+        : undefined,
+    pause:
+      step.kind === "say" && step.pauseFrom ? step.pauseFrom(a) : step.pause,
+  });
+
+  /* Only report answers the step actually reacts to. Varying `tenure` under a
+     step that branches on `storms` yields the baseline output, and labelling
+     that "when tenure = I own" would name the wrong cause. */
+  const base = resolve(baseline);
+  const baseKey = `${base.text}|${base.pause}`;
+
+  const seen = new Map<string, Variant>();
+  for (const src of sources) {
+    const outputs = src.values.map((value) => ({
+      value,
+      v: resolve({ ...baseline, [src.id]: value }),
+    }));
+    const changes = outputs.some(
+      ({ v }) => `${v.text}|${v.pause}` !== baseKey,
+    );
+    if (!changes) continue;
+
+    for (const { value, v } of outputs) {
+      const key = `${v.text}|${v.pause}`;
+      if (!seen.has(key)) seen.set(key, { ...v, when: `${src.id} = ${value}` });
+    }
+  }
+  return [...seen.values()];
 }
 
 function summarise(step: Step): string {
@@ -175,6 +265,7 @@ export function analyseFlow(id: string, script: Script): FlowReport {
       summary: summarise(step),
       edges,
       reachable: seen.has(index),
+      variants: variantsOf(step, steps),
     };
   });
 

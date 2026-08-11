@@ -6,6 +6,7 @@ Do not edit by hand — regenerate instead.
 Also viewable in the app at `/flows/:id`, from the campaign page.
 
 `!` in the left column marks a step no path reaches.
+`◆` marks copy that changes with an earlier answer, with each form listed.
 
 ## aid — Check if you qualify for aid
 
@@ -34,6 +35,10 @@ Reached from ad 01 · 19 of 19 steps reachable
              ├─ "one or more storms" → step 14
              ├─ "neither damaged my home" → step 14
  14  SAY             (depends on answers)
+             ◆ when storms = one or more storms (2000ms)
+               "Got it! I'll save these to your profile and we can review together shortly."
+             ◆ when storms = Neither of these damaged my home (1000ms)
+               "Got it!"
  15  SAY             There's one more, and it's for damage that hasn't happened yet. Do you want to apply for the state's resiliency grant? States fund these because federal research finds mitigation money pays for itself several times over in avoided losses.
  16  RESILIENCY
              ├─ "Yes interested" → step 17

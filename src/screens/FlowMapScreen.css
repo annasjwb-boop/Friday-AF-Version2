@@ -489,3 +489,46 @@
   background: #16161a !important;
   border-color: #16161a !important;
 }
+
+/* --- Conditional copy --------------------------------------------------------- */
+
+.fm-vars {
+  margin-top: 9px;
+  list-style: none;
+}
+
+.fm-vars li {
+  padding: 8px 11px;
+  margin-bottom: 6px;
+  background: rgb(10 132 255 / 6%);
+  border-left: 2px solid rgb(10 132 255 / 40%);
+  border-radius: 0 8px 8px 0;
+}
+
+.fm-vars__when {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: baseline;
+  font-size: 11px;
+  color: #8a8f98;
+}
+
+.fm-vars__when b {
+  font-family: ui-monospace, monospace;
+  font-weight: 600;
+  color: #0a5fbf;
+}
+
+.fm-vars__when em {
+  font-size: 10.5px;
+  font-style: normal;
+  color: #8a8f98;
+}
+
+.fm-vars__text {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #16161a;
+}

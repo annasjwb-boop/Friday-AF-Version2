@@ -212,7 +212,22 @@ function StepRow({
             </div>
           </div>
         ) : (
-          <p className="fm-step__text">{node.summary}</p>
+          <>
+            <p className="fm-step__text">{node.summary}</p>
+            {node.variants.length > 0 && (
+              <ul className="fm-vars">
+                {node.variants.map((v) => (
+                  <li key={v.when}>
+                    <p className="fm-vars__when">
+                      when <b>{v.when}</b>
+                      {v.pause ? <em>{v.pause}ms pause</em> : null}
+                    </p>
+                    <p className="fm-vars__text">{v.text}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
         {node.edges.some((e) => e.on || e.exit || e.to == null) && (
           <ul className="fm-edges">
