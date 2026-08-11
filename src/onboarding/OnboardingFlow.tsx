@@ -222,13 +222,6 @@ export function OnboardingFlow() {
             </div>
           )}
 
-          {waiting && current && history.length > 0 && (
-            <button type="button" className="ob__back-step" onClick={goBack}>
-              <CornerUpLeft size={13} strokeWidth={2} aria-hidden="true" />
-              Back
-            </button>
-          )}
-
           {waiting && current && (
             <motion.div
               className="ob__active"
@@ -249,6 +242,18 @@ export function OnboardingFlow() {
 
         </div>
       </div>
+
+      {/* Outside the scroller: one fixed position at the foot of the flow, so
+          it can't scroll away mid-conversation or land in a different place
+          on every step. Hidden at the start, when there's nothing behind. */}
+      {history.length > 0 && !done && (
+        <div className="ob__foot">
+          <button type="button" className="ob__back-step" onClick={goBack}>
+            <CornerUpLeft size={13} strokeWidth={2} aria-hidden="true" />
+            Back
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -73,7 +73,8 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 22px 16px calc(28px + env(safe-area-inset-bottom, 0px));
+  /* The footer supplies the bottom inset now. */
+  padding: 22px 16px 20px;
 }
 
 /* --- Bubbles --------------------------------------------------------------- */
@@ -718,13 +719,20 @@
   gap: 12px;
 }
 
-/* Back sits with the answer controls rather than in the header, where it would
-   compete with leaving the flow entirely. */
+/* A fixed strip under the thread. Back lives here rather than inline with the
+   answers so it is in the same place on every step — inline it moved with the
+   content and could scroll out of view behind a tall card. */
+.ob__foot {
+  flex: none;
+  padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: #fbfbfa;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
 .ob__back-step {
   display: inline-flex;
   gap: 5px;
   align-items: center;
-  align-self: flex-start;
   padding: 6px 12px;
   font: inherit;
   font-size: 12px;
