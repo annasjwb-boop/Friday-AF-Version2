@@ -10,6 +10,7 @@ import {
   Flame,
 } from "lucide-react";
 import { OPEN_DISASTERS, RESILIENCY_GRANT } from "../data/grants";
+import { policyCoverages } from "../data/home";
 import { MAPBOX_TOKEN } from "../components/campaign/FloridaMap";
 
 /* ---------------------------------------------------------------------------
@@ -295,24 +296,69 @@ export function PickGrantsStep({ onDone }: { onDone: (v: string) => void }) {
   );
 }
 
+/**
+ * The resiliency grant, with the amount, who qualifies and what it buys.
+ *
+ * The eligibility line is checked against the policy on file rather than
+ * printed as generic marketing. This household's dwelling limit is above the
+ * standard-lane cap, and saying so here is the difference between a useful
+ * product and one that sends someone to fill in an application they can't win.
+ */
 export function ResiliencyStep({ onDone }: { onDone: (v: string) => void }) {
   const g = RESILIENCY_GRANT;
+  const dwelling =
+    policyCoverages.find((c) => c.id === "dwelling")?.limit ?? 0;
+  const overCap = dwelling > g.insuredValueCap;
+
   return (
     <div className="ob-pick">
       <div className="ob-grant ob-grant--solo">
         <p className="ob-grant__name">{g.name}</p>
         <p className="ob-grant__agency">{g.agency}</p>
-        <p className="ob-grant__blurb">{g.blurb}</p>
+
+        <p className="ob-grant__amount">{g.max}</p>
+        <p className="ob-grant__blurb">{g.match}</p>
+
+        <p className="ob-grant__k">Who qualifies</p>
+        <p className="ob-grant__blurb">{g.who}</p>
+
+        <p className="ob-grant__k">What it pays for</p>
+        <p className="ob-grant__blurb">{g.use}</p>
+
+        {overCap && (
+          <p className="ob-grant__flag">
+            Worth knowing before you apply: your dwelling limit is $
+            {dwelling.toLocaleString()}, above the $
+            {g.insuredValueCap.toLocaleString()} cap on the standard route. The
+            low-income route waives that cap.
+          </p>
+        )}
+
         <p className="ob-grant__meta">
-          <b>{g.max}</b>
+          <b>{g.link}</b>
           <span>{g.due}</span>
         </p>
       </div>
       <div className="ob-chips">
-        <button type="button" className="ob-chip" onClick={() => onDone("Yes, I'm interested")}>
-          Yes, I'm interested
+        <button
+          type="button"
+          className="ob-chip"
+          onClick={() => onDone("Yes, I want to apply")}
+        >
+          Yes, I want to apply
         </button>
-        <button type="button" className="ob-chip" onClick={() => onDone("Not right now")}>
+        <button
+          type="button"
+          className="ob-chip"
+          onClick={() => onDone("Tell me more first")}
+        >
+          Tell me more first
+        </button>
+        <button
+          type="button"
+          className="ob-chip"
+          onClick={() => onDone("Not right now")}
+        >
           Not right now
         </button>
       </div>

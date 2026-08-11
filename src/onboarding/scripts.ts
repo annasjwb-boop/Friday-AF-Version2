@@ -113,7 +113,7 @@ export const SCRIPTS: Record<string, Script> = {
         /* SPEC: the written line asserts "every dollar saves six dollars" as
            fact. Attributed here instead, because the figure is contested and
            this is aimed at people making real decisions. */
-        text: "Now, are you interested in the resiliency grant? Your state offers up to $10,000 to help protect your home from future damage. States fund these because federal research finds mitigation money pays for itself several times over in avoided losses.",
+        text: "There's one more, and it's for damage that hasn't happened yet. Do you want to apply for the state's resiliency grant? States fund these because federal research finds mitigation money pays for itself several times over in avoided losses.",
       },
       { kind: "resiliency" },
       {

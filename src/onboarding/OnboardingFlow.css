@@ -668,3 +668,45 @@
   line-height: 1.45;
   color: #8a8f98;
 }
+
+/* --- Resiliency grant detail ------------------------------------------------ */
+
+.ob-grant__amount {
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.ob-grant__k {
+  margin-top: 13px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #8a8f98;
+}
+
+.ob-grant__k + .ob-grant__blurb {
+  margin-top: 4px;
+}
+
+/* Checked against the policy on file, so it reads as a finding rather than a
+   disclaimer. */
+.ob-grant__flag {
+  padding: 11px 12px;
+  margin-top: 13px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #8a6412;
+  background: rgb(217 155 50 / 12%);
+  border-radius: 9px;
+}
+
+.ob-grant__meta b {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #16161a;
+}

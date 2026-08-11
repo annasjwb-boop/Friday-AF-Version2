@@ -92,15 +92,31 @@ export const OPEN_DISASTERS: DisasterGroup[] = [
   },
 ];
 
-export const RESILIENCY_GRANT: Grant = {
+/* ---------------------------------------------------------------------------
+ * The resiliency grant.
+ *
+ * Unlike the figures above, these are real and checked against the program's
+ * own material: a 2:1 state match to a $10,000 ceiling, no match required for
+ * households at or below 80% of county AMI, a $700,000 insured-value cap that
+ * the low-income route waives, homestead property permitted before 2008, and
+ * funds restricted to what the free wind inspection recommends.
+ *
+ * Program parameters change by funding cycle, so mysafeflhome.com is the
+ * authoritative source and is linked rather than summarised away.
+ * ------------------------------------------------------------------------- */
+
+export const RESILIENCY_GRANT = {
   id: "msfh",
   name: "My Safe Florida Home",
   agency: "Florida Dept. of Financial Services",
-  blurb:
-    "Pays toward roof and opening upgrades that reduce what a future storm can do to your home.",
   max: "Up to $10,000",
-  due: "Open — funded in rounds",
-  kind: "grant",
+  match: "State pays $2 for every $1 you put in — $5,000 from you unlocks the full $10,000.",
+  who: "Homesteaded single-family homes permitted before 2008, with insurance in force and an insured value of $700,000 or less; households at or below 80% of county median income skip both the match and that cap.",
+  use: "Only the upgrades the free wind inspection recommends — impact windows and doors, shutters, and roof reinforcement.",
+  due: "First come, first served within priority groups, by funding cycle",
+  link: "mysafeflhome.com",
+  /** Standard-lane cap on Coverage A. Compared against the policy on file. */
+  insuredValueCap: 700_000,
 };
 
 export const ALL_STORM_GRANTS = OPEN_DISASTERS.flatMap((d) =>
