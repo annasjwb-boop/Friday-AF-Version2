@@ -199,9 +199,14 @@ export const SCRIPTS: Record<string, Script> = {
         text: "Before we go further, have a look at the details and change anything that's off. The rebuild cost and the room count matter most.",
       },
       { kind: "property" },
+      { kind: "say", text: "Got it." },
       {
         kind: "say",
-        text: "Now the risks. We look at local wind, water and weather patterns, but nobody knows your property like you do — adjust anything that doesn't match what you've seen.",
+        text: "Now the risks. We have pulled data from NASA, NOAA, and leading models for weather related risks for your property. That said, nobody knows your property like you do.",
+      },
+      {
+        kind: "say",
+        text: "Before we check your coverage, let us know if we should add any categories, and tune those risks we have found.",
       },
       { kind: "risks" },
       {

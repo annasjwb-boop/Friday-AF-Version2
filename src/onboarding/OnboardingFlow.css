@@ -501,15 +501,19 @@
 /* --- Risks ----------------------------------------------------------------- */
 
 .ob-risk {
-  display: flex;
-  gap: 11px;
-  align-items: center;
-  padding: 11px 0;
+  padding: 13px 0;
   border-top: 1px solid rgb(22 22 24 / 7%);
 }
 
 .ob-risk:first-of-type {
   border-top: none;
+}
+
+.ob-risk__head {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .ob-risk__icon {
@@ -541,24 +545,36 @@
   color: #8a8f98;
 }
 
-.ob-risk__sev {
+.ob-risk input[type="range"] {
+  width: 100%;
+  accent-color: #0a84ff;
+}
+
+/* Three labels under the track, the active one picked out — same pattern as
+   the note under the rebuild-cost slider. */
+.ob-risk__scale {
   display: flex;
-  flex: none;
-  gap: 3px;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: #8a8f98;
 }
 
-.ob-sev {
-  width: 9px;
-  height: 22px;
-  padding: 0;
-  cursor: pointer;
-  background: rgb(22 22 24 / 10%);
-  border: none;
-  border-radius: 3px;
+.ob-risk__scale span:nth-child(2) {
+  text-align: center;
 }
 
-.ob-sev.is-on {
-  background: #0a84ff;
+.ob-risk__scale span:last-child {
+  text-align: right;
+}
+
+.ob-risk__scale .is-on {
+  font-weight: 600;
+  color: #16161a;
+}
+
+.ob-risk--added .ob-risk__head {
+  margin-bottom: 0;
 }
 
 /* --- Handoff --------------------------------------------------------------- */

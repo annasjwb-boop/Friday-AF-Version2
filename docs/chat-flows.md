@@ -54,7 +54,7 @@ No dead ends, broken jumps or unreachable steps.
 
 ## coverage — Worried you might be underinsured
 
-Reached from ads 02, 05 · 20 of 20 steps reachable
+Reached from ads 02, 05 · 22 of 22 steps reachable
 
 ```
   1  SAY             Thanks for your address.
@@ -76,16 +76,18 @@ Reached from ads 02, 05 · 20 of 20 steps reachable
  11  SAY             I've also pulled the hazards for your county, and for your specific parcel where the data goes that deep.
  12  SAY             Before we go further, have a look at the details and change anything that's off. The rebuild cost and the room count matter most.
  13  PROPERTY        editable property details
- 14  SAY             Now the risks. We look at local wind, water and weather patterns, but nobody knows your property like you do — adjust anything that doesn't match what you've seen.
- 15  RISKS           editable hazard list
- 16  SAY             Last piece is your insurance. We can connect to your policy directly, you can upload your declarations page, or you can tell me you don't carry insurance.
- 17  INSURANCE       connect, upload, or none
-             ├─ "Connect my policy" → step 18
-             ├─ "Upload my declarations page" → step 18
-             ├─ "I don't carry insurance" → step 18
- 18  SAY             One last question. Can you tell me how you think about your home? A castle? An igloo? A cabin? A secret lair?
- 19  TEXT            free text "metaphor" — A castle, a cabin, a secret lair…
- 20  GOTO            [See your risk breakdown] See your risk breakdown → /?tab=risk
+ 14  SAY             Got it.
+ 15  SAY             Now the risks. We have pulled data from NASA, NOAA, and leading models for weather related risks for your property. That said, nobody knows your property like you do.
+ 16  SAY             Before we check your coverage, let us know if we should add any categories, and tune those risks we have found.
+ 17  RISKS           editable hazard list
+ 18  SAY             Last piece is your insurance. We can connect to your policy directly, you can upload your declarations page, or you can tell me you don't carry insurance.
+ 19  INSURANCE       connect, upload, or none
+             ├─ "Connect my policy" → step 20
+             ├─ "Upload my declarations page" → step 20
+             ├─ "I don't carry insurance" → step 20
+ 20  SAY             One last question. Can you tell me how you think about your home? A castle? An igloo? A cabin? A secret lair?
+ 21  TEXT            free text "metaphor" — A castle, a cabin, a secret lair…
+ 22  GOTO            [See your risk breakdown] See your risk breakdown → /?tab=risk
              └─ ends the flow
 ```
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Check,
+  Plus,
   FileUp,
   Link2,
   MapPin,
@@ -524,54 +525,159 @@ export function PropertyStep({ onDone }: { onDone: (v: string) => void }) {
 /* --- Risks ---------------------------------------------------------------- */
 
 const RISKS = [
-  { id: "wind", label: "Wind", icon: Wind, detail: "Gusts to 110 mph modelled", sev: 3 },
-  { id: "flood", label: "Flood", icon: Waves, detail: "Zone X, outside the 100-year floodplain", sev: 2 },
-  { id: "fire", label: "Wildfire", icon: Flame, detail: "Low — no wildland interface within 5 mi", sev: 1 },
+  {
+    id: "wind",
+    label: "Wind",
+    icon: Wind,
+    detail: "Gusts to 110 mph modelled",
+    sev: 2,
+  },
+  {
+    id: "flood",
+    label: "Flood",
+    icon: Waves,
+    detail: "Zone X, outside the 100-year floodplain",
+    sev: 2,
+  },
+  {
+    id: "fire",
+    label: "Wildfire",
+    icon: Flame,
+    detail: "Low — no wildland interface within 5 mi",
+    sev: 2,
+  },
 ];
 
-const SEV = ["", "Low", "Moderate", "High", "Severe"];
+/* Three positions rather than a severity score. The person isn't re-rating the
+   hazard — they're telling us whether our reading matches theirs, which is the
+   only thing they're actually in a position to know. */
+const TUNE_LABELS = ["Less concerned", "As expected", "More concerned"];
 
 export function RisksStep({ onDone }: { onDone: (v: string) => void }) {
   const [risks, setRisks] = useState(RISKS);
+  const [added, setAdded] = useState<string[]>([]);
+  const [adding, setAdding] = useState(false);
+  const [draft, setDraft] = useState("");
+
+  const moved = risks.filter((r) => r.sev !== 2).length;
 
   return (
     <div className="ob-panel">
-      <p className="ob-panel__src">Modelled for your county · sample data</p>
+      <p className="ob-panel__src">
+        Modelled from NASA, NOAA and hazard model data for your county · sample
+        data
+      </p>
+
       {risks.map((r, i) => {
         const Icon = r.icon;
         return (
           <div className="ob-risk" key={r.id}>
-            <span className="ob-risk__icon" aria-hidden="true">
-              <Icon size={16} strokeWidth={1.8} />
-            </span>
-            <div className="ob-risk__body">
-              <p className="ob-risk__label">{r.label}</p>
-              <p className="ob-risk__detail">{r.detail}</p>
+            <div className="ob-risk__head">
+              <span className="ob-risk__icon" aria-hidden="true">
+                <Icon size={16} strokeWidth={1.8} />
+              </span>
+              <div className="ob-risk__body">
+                <p className="ob-risk__label">{r.label}</p>
+                <p className="ob-risk__detail">{r.detail}</p>
+              </div>
             </div>
-            <div className="ob-risk__sev">
-              {[1, 2, 3, 4].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  aria-label={`Set ${r.label} to ${SEV[n]}`}
-                  className={`ob-sev${n <= r.sev ? " is-on" : ""}`}
-                  onClick={() =>
-                    setRisks((all) =>
-                      all.map((x, m) => (m === i ? { ...x, sev: n } : x)),
-                    )
-                  }
-                />
+
+            {/* Same shape as the rebuild-cost control: a slider under the
+                figure it adjusts, with the current position named. */}
+            <input
+              type="range"
+              min={0}
+              max={2}
+              step={1}
+              value={r.sev}
+              aria-label={`${r.label} — ${TUNE_LABELS[r.sev]}`}
+              onChange={(e) =>
+                setRisks((all) =>
+                  all.map((x, m) =>
+                    m === i ? { ...x, sev: Number(e.target.value) } : x,
+                  ),
+                )
+              }
+            />
+            <div className="ob-risk__scale" aria-hidden="true">
+              {TUNE_LABELS.map((t, n) => (
+                <span key={t} className={n === r.sev ? "is-on" : undefined}>
+                  {t}
+                </span>
               ))}
             </div>
           </div>
         );
       })}
+
+      {added.map((a) => (
+        <div className="ob-risk ob-risk--added" key={a}>
+          <div className="ob-risk__head">
+            <span className="ob-risk__icon" aria-hidden="true">
+              <Plus size={15} strokeWidth={2} />
+            </span>
+            <div className="ob-risk__body">
+              <p className="ob-risk__label">{a}</p>
+              <p className="ob-risk__detail">Added by you</p>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {adding ? (
+        <div className="ob-free">
+          <input
+            autoFocus
+            value={draft}
+            placeholder="Sinkholes, mudslide, tidal flooding…"
+            aria-label="Another risk"
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && draft.trim()) {
+                setAdded((all) => [...all, draft.trim()]);
+                setDraft("");
+                setAdding(false);
+              }
+            }}
+          />
+          <button
+            type="button"
+            className="ob-send"
+            disabled={!draft.trim()}
+            onClick={() => {
+              setAdded((all) => [...all, draft.trim()]);
+              setDraft("");
+              setAdding(false);
+            }}
+          >
+            Add
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="ob-chip ob-chip--wide"
+          onClick={() => setAdding(true)}
+        >
+          Add a risk we missed
+        </button>
+      )}
+
       <button
         type="button"
         className="ob-send"
-        onClick={() => onDone("Risks confirmed")}
+        onClick={() =>
+          onDone(
+            [
+              moved ? `Tuned ${moved} risk${moved === 1 ? "" : "s"}` : null,
+              added.length ? `added ${added.join(", ")}` : null,
+            ]
+              .filter(Boolean)
+              .join(" and ") || "These look right",
+          )
+        }
       >
-        These look right
+        {moved || added.length ? "Save these" : "These look right"}
       </button>
     </div>
   );
