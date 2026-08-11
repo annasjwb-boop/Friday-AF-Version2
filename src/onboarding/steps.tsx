@@ -232,30 +232,47 @@ export function GrantsStep() {
   );
 }
 
+/**
+ * Which storms damaged the property — not which programs to apply for.
+ *
+ * The programs follow from the storm; a household knows which hurricane took
+ * their roof off, and doesn't know whether that maps to Housing Assistance or
+ * Other Needs Assistance. Asking the second question is asking them to do our
+ * job, and the answer would be unreliable.
+ */
 export function PickGrantsStep({ onDone }: { onDone: (v: string) => void }) {
   const [picked, setPicked] = useState<string[]>([]);
-  const all = OPEN_DISASTERS.flatMap((d) => d.grants);
 
   return (
     <div className="ob-pick">
-      {all.map((g) => {
-        const on = picked.includes(g.id);
+      {OPEN_DISASTERS.map((d) => {
+        const on = picked.includes(d.id);
         return (
           <button
-            key={g.id}
+            key={d.id}
             type="button"
-            className={`ob-check${on ? " is-on" : ""}`}
+            className={`ob-check ob-check--storm${on ? " is-on" : ""}`}
             aria-pressed={on}
             onClick={() =>
               setPicked((p) =>
-                p.includes(g.id) ? p.filter((x) => x !== g.id) : [...p, g.id],
+                p.includes(d.id) ? p.filter((x) => x !== d.id) : [...p, d.id],
               )
             }
           >
             <span className="ob-check__box" aria-hidden="true">
               {on && <Check size={13} strokeWidth={3} />}
             </span>
-            {g.name}
+            <span className="ob-check__body">
+              <span className="ob-check__name">
+                {d.name}
+                <em>{d.dr}</em>
+              </span>
+              <span className="ob-check__when">Landfall {d.landfall}</span>
+              <span className="ob-check__meta">
+                Damage counts if it happened {d.incident} ·{" "}
+                {d.grants.length} program{d.grants.length === 1 ? "" : "s"} open
+              </span>
+            </span>
           </button>
         );
       })}
@@ -265,12 +282,14 @@ export function PickGrantsStep({ onDone }: { onDone: (v: string) => void }) {
         onClick={() =>
           onDone(
             picked.length
-              ? `${picked.length} selected`
-              : "None of these apply to me",
+              ? OPEN_DISASTERS.filter((d) => picked.includes(d.id))
+                  .map((d) => d.name)
+                  .join(" and ")
+              : "Neither of these damaged my home",
           )
         }
       >
-        {picked.length ? "Continue" : "None of these apply"}
+        {picked.length ? "Continue" : "Neither damaged my home"}
       </button>
     </div>
   );

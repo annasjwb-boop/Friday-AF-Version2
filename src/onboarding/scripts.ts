@@ -105,7 +105,7 @@ export const SCRIPTS: Record<string, Script> = {
       { kind: "grants" },
       {
         kind: "say",
-        text: "Did you have damage from any of these storms? Select the ones you think might apply to you — we'll work out the details together later.",
+        text: "Which of these storms actually damaged your home? Pick the ones you remember — I'll work out which programs that opens for you.",
       },
       { kind: "pickGrants" },
       {

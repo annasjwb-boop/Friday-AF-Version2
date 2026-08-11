@@ -619,3 +619,52 @@
   width: 100%;
   text-align: center;
 }
+
+/* --- Storm picker ----------------------------------------------------------- */
+
+.ob-check--storm {
+  align-items: flex-start;
+  padding: 14px 15px;
+}
+
+.ob-check--storm .ob-check__box {
+  margin-top: 1px;
+}
+
+.ob-check__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ob-check__name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 14px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.ob-check__name em {
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #8a8f98;
+}
+
+.ob-check__when {
+  display: block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  color: #3c4149;
+}
+
+.ob-check__meta {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #8a8f98;
+}

@@ -1,10 +1,12 @@
 /* ---------------------------------------------------------------------------
  * Grant programs surfaced by the aid flow.
  *
- * SAMPLE DATA. The disaster names and DR numbers are real Florida
- * declarations and the program names are real, but every dollar figure,
- * deadline and eligibility line here is illustrative and needs verifying
- * against OpenFEMA and the administering agency before it reaches anyone.
+ * SAMPLE DATA. The disaster names, DR numbers and landfall dates are real
+ * Florida declarations; the program names are real. Every dollar figure,
+ * deadline, incident period and eligibility line is illustrative and needs
+ * verifying against OpenFEMA and the administering agency before it reaches
+ * anyone — incident periods especially, since eligibility turns on whether
+ * damage fell inside the window.
  *
  * In the built version this comes from an address lookup: declared disasters
  * covering the property's county, then open programs under each.
@@ -28,6 +30,14 @@ export interface DisasterGroup {
   name: string;
   /** FEMA declaration number. */
   dr: string;
+  /** When it hit — what someone actually remembers. */
+  landfall: string;
+  /**
+   * The incident period is the legally operative window: damage has to fall
+   * inside it to be eligible, which is why it's shown rather than just the
+   * declaration date.
+   */
+  incident: string;
   grants: Grant[];
 }
 
@@ -36,6 +46,8 @@ export const OPEN_DISASTERS: DisasterGroup[] = [
     id: "ian",
     name: "Hurricane Ian",
     dr: "DR-4673-FL",
+    landfall: "28 September 2022",
+    incident: "23 Sep – 4 Nov 2022",
     grants: [
       {
         id: "ia-housing",
@@ -63,6 +75,8 @@ export const OPEN_DISASTERS: DisasterGroup[] = [
     id: "idalia",
     name: "Hurricane Idalia",
     dr: "DR-4734-FL",
+    landfall: "30 August 2023",
+    incident: "27 Aug – 4 Sep 2023",
     grants: [
       {
         id: "ona",
