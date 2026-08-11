@@ -850,3 +850,154 @@
 .ob-account .ob-panel {
   gap: 12px;
 }
+
+/* --- Canopy Connect wizard --------------------------------------------------- */
+
+.ob-canopy {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 10%);
+  border-radius: 14px;
+}
+
+.ob-canopy__top {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 15px;
+  background: #16161a;
+}
+
+.ob-canopy__brand {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.ob-canopy__secure {
+  margin-left: auto;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 55%);
+}
+
+.ob-canopy__body {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 15px;
+}
+
+.ob-canopy__q {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.ob-canopy__note {
+  font-size: 12px;
+  color: #8a8f98;
+}
+
+/* Above the inputs, not under the button: these are real insurer credentials
+   and the warning has to arrive before someone starts typing. */
+.ob-canopy__warn {
+  padding: 10px 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #8a6412;
+  background: rgb(217 155 50 / 14%);
+  border-radius: 9px;
+}
+
+.ob-carriers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.ob-carriers button {
+  padding: 12px 10px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #16161a;
+  cursor: pointer;
+  background: #f7f8f9;
+  border: 1px solid rgb(22 22 24 / 8%);
+  border-radius: 10px;
+}
+
+.ob-carriers button:hover {
+  border-color: #0a84ff;
+}
+
+.ob-canopy__alt {
+  padding: 4px 0;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #0a84ff;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.ob-canopy__waiting {
+  align-items: center;
+  padding: 30px 15px;
+  text-align: center;
+}
+
+.ob-canopy__spin {
+  width: 26px;
+  height: 26px;
+  border: 2.5px solid rgb(22 22 24 / 12%);
+  border-top-color: #0a84ff;
+  border-radius: 50%;
+  animation: ob-spin 0.8s linear infinite;
+}
+
+@keyframes ob-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ob-policy {
+  padding: 13px 14px;
+  background: #f7f8f9;
+  border-radius: 11px;
+}
+
+.ob-policy__name {
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.ob-policy__row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 12.5px;
+  color: #8a8f98;
+  border-top: 1px solid rgb(22 22 24 / 6%);
+}
+
+.ob-policy__row b {
+  font-weight: 600;
+  color: #16161a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ob-canopy__spin {
+    animation-duration: 2.4s;
+  }
+}

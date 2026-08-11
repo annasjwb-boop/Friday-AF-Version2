@@ -58,8 +58,10 @@ export type Step = StepBase &
   | { kind: "property" }
   /** Editable risk list. */
   | { kind: "risks" }
-  /** Canopy / upload / self-insure. */
-  | { kind: "insurance" }
+  /** Canopy wizard / upload / self-insure. `vehicle` shifts the copy. */
+  | { kind: "insurance"; vehicle?: boolean }
+  /** Another policy, a vehicle policy, or done. Loops back to `againTo`. */
+  | { kind: "morePolicies"; againTo: string; doneTo: string }
   /** Free-text answer. */
   | { kind: "text"; id: string; placeholder: string }
   /** Account creation. */
@@ -213,18 +215,32 @@ export const SCRIPTS: Record<string, Script> = {
         kind: "say",
         text: "Last piece is your insurance. We can connect to your policy directly, you can upload your declarations page, or you can tell me you don't carry insurance.",
       },
-      { kind: "insurance" },
-      { kind: "say", text: METAPHOR_Q },
+      { kind: "insurance", label: "policy" },
+
+      /* Households routinely hold more than one policy, and the vehicle one
+         matters here — comprehensive auto covers flood damage to a car that
+         the home policy excludes for the house. Asking once and moving on
+         would miss it. */
       {
-        kind: "text",
-        id: "metaphor",
-        placeholder: "A castle, a cabin, a secret lair…",
+        kind: "say",
+        label: "afterPolicy",
+        text: "Got it — that's on file. Anything else to connect?",
+      },
+      { kind: "morePolicies", againTo: "policy", doneTo: "wrapUp" },
+
+      /* SPEC: the metaphor question is dropped here. It fed nothing in this
+         flow, and it sat between a person finishing a real task and the answer
+         they came for. */
+      {
+        kind: "say",
+        label: "wrapUp",
+        text: "Thanks — that's everything I need. Let me show you your Coverage Score.",
       },
       /* No account step: flows 2 and 3 are the conversion test, and every
          field before the payoff costs completions. The cost is that a closed
          tab loses the property edits, risk adjustments and policy collected
          above — worth asking for once the user has seen the breakdown. */
-      { kind: "goto", to: "/?tab=risk", label: "See your risk breakdown" },
+      { kind: "goto", to: "/?tab=risk", label: "See your Coverage Score" },
     ],
   },
 

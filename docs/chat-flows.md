@@ -54,7 +54,7 @@ No dead ends, broken jumps or unreachable steps.
 
 ## coverage — Worried you might be underinsured
 
-Reached from ads 02, 05 · 22 of 22 steps reachable
+Reached from ads 02, 05 · 23 of 23 steps reachable
 
 ```
   1  SAY             Thanks for your address.
@@ -81,13 +81,17 @@ Reached from ads 02, 05 · 22 of 22 steps reachable
  16  SAY             Before we check your coverage, let us know if we should add any categories, and tune those risks we have found.
  17  RISKS           editable hazard list
  18  SAY             Last piece is your insurance. We can connect to your policy directly, you can upload your declarations page, or you can tell me you don't carry insurance.
- 19  INSURANCE       connect, upload, or none
+ 19  INSURANCE       [policy] connect, upload, or none
              ├─ "Connect my policy" → step 20
              ├─ "Upload my declarations page" → step 20
              ├─ "I don't carry insurance" → step 20
- 20  SAY             One last question. Can you tell me how you think about your home? A castle? An igloo? A cabin? A secret lair?
- 21  TEXT            free text "metaphor" — A castle, a cabin, a secret lair…
- 22  GOTO            [See your risk breakdown] See your risk breakdown → /?tab=risk
+ 20  SAY             [afterPolicy] Got it — that's on file. Anything else to connect?
+ 21  MOREPOLICIES    another policy, a vehicle policy, or done
+             ├─ "Another property policy" loops back to step 19
+             ├─ "My vehicle policy" loops back to step 19
+             ├─ "That's everything" → step 22
+ 22  SAY             [wrapUp] Thanks — that's everything I need. Let me show you your Coverage Score.
+ 23  GOTO            [See your Coverage Score] See your Coverage Score → /?tab=risk
              └─ ends the flow
 ```
 

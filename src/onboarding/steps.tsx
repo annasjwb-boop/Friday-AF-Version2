@@ -696,52 +696,262 @@ export function RisksStep({ onDone }: { onDone: (v: string) => void }) {
 
 /* --- Insurance ------------------------------------------------------------ */
 
-export function InsuranceStep({ onDone }: { onDone: (v: string) => void }) {
-  const opts = [
-    {
-      id: "canopy",
-      icon: Link2,
-      label: "Connect my policy",
-      sub: "Through Canopy Connect — not wired up in this prototype",
-      answer: "Connected my policy",
-    },
-    {
-      id: "upload",
-      icon: FileUp,
-      label: "Upload my declarations page",
-      sub: "The page listing your coverage limits",
-      answer: "Uploaded my declarations page",
-    },
-    {
-      id: "self",
-      icon: ShieldOff,
-      label: "I don't carry insurance",
-      sub: "We'll build your recovery plan around that",
-      answer: "I don't carry insurance",
-    },
-  ];
+/* --- Insurance ------------------------------------------------------------- */
+
+/** Carriers offered by the connect wizard. Illustrative. */
+const CARRIERS = [
+  "State Farm",
+  "Citizens Property",
+  "Universal",
+  "Tower Hill",
+  "Progressive",
+  "USAA",
+  "Allstate",
+  "Heritage",
+];
+
+type Stage = "choose" | "carrier" | "login" | "connecting" | "found";
+
+/**
+ * Insurance, including the connect wizard.
+ *
+ * The wizard mirrors the real shape — pick a carrier, sign in, wait, see what
+ * came back — because how much work it looks like is the thing being tested.
+ *
+ * The credentials screen is inert and says so twice. These are insurer portal
+ * logins, which are real credentials protecting real money, and a convincing
+ * prototype is exactly what gets given them. Nothing is read from the fields,
+ * autocomplete is off so no manager offers a saved login, and the warning sits
+ * above the inputs rather than under the button.
+ */
+export function InsuranceStep({
+  onDone,
+  vehicle = false,
+}: {
+  onDone: (v: string) => void;
+  /** Second time through, the copy is about a vehicle policy. */
+  vehicle?: boolean;
+}) {
+  const [stage, setStage] = useState<Stage>("choose");
+  const [carrier, setCarrier] = useState("");
+  const [user, setUser] = useState("");
+  const [pass, setPass] = useState("");
+
+  useEffect(() => {
+    if (stage !== "connecting") return;
+    const t = setTimeout(() => setStage("found"), 1900);
+    return () => clearTimeout(t);
+  }, [stage]);
+
+  if (stage === "choose") {
+    const opts = [
+      {
+        id: "canopy",
+        icon: Link2,
+        label: "Connect my policy",
+        sub: "Sign in to your insurer — takes about a minute",
+        go: () => setStage("carrier"),
+      },
+      {
+        id: "upload",
+        icon: FileUp,
+        label: "Upload my declarations page",
+        sub: "The page listing your coverage limits",
+        go: () => onDone("Uploaded my declarations page"),
+      },
+      {
+        id: "self",
+        icon: ShieldOff,
+        label: "I don't carry insurance",
+        sub: "We'll build your recovery plan around that",
+        go: () => onDone("I don't carry insurance"),
+      },
+    ];
+    return (
+      <div className="ob-opts">
+        {opts.map((o) => {
+          const Icon = o.icon;
+          return (
+            <button key={o.id} type="button" className="ob-opt" onClick={o.go}>
+              <span className="ob-opt__icon" aria-hidden="true">
+                <Icon size={17} strokeWidth={1.8} />
+              </span>
+              <span>
+                <span className="ob-opt__label">{o.label}</span>
+                <span className="ob-opt__sub">{o.sub}</span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
-    <div className="ob-opts">
-      {opts.map((o) => {
-        const Icon = o.icon;
-        return (
+    <div className="ob-canopy">
+      <header className="ob-canopy__top">
+        <span className="ob-canopy__brand">Canopy Connect</span>
+        <span className="ob-canopy__secure">Secure connection</span>
+      </header>
+
+      {stage === "carrier" && (
+        <div className="ob-canopy__body">
+          <p className="ob-canopy__q">
+            Who is your {vehicle ? "auto" : "home"} insurance with?
+          </p>
+          <div className="ob-carriers">
+            {CARRIERS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => {
+                  setCarrier(c);
+                  setStage("login");
+                }}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
           <button
-            key={o.id}
             type="button"
-            className="ob-opt"
-            onClick={() => onDone(o.answer)}
+            className="ob-canopy__alt"
+            onClick={() => onDone("Couldn't find my carrier")}
           >
-            <span className="ob-opt__icon" aria-hidden="true">
-              <Icon size={17} strokeWidth={1.8} />
-            </span>
-            <span>
-              <span className="ob-opt__label">{o.label}</span>
-              <span className="ob-opt__sub">{o.sub}</span>
-            </span>
+            My insurer isn't listed
           </button>
-        );
-      })}
+        </div>
+      )}
+
+      {stage === "login" && (
+        <div className="ob-canopy__body">
+          <p className="ob-canopy__q">Sign in to {carrier}</p>
+
+          <p className="ob-canopy__warn">
+            Prototype — this doesn't connect to anything. Don't enter your real
+            insurer login.
+          </p>
+
+          <label className="ob-field ob-field--stack">
+            <span>Username</span>
+            <input
+              value={user}
+              autoComplete="off"
+              placeholder="Not a real login"
+              onChange={(e) => setUser(e.target.value)}
+            />
+          </label>
+          <label className="ob-field ob-field--stack">
+            <span>Password</span>
+            <input
+              type="password"
+              value={pass}
+              autoComplete="new-password"
+              placeholder="Nothing is sent or stored"
+              onChange={(e) => setPass(e.target.value)}
+            />
+          </label>
+
+          <button
+            type="button"
+            className="ob-send"
+            disabled={!user.trim() || !pass}
+            onClick={() => setStage("connecting")}
+          >
+            Sign in
+          </button>
+          <button
+            type="button"
+            className="ob-canopy__alt"
+            onClick={() => setStage("carrier")}
+          >
+            Choose a different insurer
+          </button>
+        </div>
+      )}
+
+      {stage === "connecting" && (
+        <div className="ob-canopy__body ob-canopy__waiting">
+          <span className="ob-canopy__spin" aria-hidden="true" />
+          <p className="ob-canopy__q">Connecting to {carrier}…</p>
+          <p className="ob-canopy__note">
+            Reading your declarations, limits and deductibles.
+          </p>
+        </div>
+      )}
+
+      {stage === "found" && (
+        <div className="ob-canopy__body">
+          <p className="ob-canopy__q">Found your policy</p>
+          <div className="ob-policy">
+            <p className="ob-policy__name">{carrier}</p>
+            {(vehicle
+              ? [
+                  ["Policy type", "Auto — 2 vehicles"],
+                  ["Liability", "$100K / $300K"],
+                  ["Comprehensive", "$500 deductible"],
+                ]
+              : [
+                  ["Policy type", "Homeowners HO-3"],
+                  ["Dwelling (Cov A)", "$850,000"],
+                  ["Personal property", "$50,000"],
+                  ["Named-storm deductible", "5% of dwelling"],
+                ]
+            ).map(([k, v]) => (
+              <p className="ob-policy__row" key={k}>
+                <span>{k}</span>
+                <b>{v}</b>
+              </p>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="ob-send"
+            onClick={() =>
+              onDone(
+                vehicle
+                  ? `Connected my ${carrier} auto policy`
+                  : `Connected my ${carrier} policy`,
+              )
+            }
+          >
+            Use this policy
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** After a policy connects: another, a vehicle policy, or done. */
+export function MorePoliciesStep({
+  onDone,
+}: {
+  onDone: (v: string, again: boolean) => void;
+}) {
+  return (
+    <div className="ob-chips">
+      <button
+        type="button"
+        className="ob-chip"
+        onClick={() => onDone("Add another property policy", true)}
+      >
+        Another property policy
+      </button>
+      <button
+        type="button"
+        className="ob-chip"
+        onClick={() => onDone("Add my vehicle policy", true)}
+      >
+        My vehicle policy
+      </button>
+      <button
+        type="button"
+        className="ob-send"
+        onClick={() => onDone("That's everything", false)}
+      >
+        That's everything
+      </button>
     </div>
   );
 }

@@ -12,6 +12,7 @@ import {
   DEFAULT_ADDRESS,
   GrantsStep,
   InsuranceStep,
+  MorePoliciesStep,
   MapStep,
   PickGrantsStep,
   PropertyStep,
@@ -371,7 +372,13 @@ function Interactive({
     case "risks":
       return <RisksStep onDone={onDone} />;
     case "insurance":
-      return <InsuranceStep onDone={onDone} />;
+      return <InsuranceStep onDone={onDone} vehicle={step.vehicle} />;
+    case "morePolicies":
+      return (
+        <MorePoliciesStep
+          onDone={(v, again) => onDone(v, again ? step.againTo : step.doneTo)}
+        />
+      );
     case "text":
       return <TextStep placeholder={step.placeholder} onDone={onDone} />;
     case "account":

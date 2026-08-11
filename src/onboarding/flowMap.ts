@@ -28,6 +28,11 @@ export const BRANCH_LABELS: Record<string, string[]> = {
     "Upload my declarations page",
     "I don't carry insurance",
   ],
+  morePolicies: [
+    "Another property policy",
+    "My vehicle policy",
+    "That's everything",
+  ],
 };
 
 export interface Edge {
@@ -98,6 +103,16 @@ export function edgesOf(steps: Step[], i: number): Edge[] {
           broken: labelIndex(steps, s.backTo) < 0,
         },
       ];
+    case "morePolicies": {
+      const [again, vehicle, done] = BRANCH_LABELS.morePolicies;
+      const loop = labelIndex(steps, s.againTo) < 0;
+      const end = labelIndex(steps, s.doneTo) < 0;
+      return [
+        { on: again, to: at(s.againTo), broken: loop },
+        { on: vehicle, to: at(s.againTo), broken: loop },
+        { on: done, to: at(s.doneTo), broken: end },
+      ];
+    }
     case "choice":
       return s.options
         .concat(s.other ? ["Something else (free text)"] : [])
@@ -186,6 +201,7 @@ function variantsOf(step: Step, steps: Step[]): Variant[] {
 }
 
 function summarise(step: Step): string {
+  const s = step as Step & Record<string, unknown>;
   switch (step.kind) {
     case "say":
       /* Lines that vary on earlier answers can't be shown as one string, so
@@ -214,7 +230,11 @@ function summarise(step: Step): string {
     case "risks":
       return "editable hazard list";
     case "insurance":
-      return "connect, upload, or none";
+      return s.vehicle
+        ? "connect a vehicle policy, upload, or none"
+        : "connect, upload, or none";
+    case "morePolicies":
+      return "another policy, a vehicle policy, or done";
     case "account":
       return "create an account";
     default:
