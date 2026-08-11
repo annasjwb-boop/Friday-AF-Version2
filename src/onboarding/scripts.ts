@@ -8,13 +8,25 @@
  * Departures from the written spec are marked SPEC below, each with a reason.
  * ------------------------------------------------------------------------- */
 
-export type Step =
+/** Steps can be jumped to by label, which is what makes the address loop work. */
+export interface StepBase {
+  label?: string;
+}
+
+export type Step = StepBase &
+  (
   /** A chat bubble from the assistant. */
   | { kind: "say"; text: string }
   /** Map tile zooming to the property, boxed. */
   | { kind: "map" }
-  /** Confirm the matched address, and add a unit number if there is one. */
-  | { kind: "confirmAddress" }
+  /**
+   * Confirm the matched address, and add a unit number if there is one.
+   * Rejecting jumps to `retryTo`; confirming jumps past the retry block to
+   * `okTo`, so the loop can sit inline without being walked into.
+   */
+  | { kind: "confirmAddress"; retryTo: string; okTo: string }
+  /** Re-enter the address, then jump back to `backTo` to re-locate it. */
+  | { kind: "askAddress"; backTo: string }
   /** Open programs, grouped by disaster. */
   | { kind: "grants" }
   /** Multi-select over the storm grants. */
@@ -44,7 +56,8 @@ export type Step =
       kind: "goto";
       to: string | ((answers: Record<string, string>) => string);
       label: string;
-    };
+    }
+  );
 
 export interface Script {
   id: string;
@@ -63,13 +76,23 @@ export const SCRIPTS: Record<string, Script> = {
     source: "Check if you qualify for aid",
     steps: [
       { kind: "say", text: "Thanks for your address. I think I found you." },
-      { kind: "map" },
+      { kind: "map", label: "locate" },
       {
         kind: "say",
         text: "Is this the right place? If there's an apartment or unit number, add it now — records are matched on the exact address, and a missing unit is one of the most common reasons an application stalls.",
       },
-      { kind: "confirmAddress" },
-      { kind: "say", text: "And do you own or rent?" },
+      { kind: "confirmAddress", retryTo: "fixAddress", okTo: "confirmed" },
+      {
+        kind: "say",
+        label: "fixAddress",
+        text: "No problem — what's the right address?",
+      },
+      { kind: "askAddress", backTo: "locate" },
+      {
+        kind: "say",
+        label: "confirmed",
+        text: "And do you own or rent?",
+      },
       {
         kind: "choice",
         id: "tenure",
@@ -108,13 +131,23 @@ export const SCRIPTS: Record<string, Script> = {
     source: "Worried you might be underinsured",
     steps: [
       { kind: "say", text: "Thanks for your address." },
-      { kind: "map" },
+      { kind: "map", label: "locate" },
       {
         kind: "say",
         text: "Is this the right place? If there's an apartment or unit number, add it now — records are matched on the exact address, and a missing unit is one of the most common reasons an application stalls.",
       },
-      { kind: "confirmAddress" },
-      { kind: "say", text: "And do you own or rent?" },
+      { kind: "confirmAddress", retryTo: "fixAddress", okTo: "confirmed" },
+      {
+        kind: "say",
+        label: "fixAddress",
+        text: "No problem — what's the right address?",
+      },
+      { kind: "askAddress", backTo: "locate" },
+      {
+        kind: "say",
+        label: "confirmed",
+        text: "And do you own or rent?",
+      },
       {
         kind: "choice",
         id: "tenure",
@@ -163,13 +196,23 @@ export const SCRIPTS: Record<string, Script> = {
     source: "Get prepared",
     steps: [
       { kind: "say", text: "Thanks for your address. It looks like I found you." },
-      { kind: "map" },
+      { kind: "map", label: "locate" },
       {
         kind: "say",
         text: "Is this the right place? If there's an apartment or unit number, add it now — records are matched on the exact address, and a missing unit is one of the most common reasons an application stalls.",
       },
-      { kind: "confirmAddress" },
-      { kind: "say", text: "And do you own or rent?" },
+      { kind: "confirmAddress", retryTo: "fixAddress", okTo: "confirmed" },
+      {
+        kind: "say",
+        label: "fixAddress",
+        text: "No problem — what's the right address?",
+      },
+      { kind: "askAddress", backTo: "locate" },
+      {
+        kind: "say",
+        label: "confirmed",
+        text: "And do you own or rent?",
+      },
       {
         kind: "choice",
         id: "tenure",

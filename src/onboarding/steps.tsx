@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Check,
   FileUp,
@@ -22,26 +22,71 @@ import { MAPBOX_TOKEN } from "../components/campaign/FloridaMap";
  * fetched real data invites people to trust numbers that were typed in by hand.
  * ------------------------------------------------------------------------- */
 
-const ADDRESS = "123 Prado Rd NE, Atlanta, GA";
+export const DEFAULT_ADDRESS = "123 Prado Rd NE, Atlanta, GA";
 
-export function MapStep() {
-  /* Static tile rather than an interactive map: this is a confirmation beat,
-     not somewhere to explore, and a draggable map here invites fiddling. */
-  const src = MAPBOX_TOKEN
-    ? `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/-84.35,33.77,16,0/560x560@2x?access_token=${MAPBOX_TOKEN}`
-    : null;
+/** Where the static map falls back to if geocoding fails or is unavailable. */
+const FALLBACK_CENTER: [number, number] = [-84.35, 33.77];
+
+/**
+ * The property on a static map tile.
+ *
+ * Geocodes the address rather than showing a fixed point, so when someone
+ * corrects their address the map actually moves to it — otherwise the retry
+ * loop would show the same tile back and quietly assert we'd found them again.
+ *
+ * Falls back to the original coordinates if geocoding fails or no token is
+ * configured, with the address printed underneath either way.
+ */
+export function MapStep({ address }: { address: string }) {
+  const [center, setCenter] = useState<[number, number] | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!MAPBOX_TOKEN) {
+      setFailed(true);
+      return;
+    }
+    let cancelled = false;
+    const url =
+      "https://api.mapbox.com/search/geocode/v6/forward?q=" +
+      encodeURIComponent(address) +
+      "&limit=1&access_token=" +
+      MAPBOX_TOKEN;
+
+    fetch(url)
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((data) => {
+        if (cancelled) return;
+        const c = data?.features?.[0]?.properties?.coordinates;
+        if (c?.longitude != null) setCenter([c.longitude, c.latitude]);
+        else setCenter(FALLBACK_CENTER);
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [address]);
+
+  const src =
+    MAPBOX_TOKEN && center
+      ? `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${center[0]},${center[1]},16,0/560x560@2x?access_token=${MAPBOX_TOKEN}`
+      : null;
 
   return (
     <div className="ob-map">
       {src ? (
-        <img src={src} alt={`Map showing ${ADDRESS}`} />
+        <img src={src} alt={`Map showing ${address}`} />
       ) : (
         <div className="ob-map__fallback">
           <MapPin size={22} strokeWidth={1.7} aria-hidden="true" />
+          {failed && <span>Map unavailable</span>}
         </div>
       )}
       <span className="ob-map__pin" aria-hidden="true" />
-      <p className="ob-map__addr">{ADDRESS}</p>
+      <p className="ob-map__addr">{address}</p>
     </div>
   );
 }
@@ -54,7 +99,15 @@ export function MapStep() {
  * "Not my address" is offered because address matching does fail, and a flow
  * that only accepts yes teaches people to click yes.
  */
-export function ConfirmAddressStep({ onDone }: { onDone: (v: string) => void }) {
+export function ConfirmAddressStep({
+  address,
+  onConfirm,
+  onReject,
+}: {
+  address: string;
+  onConfirm: (v: string) => void;
+  onReject: () => void;
+}) {
   const [unit, setUnit] = useState("");
   const [adding, setAdding] = useState(false);
 
@@ -63,7 +116,7 @@ export function ConfirmAddressStep({ onDone }: { onDone: (v: string) => void }) 
       <div className="ob-confirm__card">
         <MapPin size={16} strokeWidth={1.9} aria-hidden="true" />
         <span>
-          {ADDRESS}
+          {address}
           {unit.trim() && <b>{`Unit ${unit.trim()}`}</b>}
         </span>
       </div>
@@ -102,7 +155,7 @@ export function ConfirmAddressStep({ onDone }: { onDone: (v: string) => void }) 
         <button
           type="button"
           className="ob-chip"
-          onClick={() => onDone("That's not my address")}
+          onClick={onReject}
         >
           That's not my address
         </button>
@@ -110,16 +163,41 @@ export function ConfirmAddressStep({ onDone }: { onDone: (v: string) => void }) 
           type="button"
           className="ob-send"
           onClick={() =>
-            onDone(
-              unit.trim()
-                ? `Yes — unit ${unit.trim()}`
-                : "Yes, that's my home",
+            onConfirm(
+              unit.trim() ? `Yes — unit ${unit.trim()}` : "Yes, that's my home",
             )
           }
         >
           Yes, that's my home
         </button>
       </div>
+    </div>
+  );
+}
+
+/** Re-entering the address after a bad match. */
+export function AskAddressStep({ onDone }: { onDone: (v: string) => void }) {
+  const [v, setV] = useState("");
+  return (
+    <div className="ob-free">
+      <input
+        autoFocus
+        value={v}
+        placeholder="Street, city, state"
+        aria-label="Your address"
+        onChange={(e) => setV(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && v.trim()) onDone(v.trim());
+        }}
+      />
+      <button
+        type="button"
+        className="ob-send"
+        disabled={!v.trim()}
+        onClick={() => onDone(v.trim())}
+      >
+        Find it
+      </button>
     </div>
   );
 }

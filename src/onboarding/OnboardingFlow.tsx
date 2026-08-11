@@ -5,8 +5,10 @@ import { ArrowRight, ChevronLeft } from "lucide-react";
 import { SCRIPTS, type Step } from "./scripts";
 import {
   AccountStep,
+  AskAddressStep,
   ChoiceStep,
   ConfirmAddressStep,
+  DEFAULT_ADDRESS,
   GrantsStep,
   InsuranceStep,
   MapStep,
@@ -40,6 +42,9 @@ interface Entry {
   step: Step;
   /** The user's reply, echoed under the step that asked for it. */
   answer?: string;
+  /** Address as it stood when this entry was made, so an earlier map in the
+      transcript keeps showing the address it actually located. */
+  address?: string;
 }
 
 export function OnboardingFlow() {
@@ -55,6 +60,7 @@ export function OnboardingFlow() {
   );
 
   const [entries, setEntries] = useState<Entry[]>([]);
+  const [address, setAddress] = useState(DEFAULT_ADDRESS);
   /* Keyed by step id, so a later step can branch on an earlier answer. */
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [cursor, setCursor] = useState(0);
@@ -69,6 +75,7 @@ export function OnboardingFlow() {
   useEffect(() => {
     setEntries([]);
     setAnswers({});
+    setAddress(DEFAULT_ADDRESS);
     setCursor(0);
   }, [script.id]);
 
@@ -79,7 +86,7 @@ export function OnboardingFlow() {
     if (current.kind === "say" && !instant) setTyping(true);
     const t = setTimeout(() => {
       setTyping(false);
-      setEntries((e) => [...e, { step: current }]);
+      setEntries((e) => [...e, { step: current, address }]);
       setCursor((c) => c + 1);
     }, wait);
     return () => clearTimeout(t);
@@ -92,12 +99,22 @@ export function OnboardingFlow() {
     });
   }, [entries.length, typing, instant]);
 
-  const answer = (v: string) => {
+  /** Index of a labelled step, so a flow can jump instead of only advancing. */
+  const indexOf = (label: string) =>
+    script.steps.findIndex((s) => s.label === label);
+
+  const answer = (v: string, jumpTo?: string) => {
     if (!current) return;
     if ("id" in current && current.id) {
       setAnswers((a) => ({ ...a, [current.id]: v }));
     }
-    setEntries((e) => [...e, { step: current, answer: v }]);
+    setEntries((e) => [...e, { step: current, answer: v, address }]);
+
+    if (jumpTo) {
+      const i = indexOf(jumpTo);
+      setCursor(i >= 0 ? i : cursor + 1);
+      return;
+    }
     setCursor((c) => c + 1);
   };
 
@@ -153,7 +170,9 @@ export function OnboardingFlow() {
               <Interactive
                 step={current}
                 answers={answers}
+                address={address}
                 onDone={answer}
+                onAddress={setAddress}
                 onGo={navigate}
               />
             </motion.div>
@@ -168,7 +187,7 @@ export function OnboardingFlow() {
 
 /** A settled entry: whatever the step rendered, plus the reply it drew. */
 function StepView({ entry }: { entry: Entry }) {
-  const { step, answer } = entry;
+  const { step, answer, address } = entry;
   return (
     <>
       {step.kind === "say" && (
@@ -181,7 +200,7 @@ function StepView({ entry }: { entry: Entry }) {
           {step.text}
         </motion.div>
       )}
-      {step.kind === "map" && <MapStep />}
+      {step.kind === "map" && <MapStep address={address ?? DEFAULT_ADDRESS} />}
       {step.kind === "grants" && <GrantsStep />}
       {answer && <div className="ob-reply">{answer}</div>}
     </>
@@ -191,17 +210,36 @@ function StepView({ entry }: { entry: Entry }) {
 function Interactive({
   step,
   answers,
+  address,
   onDone,
+  onAddress,
   onGo,
 }: {
   step: Step;
   answers: Record<string, string>;
-  onDone: (v: string) => void;
+  address: string;
+  onDone: (v: string, jumpTo?: string) => void;
+  onAddress: (a: string) => void;
   onGo: (to: string) => void;
 }) {
   switch (step.kind) {
     case "confirmAddress":
-      return <ConfirmAddressStep onDone={onDone} />;
+      return (
+        <ConfirmAddressStep
+          address={address}
+          onConfirm={(v) => onDone(v, step.okTo)}
+          onReject={() => onDone("That's not my address", step.retryTo)}
+        />
+      );
+    case "askAddress":
+      return (
+        <AskAddressStep
+          onDone={(a: string) => {
+            onAddress(a);
+            onDone(a, step.backTo);
+          }}
+        />
+      );
     case "pickGrants":
       return <PickGrantsStep onDone={onDone} />;
     case "resiliency":
