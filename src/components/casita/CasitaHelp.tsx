@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Play, Sparkles, Video, X } from "lucide-react";
@@ -8,6 +8,7 @@ import {
   type Answer,
   type HelpContext,
 } from "../../data/help";
+import { useThreadScroll } from "../../hooks/useThreadScroll";
 import "./CasitaHelp.css";
 
 /* ---------------------------------------------------------------------------
@@ -123,13 +124,17 @@ function Sheet({
  */
 function Chat({ context }: { context: HelpContext }) {
   const [asked, setAsked] = useState<Answer[]>([]);
+  /* Answers here run long, so the same rule applies: open at the question,
+     not at the tail of the reply. */
+  const anchorRef = useRef<HTMLDivElement>(null);
+  useThreadScroll(anchorRef, [asked.length]);
   const all = answersFor(context);
   const remaining = all.filter((a) => !asked.includes(a));
 
   return (
     <div className="ch-chat">
-      {asked.map((a) => (
-        <div key={a.q}>
+      {asked.map((a, i) => (
+        <div key={a.q} ref={i === asked.length - 1 ? anchorRef : undefined}>
           <p className="ch-chat__q">{a.q}</p>
           <motion.p
             className="ch-chat__a"

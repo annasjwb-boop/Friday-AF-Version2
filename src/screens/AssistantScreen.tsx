@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useThreadScroll } from "../hooks/useThreadScroll";
 import { useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { MobileHeader } from "../components/mobile/MobileHeader";
@@ -49,6 +50,7 @@ export function AssistantScreen() {
   const [draft, setDraft] = useState("");
   const alive = useRef(true);
   const threadRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     alive.current = true;
@@ -57,12 +59,9 @@ export function AssistantScreen() {
     };
   }, []);
 
-  useEffect(() => {
-    threadRef.current?.scrollTo({
-      top: threadRef.current.scrollHeight,
-      behavior: "smooth",
-    });
-  }, [items, typing, stepId]);
+  /* Anchored on the newest turn rather than the bottom of the thread, so a
+     long reply opens at its first line instead of its last. */
+  useThreadScroll(anchorRef, [items, typing, stepId]);
 
   const push = (item: NewThreadItem) => {
     const next: ThreadItem = { ...item, id: store.nextId++ };
@@ -235,17 +234,18 @@ export function AssistantScreen() {
         </div>
       ) : (
         <div className="assistant-thread" ref={threadRef}>
-          {items.map((item) => {
+          {items.map((item, i) => {
+            const anchor = i === items.length - 1 ? anchorRef : undefined;
             if (item.role === "divider") {
               return (
-                <div key={item.id} className="assistant-divider">
+                <div key={item.id} ref={anchor} className="assistant-divider">
                   {item.label}
                 </div>
               );
             }
             if (item.role === "card") {
               return (
-                <div key={item.id} className="assistant-card-slot">
+                <div key={item.id} ref={anchor} className="assistant-card-slot">
                   <AssistantCardView card={item.card} />
                 </div>
               );
@@ -253,6 +253,7 @@ export function AssistantScreen() {
             return (
               <p
                 key={item.id}
+                ref={anchor}
                 className={`assistant-bubble assistant-bubble--${item.role}`}
               >
                 {item.text}

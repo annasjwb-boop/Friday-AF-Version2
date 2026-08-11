@@ -710,3 +710,10 @@
   font-weight: 600;
   color: #16161a;
 }
+
+/* Each turn is one flex item so the newest can be anchored as a unit. */
+.ob-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

@@ -18,6 +18,7 @@ import {
   RisksStep,
   TextStep,
 } from "./steps";
+import { useThreadScroll } from "../hooks/useThreadScroll";
 import "./OnboardingFlow.css";
 
 /* ---------------------------------------------------------------------------
@@ -66,7 +67,9 @@ export function OnboardingFlow() {
   const [cursor, setCursor] = useState(0);
   const [typing, setTyping] = useState(false);
   const [instant, setInstant] = useState(reduced);
-  const endRef = useRef<HTMLDivElement>(null);
+  /* Anchored on the newest message rather than the end of the thread — see
+     useThreadScroll for why. */
+  const anchorRef = useRef<HTMLDivElement>(null);
 
   const current = script.steps[cursor];
   const waiting = current && !PASSIVE.includes(current.kind);
@@ -99,12 +102,7 @@ export function OnboardingFlow() {
     return () => clearTimeout(t);
   }, [cursor, current, waiting, instant]);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({
-      behavior: instant ? "auto" : "smooth",
-      block: "end",
-    });
-  }, [entries.length, typing, instant]);
+  useThreadScroll(anchorRef, [entries.length, typing, cursor], { instant });
 
   /** Index of a labelled step, so a flow can jump instead of only advancing. */
   const indexOf = (label: string) =>
@@ -156,7 +154,13 @@ export function OnboardingFlow() {
       <div className="ob__scroll">
         <div className="ob__thread">
           {entries.map((e, i) => (
-            <StepView key={i} entry={e} />
+            <div
+              key={i}
+              className="ob-entry"
+              ref={i === entries.length - 1 ? anchorRef : undefined}
+            >
+              <StepView entry={e} />
+            </div>
           ))}
 
           {typing && (
@@ -185,7 +189,6 @@ export function OnboardingFlow() {
             </motion.div>
           )}
 
-          <div ref={endRef} />
         </div>
       </div>
     </div>
