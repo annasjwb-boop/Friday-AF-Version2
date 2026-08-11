@@ -9,7 +9,7 @@ Also viewable in the app at `/flows/:id`, from the campaign page.
 
 ## aid — Check if you qualify for aid
 
-Reached from ad 01 · 18 of 18 steps reachable
+Reached from ad 01 · 19 of 19 steps reachable
 
 ```
   1  SAY             Thanks for your address. I think I found you.
@@ -33,14 +33,15 @@ Reached from ad 01 · 18 of 18 steps reachable
  13  PICKGRANTS
              ├─ "one or more storms" → step 14
              ├─ "neither damaged my home" → step 14
- 14  SAY             There's one more, and it's for damage that hasn't happened yet. Do you want to apply for the state's resiliency grant? States fund these because federal research finds mitigation money pays for itself several times over in avoided losses.
- 15  RESILIENCY
-             ├─ "Yes interested" → step 16
-             ├─ "Maybe — save for now" → step 16
-             ├─ "Not right now" → step 16
- 16  SAY             Makes sense. Let's set up your account, and then we can start putting your applications together. My job is to take your information once and package each application for you. Setting up the account now means nothing is lost if you close this window.
- 17  ACCOUNT         create an account
- 18  GOTO            [Go to your home] Go to your home → /
+ 14  SAY             (depends on answers)
+ 15  SAY             There's one more, and it's for damage that hasn't happened yet. Do you want to apply for the state's resiliency grant? States fund these because federal research finds mitigation money pays for itself several times over in avoided losses.
+ 16  RESILIENCY
+             ├─ "Yes interested" → step 17
+             ├─ "Maybe — save for now" → step 17
+             ├─ "Not right now" → step 17
+ 17  SAY             Makes sense. Let's set up your account, and then we can start putting your applications together. My job is to take your information once and package each application for you. Setting up the account now means nothing is lost if you close this window.
+ 18  ACCOUNT         create an account
+ 19  GOTO            [Go to your home] Go to your home → /
              └─ ends the flow
 ```
 

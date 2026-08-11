@@ -10,6 +10,7 @@ import {
   Flame,
 } from "lucide-react";
 import { OPEN_DISASTERS, RESILIENCY_GRANT } from "../data/grants";
+import { NO_STORMS } from "./scripts";
 import { policyCoverages } from "../data/home";
 import { MAPBOX_TOKEN } from "../components/campaign/FloridaMap";
 
@@ -297,7 +298,7 @@ export function PickGrantsStep({ onDone }: { onDone: (v: string) => void }) {
               ? OPEN_DISASTERS.filter((d) => picked.includes(d.id))
                   .map((d) => d.name)
                   .join(" and ")
-              : "Neither of these damaged my home",
+              : NO_STORMS,
           )
         }
       >

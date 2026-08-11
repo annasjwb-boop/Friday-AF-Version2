@@ -21,8 +21,16 @@ export interface StepBase {
 
 export type Step = StepBase &
   (
-  /** A chat bubble from the assistant. */
-  | { kind: "say"; text: string }
+  /**
+   * A chat bubble from the assistant. Text and pause may read the answers so
+   * far, so a line can respond to what was just said — same escape hatch goto
+   * already uses for its destination.
+   */
+  | {
+      kind: "say";
+      text: string | ((answers: Record<string, string>) => string);
+      pauseFrom?: (answers: Record<string, string>) => number;
+    }
   /** Map tile zooming to the property, boxed. */
   | { kind: "map" }
   /**
@@ -36,7 +44,7 @@ export type Step = StepBase &
   /** Open programs, grouped by disaster. */
   | { kind: "grants" }
   /** Multi-select over the storm grants. */
-  | { kind: "pickGrants" }
+  | { kind: "pickGrants"; id: string }
   /** The resiliency grant plus a yes/no. */
   | { kind: "resiliency" }
   /** Single-select chips. `other` appends a free-text option. */
@@ -71,6 +79,9 @@ export interface Script {
   source: string;
   steps: Step[];
 }
+
+/** Matches the reply the storm picker sends when nothing is selected. */
+export const NO_STORMS = "Neither of these damaged my home";
 
 const METAPHOR_Q =
   "One last question. Can you tell me how you think about your home? A castle? An igloo? A cabin? A secret lair?";
@@ -118,7 +129,17 @@ export const SCRIPTS: Record<string, Script> = {
         kind: "say",
         text: "Which of these storms actually damaged your home? I'll hold onto these programs until you create an account.",
       },
-      { kind: "pickGrants" },
+      { kind: "pickGrants", id: "storms" },
+      {
+        /* Acknowledges before continuing, and says less when there is less to
+           say — someone who picked nothing has no programs to hold. */
+        kind: "say",
+        text: (a) =>
+          a.storms === NO_STORMS
+            ? "Got it!"
+            : "Got it! I'll save these to your profile and we can review together shortly.",
+        pauseFrom: (a) => (a.storms === NO_STORMS ? 1000 : 2000),
+      },
       {
         kind: "say",
         /* SPEC: the written line asserts "every dollar saves six dollars" as

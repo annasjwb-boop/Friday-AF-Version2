@@ -55,6 +55,8 @@ interface Entry {
   /** Address as it stood when this entry was made, so an earlier map in the
       transcript keeps showing the address it actually located. */
   address?: string;
+  /** Resolved text for lines whose wording depends on earlier answers. */
+  text?: string;
 }
 
 export function OnboardingFlow() {
@@ -118,18 +120,30 @@ export function OnboardingFlow() {
        a card appears almost immediately. */
     const wait = instant
       ? 0
-      : (current.pause ?? (current.kind === "say" ? DELAY : 260));
+      : (current.kind === "say" && current.pauseFrom
+          ? current.pauseFrom(answers)
+          : (current.pause ?? (current.kind === "say" ? DELAY : 260)));
 
     /* Dots run for the whole wait, whatever comes next — a two-second gap with
        nothing moving reads as a stall rather than as thinking. */
     if (!instant && wait >= 400) setTyping(true);
     const t = setTimeout(() => {
       setTyping(false);
-      setEntries((e) => [...e, { step: current, address }]);
+      setEntries((e) => [
+        ...e,
+        {
+          step: current,
+          address,
+          text:
+            current.kind === "say" && typeof current.text === "function"
+              ? current.text(answers)
+              : undefined,
+        },
+      ]);
       setCursor((c) => c + 1);
     }, wait);
     return () => clearTimeout(t);
-  }, [cursor, current, waiting, instant]);
+  }, [cursor, current, waiting, instant, address, answers]);
 
   useThreadScroll(anchorRef, [entries.length, typing, cursor], { instant });
 
@@ -260,7 +274,7 @@ export function OnboardingFlow() {
 
 /** A settled entry: whatever the step rendered, plus the reply it drew. */
 function StepView({ entry }: { entry: Entry }) {
-  const { step, answer, address } = entry;
+  const { step, answer, address, text } = entry;
   return (
     <>
       {step.kind === "say" && (
@@ -270,7 +284,7 @@ function StepView({ entry }: { entry: Entry }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {step.text}
+          {text ?? (typeof step.text === "string" ? step.text : "")}
         </motion.div>
       )}
       {step.kind === "map" && <MapStep address={address ?? DEFAULT_ADDRESS} />}

@@ -98,7 +98,11 @@ export function edgesOf(steps: Step[], i: number): Edge[] {
 function summarise(step: Step): string {
   switch (step.kind) {
     case "say":
-      return step.text;
+      /* Lines that vary on earlier answers can't be shown as one string, so
+         the map names the dependency rather than picking a branch. */
+      return typeof step.text === "function"
+        ? "(depends on answers)"
+        : step.text;
     case "choice":
       return `asks "${step.id}"`;
     case "text":
