@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronLeft } from "lucide-react";
+import { ArrowRight, ChevronLeft, CornerUpLeft } from "lucide-react";
 import { type Step } from "./scripts";
 import { editedScript, loadEdits } from "./flowEdits";
 import {
@@ -40,6 +40,14 @@ const DELAY = 900;
 /** Steps that display and move on without waiting for input. */
 const PASSIVE: Step["kind"][] = ["say", "map", "grants"];
 
+/** Everything needed to put the conversation back as it was. */
+interface Snapshot {
+  cursor: number;
+  entries: Entry[];
+  answers: Record<string, string>;
+  address: string;
+}
+
 interface Entry {
   step: Step;
   /** The user's reply, echoed under the step that asked for it. */
@@ -76,6 +84,12 @@ export function OnboardingFlow() {
 
   const [entries, setEntries] = useState<Entry[]>([]);
   const [address, setAddress] = useState(DEFAULT_ADDRESS);
+
+  /* A stack of snapshots taken each time the person answers something.
+     Recording the path travelled rather than counting indices backwards is
+     what makes this work across the address loop, where the previous step by
+     index isn't the step they actually came from. */
+  const [history, setHistory] = useState<Snapshot[]>([]);
   /* Keyed by step id, so a later step can branch on an earlier answer. */
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [cursor, setCursor] = useState(0);
@@ -93,6 +107,7 @@ export function OnboardingFlow() {
     setEntries([]);
     setAnswers({});
     setAddress(DEFAULT_ADDRESS);
+    setHistory([]);
     setCursor(0);
   }, [script.id]);
 
@@ -124,6 +139,7 @@ export function OnboardingFlow() {
 
   const answer = (v: string, jumpTo?: string) => {
     if (!current) return;
+    setHistory((h) => [...h, { cursor, entries, answers, address }]);
     if ("id" in current && current.id) {
       setAnswers((a) => ({ ...a, [current.id]: v }));
     }
@@ -138,6 +154,27 @@ export function OnboardingFlow() {
   };
 
   const done = cursor >= script.steps.length;
+
+  /**
+   * Step back to the last thing they were asked.
+   *
+   * Restores the whole snapshot rather than only moving the cursor, so the
+   * transcript, the collected answers and the address all return to what they
+   * were — otherwise going back would leave replies on screen for a question
+   * being asked again, and a corrected address would survive its own undo.
+   */
+  const goBack = () => {
+    const prev = history.at(-1);
+    if (!prev) return;
+    setHistory((h) => h.slice(0, -1));
+    setTyping(false);
+    setEntries(prev.entries);
+    setAnswers(prev.answers);
+    setAddress(prev.address);
+    /* Lands on the step that was being asked, which is interactive, so
+       nothing re-types on the way back and the typing setting is left alone. */
+    setCursor(prev.cursor);
+  };
 
   return (
     <div className="ob">
@@ -183,6 +220,13 @@ export function OnboardingFlow() {
               <i />
               <i />
             </div>
+          )}
+
+          {waiting && current && history.length > 0 && (
+            <button type="button" className="ob__back-step" onClick={goBack}>
+              <CornerUpLeft size={13} strokeWidth={2} aria-hidden="true" />
+              Back
+            </button>
           )}
 
           {waiting && current && (
