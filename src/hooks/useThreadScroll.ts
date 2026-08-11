@@ -39,7 +39,12 @@ export function useThreadScroll(
   { instant = false }: { instant?: boolean } = {},
 ) {
   useEffect(() => {
-    const anchor = anchorRef.current;
+    const entry = anchorRef.current;
+    /* A step can nominate the element that should land at the top — a tall
+       card whose first useful row is some way down would otherwise open on
+       its heading. */
+    const anchor =
+      entry?.querySelector<HTMLElement>("[data-thread-anchor]") ?? entry;
     const container = scrollParent(anchor);
     if (!container) return;
 

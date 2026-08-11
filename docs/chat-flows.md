@@ -27,7 +27,7 @@ Reached from ad 01 · 18 of 18 steps reachable
              ├─ "I rent" → step 9
              ├─ "Something else" → step 9
   9  SAY             There are 4 programs open for your address right now. Three are for damage from past storms and are still accepting applications. One is for improvements that make your home stand up better to the next one.
- 10  SAY             (2000ms) Here are the storms:
+ 10  SAY             (2000ms) Here are the storms and programs I found:
  11  GRANTS          (1000ms) shows open programs by disaster
  12  SAY             Which of these storms actually damaged your home? I'll hold onto these programs until you create an account.
  13  PICKGRANTS

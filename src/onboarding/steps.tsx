@@ -204,6 +204,9 @@ export function AskAddressStep({ onDone }: { onDone: (v: string) => void }) {
 }
 
 export function GrantsStep() {
+  /* The thread scrolls to the first program rather than the top of the block,
+     so the person lands on something specific instead of a heading. */
+  let first = true;
   return (
     <div className="ob-grants">
       {OPEN_DISASTERS.map((d) => (
@@ -212,8 +215,15 @@ export function GrantsStep() {
             {d.name}
             <span>{d.dr}</span>
           </p>
-          {d.grants.map((g) => (
-            <div className="ob-grant" key={g.id}>
+          {d.grants.map((g) => {
+            const anchor = first;
+            first = false;
+            return (
+            <div
+              className="ob-grant"
+              key={g.id}
+              {...(anchor ? { "data-thread-anchor": "" } : {})}
+            >
               <p className="ob-grant__name">{g.name}</p>
               <p className="ob-grant__agency">{g.agency}</p>
               <p className="ob-grant__blurb">{g.blurb}</p>
@@ -222,7 +232,8 @@ export function GrantsStep() {
                 <span>{g.due}</span>
               </p>
             </div>
-          ))}
+            );
+          })}
         </div>
       ))}
       <p className="ob-note">

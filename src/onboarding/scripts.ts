@@ -108,7 +108,11 @@ export const SCRIPTS: Record<string, Script> = {
         kind: "say",
         text: "There are 4 programs open for your address right now. Three are for damage from past storms and are still accepting applications. One is for improvements that make your home stand up better to the next one.",
       },
-      { kind: "say", text: "Here are the storms:", pause: 2000 },
+      {
+        kind: "say",
+        text: "Here are the storms and programs I found:",
+        pause: 2000,
+      },
       { kind: "grants", pause: 1000 },
       {
         kind: "say",
