@@ -631,30 +631,104 @@ export function InsuranceStep({ onDone }: { onDone: (v: string) => void }) {
 
 /* --- Account -------------------------------------------------------------- */
 
+/**
+ * Account creation: the two social providers first, then name, email and
+ * password for anyone who'd rather not use them.
+ *
+ * Social sits above the form because it's the shorter path and this is the
+ * last gate before the app — anything that shortens it matters here.
+ *
+ * The password field is deliberately inert. It's marked as a new password so
+ * managers don't offer a saved one, nothing is read from it beyond checking
+ * it's non-empty, and the card says outright that nothing is stored. A
+ * prototype that looks like it's taking a real password will be given real
+ * passwords.
+ */
 export function AccountStep({ onDone }: { onDone: (v: string) => void }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const ready = name.trim() && email.includes("@") && password.length >= 8;
+
   return (
-    <div className="ob-panel">
-      <label className="ob-field ob-field--stack">
-        <span>Email</span>
-        <input
-          type="email"
-          value={email}
-          placeholder="you@example.com"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
-      <p className="ob-panel__src">
-        Prototype — nothing is stored and no account is created.
+    <div className="ob-account">
+      <div className="ob-account__social">
+        <button
+          type="button"
+          className="ob-social ob-social--google"
+          onClick={() => onDone("Signed up with Google")}
+        >
+          <span className="ob-social__mark" aria-hidden="true">
+            G
+          </span>
+          Continue with Google
+        </button>
+        <button
+          type="button"
+          className="ob-social ob-social--facebook"
+          onClick={() => onDone("Signed up with Facebook")}
+        >
+          <span className="ob-social__mark" aria-hidden="true">
+            f
+          </span>
+          Continue with Facebook
+        </button>
+      </div>
+
+      <p className="ob-account__or">
+        <span>or use your email</span>
       </p>
-      <button
-        type="button"
-        className="ob-send"
-        disabled={!email.includes("@")}
-        onClick={() => onDone("Account created")}
-      >
-        Create account
-      </button>
+
+      <div className="ob-panel">
+        <label className="ob-field ob-field--stack">
+          <span>Full name</span>
+          <input
+            value={name}
+            autoComplete="name"
+            placeholder="Jane Barrett"
+            onChange={(e) => setName(e.target.value)}
+          />
+        </label>
+
+        <label className="ob-field ob-field--stack">
+          <span>Email</span>
+          <input
+            type="email"
+            value={email}
+            autoComplete="email"
+            placeholder="you@example.com"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+
+        <label className="ob-field ob-field--stack">
+          <span>Password</span>
+          <input
+            type="password"
+            value={password}
+            /* new-password stops a manager offering a real saved credential
+               to a prototype that cannot protect it. */
+            autoComplete="new-password"
+            placeholder="At least 8 characters"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+
+        <p className="ob-panel__src">
+          Prototype — nothing is stored, no account is created, and this
+          password goes nowhere. Don't enter one you use elsewhere.
+        </p>
+
+        <button
+          type="button"
+          className="ob-send"
+          disabled={!ready}
+          onClick={() => onDone("Account created")}
+        >
+          Create account
+        </button>
+      </div>
     </div>
   );
 }
