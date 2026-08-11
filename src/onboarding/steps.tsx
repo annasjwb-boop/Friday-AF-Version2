@@ -530,27 +530,30 @@ const RISKS = [
     label: "Wind",
     icon: Wind,
     detail: "Gusts to 110 mph modelled",
-    sev: 2,
+    sev: 1,
   },
   {
     id: "flood",
     label: "Flood",
     icon: Waves,
     detail: "Zone X, outside the 100-year floodplain",
-    sev: 2,
+    sev: 1,
   },
   {
     id: "fire",
     label: "Wildfire",
     icon: Flame,
     detail: "Low — no wildland interface within 5 mi",
-    sev: 2,
+    sev: 1,
   },
 ];
 
 /* Three positions rather than a severity score. The person isn't re-rating the
    hazard — they're telling us whether our reading matches theirs, which is the
-   only thing they're actually in a position to know. */
+   only thing they're actually in a position to know.
+ *
+ * Index 1 is the midpoint and every risk starts there: the slider opens on
+ * what the models say, so moving it is always a deliberate disagreement. */
 const TUNE_LABELS = ["Less concerned", "As expected", "More concerned"];
 
 export function RisksStep({ onDone }: { onDone: (v: string) => void }) {
@@ -559,7 +562,8 @@ export function RisksStep({ onDone }: { onDone: (v: string) => void }) {
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState("");
 
-  const moved = risks.filter((r) => r.sev !== 2).length;
+  /* Anything away from the midpoint is a correction the person made. */
+  const moved = risks.filter((r) => r.sev !== 1).length;
 
   return (
     <div className="ob-panel">
