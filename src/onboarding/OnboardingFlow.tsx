@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronLeft } from "lucide-react";
-import { SCRIPTS, type Step } from "./scripts";
+import { type Step } from "./scripts";
+import { editedScript, loadEdits } from "./flowEdits";
 import {
   AccountStep,
   AskAddressStep,
@@ -51,7 +52,20 @@ interface Entry {
 export function OnboardingFlow() {
   const { flow } = useParams<{ flow: string }>();
   const navigate = useNavigate();
-  const script = SCRIPTS[flow ?? "aid"] ?? SCRIPTS.aid;
+  /* Re-read on the flow-edits event so an edit in another tab takes effect
+     without a reload. */
+  const [edits, setEdits] = useState(loadEdits);
+  useEffect(() => {
+    const sync = () => setEdits(loadEdits());
+    window.addEventListener("flow-edits", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("flow-edits", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const script = editedScript(flow ?? "aid", edits) ?? editedScript("aid", edits);
 
   const reduced = useMemo(
     () =>
