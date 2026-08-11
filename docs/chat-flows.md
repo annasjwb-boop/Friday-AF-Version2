@@ -54,7 +54,7 @@ No dead ends, broken jumps or unreachable steps.
 
 ## coverage — Worried you might be underinsured
 
-Reached from ads 02, 05 · 19 of 19 steps reachable
+Reached from ads 02, 05 · 20 of 20 steps reachable
 
 ```
   1  SAY             Thanks for your address.
@@ -71,20 +71,21 @@ Reached from ads 02, 05 · 19 of 19 steps reachable
              ├─ "I own" → step 9
              ├─ "I rent" → step 9
              ├─ "Something else" → step 9
-  9  SAY             I've pulled what public records hold about your property — size, age, materials, sale history — to estimate what it would cost to rebuild.
- 10  SAY             I've also pulled the hazards for your county, and for your specific parcel where the data goes that deep.
- 11  SAY             Before we go further, have a look at the details and change anything that's off. The rebuild cost and the room count matter most.
- 12  PROPERTY        editable property details
- 13  SAY             Now the risks. We look at local wind, water and weather patterns, but nobody knows your property like you do — adjust anything that doesn't match what you've seen.
- 14  RISKS           editable hazard list
- 15  SAY             Last piece is your insurance. We can connect to your policy directly, you can upload your declarations page, or you can tell me you don't carry insurance.
- 16  INSURANCE       connect, upload, or none
-             ├─ "Connect my policy" → step 17
-             ├─ "Upload my declarations page" → step 17
-             ├─ "I don't carry insurance" → step 17
- 17  SAY             One last question. Can you tell me how you think about your home? A castle? An igloo? A cabin? A secret lair?
- 18  TEXT            free text "metaphor" — A castle, a cabin, a secret lair…
- 19  GOTO            [See your risk breakdown] See your risk breakdown → /?tab=risk
+  9  SAY             Thanks!
+ 10  SAY             I've pulled what public records hold about your property — size, age, materials, sale history — to estimate what it would cost to rebuild.
+ 11  SAY             I've also pulled the hazards for your county, and for your specific parcel where the data goes that deep.
+ 12  SAY             Before we go further, have a look at the details and change anything that's off. The rebuild cost and the room count matter most.
+ 13  PROPERTY        editable property details
+ 14  SAY             Now the risks. We look at local wind, water and weather patterns, but nobody knows your property like you do — adjust anything that doesn't match what you've seen.
+ 15  RISKS           editable hazard list
+ 16  SAY             Last piece is your insurance. We can connect to your policy directly, you can upload your declarations page, or you can tell me you don't carry insurance.
+ 17  INSURANCE       connect, upload, or none
+             ├─ "Connect my policy" → step 18
+             ├─ "Upload my declarations page" → step 18
+             ├─ "I don't carry insurance" → step 18
+ 18  SAY             One last question. Can you tell me how you think about your home? A castle? An igloo? A cabin? A secret lair?
+ 19  TEXT            free text "metaphor" — A castle, a cabin, a secret lair…
+ 20  GOTO            [See your risk breakdown] See your risk breakdown → /?tab=risk
              └─ ends the flow
 ```
 

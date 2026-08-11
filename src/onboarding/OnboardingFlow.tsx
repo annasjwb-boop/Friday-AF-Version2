@@ -35,7 +35,25 @@ import "./OnboardingFlow.css";
  * to sit through eight seconds of simulated typing to reach a grant deadline.
  * ------------------------------------------------------------------------- */
 
-const DELAY = 900;
+/* Typing time is derived from the previous message rather than fixed, so a
+ * one-word line doesn't hold as long as a four-line one. ~220ms a word is
+ * roughly 270 words a minute — quick, because chat is skimmed rather than read.
+ *
+ * Clamped at both ends: below ~700ms the dots flash rather than register, and
+ * above ~2.8s the wait reads as a stall however long the previous line was.
+ * A step's own `pause` or `pauseFrom` still wins, for beats that are about
+ * emphasis rather than reading.
+ */
+const MS_PER_WORD = 220;
+const MIN_PAUSE = 700;
+const MAX_PAUSE = 2800;
+/** Cards and maps are scanned, not read, so they get a flat beat. */
+const VISUAL_PAUSE = 900;
+
+function readingTime(text: string): number {
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(MIN_PAUSE, Math.min(MAX_PAUSE, words * MS_PER_WORD));
+}
 
 /** Steps that display and move on without waiting for input. */
 const PASSIVE: Step["kind"][] = ["say", "map", "grants"];
@@ -116,13 +134,23 @@ export function OnboardingFlow() {
   /* Advance through passive steps on a timer. */
   useEffect(() => {
     if (!current || waiting) return;
-    /* A step can set its own pause; otherwise a line gets the default beat and
-       a card appears almost immediately. */
+    /* A step can set its own pause; otherwise the wait is how long the message
+       above it takes to read, so the conversation paces itself. */
+    const previous = entries.at(-1);
+    const prevText =
+      previous?.step.kind === "say"
+        ? typeof previous.step.text === "function"
+          ? previous.step.text(answers)
+          : previous.step.text
+        : null;
+
+    const derived = prevText ? readingTime(prevText) : VISUAL_PAUSE;
+
     const wait = instant
       ? 0
       : (current.kind === "say" && current.pauseFrom
           ? current.pauseFrom(answers)
-          : (current.pause ?? (current.kind === "say" ? DELAY : 260)));
+          : (current.pause ?? derived));
 
     /* Dots run for the whole wait, whatever comes next — a two-second gap with
        nothing moving reads as a stall rather than as thinking. */
@@ -143,6 +171,9 @@ export function OnboardingFlow() {
       setCursor((c) => c + 1);
     }, wait);
     return () => clearTimeout(t);
+    /* entries is read for the previous message's length; the effect only fires
+       on cursor changes, so this can't loop. */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cursor, current, waiting, instant, address, answers]);
 
   useThreadScroll(anchorRef, [entries.length, typing, cursor], { instant });

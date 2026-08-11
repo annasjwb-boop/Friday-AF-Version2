@@ -185,6 +185,7 @@ export const SCRIPTS: Record<string, Script> = {
         id: "tenure",
         options: ["I own", "I rent", "Something else"],
       },
+      { kind: "say", text: "Thanks!" },
       {
         kind: "say",
         text: "I've pulled what public records hold about your property — size, age, materials, sale history — to estimate what it would cost to rebuild.",
