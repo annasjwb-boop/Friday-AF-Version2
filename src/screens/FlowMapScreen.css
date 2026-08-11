@@ -1,0 +1,245 @@
+/* ---------------------------------------------------------------------------
+ * Flow map. A debugging surface, so it favours density and legibility over
+ * the product's usual restraint — but stays in the same palette.
+ * ------------------------------------------------------------------------- */
+
+.fm {
+  height: 100dvh;
+  overflow-y: auto;
+  background: #e9eaed;
+}
+
+.fm__wrap {
+  max-width: 860px;
+  padding: 32px 24px 80px;
+  margin: 0 auto;
+}
+
+.fm__back {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3c4149;
+  text-decoration: none;
+}
+
+.fm__head {
+  margin: 18px 0 22px;
+}
+
+.fm__title {
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #0b0c0f;
+}
+
+.fm__meta {
+  margin-top: 7px;
+  font-size: 13px;
+  color: #3c4149;
+}
+
+.fm__meta code {
+  padding: 1px 6px;
+  font-size: 12px;
+  background: rgb(11 12 15 / 7%);
+  border-radius: 4px;
+}
+
+.fm__run {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding: 9px 16px;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: #16161a;
+  border-radius: 999px;
+}
+
+.fm__clean,
+.fm__problems {
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  line-height: 1.55;
+  border-radius: 11px;
+}
+
+.fm__clean {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 12%);
+}
+
+.fm__problems {
+  color: #a3341c;
+  background: rgb(212 84 48 / 10%);
+  border: 1px solid rgb(212 84 48 / 26%);
+}
+
+.fm__problems-head {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.fm__problems ul {
+  padding-left: 18px;
+}
+
+/* --- Steps -------------------------------------------------------------------- */
+
+.fm-steps {
+  list-style: none;
+}
+
+.fm-step {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 7px;
+  background: #fff;
+  border: 1px solid rgb(11 12 15 / 8%);
+  border-radius: 12px;
+}
+
+.fm-step.is-orphan {
+  background: rgb(212 84 48 / 5%);
+  border-color: rgb(212 84 48 / 30%);
+}
+
+.fm-step__n {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #3c4149;
+  background: rgb(11 12 15 / 6%);
+  border-radius: 50%;
+}
+
+.fm-step__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.fm-step__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.fm-step__kind {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #8a8f98;
+}
+
+.fm-step__label {
+  padding: 2px 7px;
+  font-family: ui-monospace, monospace;
+  font-size: 10.5px;
+  color: #0a84ff;
+  background: rgb(10 132 255 / 10%);
+  border-radius: 4px;
+}
+
+.fm-step__pause {
+  font-size: 10.5px;
+  color: #8a8f98;
+}
+
+.fm-step__orphan {
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #a3341c;
+  background: rgb(212 84 48 / 14%);
+  border-radius: 4px;
+}
+
+.fm-step__text {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #16161a;
+}
+
+/* --- Edges -------------------------------------------------------------------- */
+
+.fm-edges {
+  margin-top: 9px;
+  list-style: none;
+  border-left: 2px solid rgb(11 12 15 / 10%);
+}
+
+.fm-edge {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: baseline;
+  padding: 4px 0 4px 12px;
+  font-size: 12.5px;
+  color: #8a8f98;
+}
+
+.fm-edge b {
+  font-weight: 600;
+  color: #3c4149;
+}
+
+.fm-edge i {
+  font-style: italic;
+}
+
+.fm-edge--loop b,
+.fm-edge--loop span {
+  color: #8a6412;
+}
+
+.fm-edge--exit {
+  font-weight: 600;
+  color: #1d6b3f;
+}
+
+.fm-edge--bad,
+.fm-edge--bad b {
+  font-weight: 600;
+  color: #c0341c;
+}
+
+/* --- Other flows -------------------------------------------------------------- */
+
+.fm__others {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 20px;
+  margin-top: 24px;
+  border-top: 1px solid rgb(11 12 15 / 10%);
+}
+
+.fm__others a {
+  padding: 9px 15px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #16161a;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid rgb(11 12 15 / 10%);
+  border-radius: 999px;
+}

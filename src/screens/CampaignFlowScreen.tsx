@@ -116,10 +116,13 @@ export function CampaignFlowScreen() {
                 <span className="ad__go">Learn more</span>
               </div>
 
-              <Link className="ad__foot" to={`/start/${AD_TO_SCRIPT[ad.n]}`}>
+              <div className="ad__foot">
                 <span className="ad__dest">{ad.dest}</span>
-                <span className="ad__state">Open flow</span>
-              </Link>
+                <span className="ad__links">
+                  <Link to={`/flows/${AD_TO_SCRIPT[ad.n]}`}>Chat flow</Link>
+                  <Link to={`/start/${AD_TO_SCRIPT[ad.n]}`}>Run</Link>
+                </span>
+              </div>
             </article>
           ))}
         </div>

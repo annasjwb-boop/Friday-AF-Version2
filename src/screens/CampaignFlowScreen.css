@@ -426,3 +426,26 @@ a.ad__foot:hover {
 a.ad__foot:hover .ad__state {
   color: #0a84ff;
 }
+
+/* Two destinations per ad: the flow diagram, and the flow itself. */
+.ad__links {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.ad__links a {
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3c4149;
+  text-decoration: none;
+  background: rgb(11 12 15 / 6%);
+  border-radius: 999px;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.ad__links a:hover {
+  color: #0a84ff;
+  background: rgb(10 132 255 / 10%);
+}
