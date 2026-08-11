@@ -10,11 +10,10 @@
  * from data/home.ts so they stay consistent with the rest of the app; the
  * probabilities do not have a source yet.
  *
- * ⚠ Location: this content is written to work for a coastal Southeast
- * property. The app's address is Atlanta, GA while the campaign surfaces are
- * Florida — surge and sinkhole belong to the second, not the first. Nothing
- * here names a county, so it survives either choice, but the choice still
- * needs making.
+ * Location: the property is in Fort Myers, FL, which is what makes surge,
+ * sinkhole and the named-storm deductible the right perils to model. The
+ * campaign surfaces are Florida too, so the whole product now describes one
+ * place.
  * ------------------------------------------------------------------------- */
 
 export type CoverStatus = "uninsured" | "partial" | "covered";
@@ -191,7 +190,7 @@ export const RISK_PERILS: RiskPeril[] = [
   {
     id: "dwelling",
     name: "Underinsured dwelling",
-    sub: "$850K covered vs $1.05M rebuild",
+    sub: "$625K covered vs $780K rebuild",
     status: "partial",
     max: 8,
     severity: 3,
@@ -202,11 +201,11 @@ export const RISK_PERILS: RiskPeril[] = [
       note: "Applies to any total loss, whatever caused it",
     },
     howIntense: {
-      value: "$200K",
+      value: "$155K",
       note: "Rebuild cost above your dwelling limit",
     },
     yourShare: {
-      value: "$200K",
+      value: "$155K",
       note: "Uninsured by definition — no peril pays above the limit",
     },
     whoPays: [
@@ -230,7 +229,7 @@ export const RISK_PERILS: RiskPeril[] = [
   {
     id: "deductible",
     name: "Hurricane deductible",
-    sub: "$45K out of pocket before anything pays",
+    sub: "$31K out of pocket before anything pays",
     status: "partial",
     max: 13,
     severity: 3,
@@ -241,7 +240,7 @@ export const RISK_PERILS: RiskPeril[] = [
       note: "Frequency of a named storm affecting the property",
     },
     howIntense: {
-      value: "$45K",
+      value: "$31K",
       note: "Payable before the policy contributes anything",
     },
     yourShare: {
@@ -257,7 +256,7 @@ export const RISK_PERILS: RiskPeril[] = [
       title: "Build the deductible in cash",
       est: "No premium change",
       options: [
-        { name: "Set aside $45K", note: "Reachable within a week" },
+        { name: "Set aside $31K", note: "Reachable within a week" },
         { name: "Lower the percentage", note: "Raises premium, cuts exposure" },
       ],
     },
@@ -371,7 +370,7 @@ export const PROVIDERS: Record<string, Provider[]> = {
         "Can't be non-renewed because you filed",
       ],
       downsides: [
-        "Caps at $250K — well below your $1.05M rebuild cost",
+        "Caps at $250K — well below your $780K rebuild cost",
         "30-day wait before it takes effect, so it can't be bought ahead of a storm",
         "Contents cover is separate and limited",
       ],
@@ -380,7 +379,7 @@ export const PROVIDERS: Record<string, Provider[]> = {
       name: "Neptune Flood",
       kind: "Private standalone policy",
       monthly: 195,
-      covers: 1_100_000,
+      covers: 830_000,
       coversLabel: "Up to full replacement value",
       upsides: [
         "Limits high enough to cover the whole rebuild",
@@ -396,7 +395,7 @@ export const PROVIDERS: Record<string, Provider[]> = {
       name: "Wright Flood excess",
       kind: "Excess layer above an NFIP policy",
       monthly: 95,
-      covers: 850_000,
+      covers: 580_000,
       coversLabel: "The remainder above NFIP's $250K",
       upsides: [
         "Cheapest route to full-value cover if you keep NFIP underneath",
@@ -413,7 +412,7 @@ export const PROVIDERS: Record<string, Provider[]> = {
       name: "Sinkhole endorsement",
       kind: "Added to your existing policy",
       monthly: 92,
-      covers: 1_050_000,
+      covers: 625_000,
       coversLabel: "To your dwelling limit",
       upsides: [
         "Same carrier and adjuster as the rest of your claim",
@@ -428,7 +427,7 @@ export const PROVIDERS: Record<string, Provider[]> = {
       name: "Catastrophic ground cover collapse",
       kind: "Statutory offer from your carrier",
       monthly: 14,
-      covers: 1_050_000,
+      covers: 625_000,
       coversLabel: "Only if the home is condemned",
       upsides: [
         "Very cheap, and carriers must offer it in some states",
@@ -477,10 +476,10 @@ export const PROVIDERS: Record<string, Provider[]> = {
       name: "Extended replacement cost",
       kind: "Endorsement on your existing policy",
       monthly: 28,
-      covers: 212_500,
-      coversLabel: "25% above your $850K limit",
+      covers: 156_250,
+      coversLabel: "25% above your $625K limit",
       upsides: [
-        "Closes most of the $200K shortfall for a small premium change",
+        "Closes most of the $155K shortfall for a small premium change",
         "Applies to every covered peril at once",
       ],
       downsides: [
@@ -492,7 +491,7 @@ export const PROVIDERS: Record<string, Provider[]> = {
       name: "Guaranteed replacement cost",
       kind: "Endorsement on your existing policy",
       monthly: 46,
-      covers: 1_050_000,
+      covers: 780_000,
       coversLabel: "Whatever rebuilding actually costs",
       upsides: [
         "Removes the shortfall entirely, whatever construction costs do",
@@ -509,8 +508,8 @@ export const PROVIDERS: Record<string, Provider[]> = {
       name: "Lower to 2% of dwelling",
       kind: "Change to your existing policy",
       monthly: 37,
-      covers: 28_000,
-      coversLabel: "Cuts the deductible from $45K to $17K",
+      covers: 18_750,
+      coversLabel: "Cuts the deductible from $31K to $12.5K",
       upsides: [
         "Reduces what you must find in cash before anything pays",
         "Takes effect at renewal with no inspection",
@@ -524,14 +523,14 @@ export const PROVIDERS: Record<string, Provider[]> = {
       name: "Hold it in cash",
       kind: "No policy change",
       monthly: 0,
-      covers: 45_000,
+      covers: 31_250,
       coversLabel: "You fund the deductible yourself",
       upsides: [
         "Costs nothing in premium",
         "The money stays yours if no storm comes",
       ],
       downsides: [
-        "$45K has to be reachable within about a week",
+        "$31K has to be reachable within about a week",
         "It's the same money whether you set it aside or not",
       ],
     },

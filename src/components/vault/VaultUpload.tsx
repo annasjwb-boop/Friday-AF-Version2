@@ -19,7 +19,7 @@ type Stage = "source" | "uploading" | "verifying" | "done";
 const AI_CHECKS = [
   "Legible and complete",
   "Name matches Jarad Bell",
-  "Address matches 123 Prado Rd NE",
+  "Address matches 1200 Edwards Dr",
 ];
 
 const SOURCES = [

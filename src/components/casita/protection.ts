@@ -5,18 +5,18 @@ import { RISK_PERILS, scoreBand, totalScore } from "../../data/risks";
  * Blue-sky protection figures, derived from the policy on file.
  *
  * Everything here reads from policyCoverages, so the overview cannot disagree
- * with the policy screens. The $200K shortfall this produces is the same
- * number the dwelling gap note states in prose — "about $200K more than your
- * $850K limit" — which is the check that the derivation is right.
+ * with the policy screens. The $155K shortfall this produces is the same
+ * number the dwelling gap note states in prose — "about $155K more than your
+ * $625K limit" — which is the check that the derivation is right.
  * ------------------------------------------------------------------------- */
 
 const limit = (id: string, fallback: number) =>
   policyCoverages.find((c) => c.id === id)?.limit ?? fallback;
 
 /** From the dwelling gap note in data/home.ts. */
-export const REBUILD_COST = 1_050_000;
+export const REBUILD_COST = 780_000;
 
-export const DWELLING_LIMIT = limit("dwelling", 850_000);
+export const DWELLING_LIMIT = limit("dwelling", 625_000);
 export const PERSONAL_PROPERTY = limit("personal-property", 50_000);
 
 /**
@@ -27,7 +27,8 @@ export const PERSONAL_PROPERTY = limit("personal-property", 50_000);
 export const TOTAL_LOSS_ESTIMATE = REBUILD_COST + PERSONAL_PROPERTY;
 
 /** Out of pocket before the policy pays anything. */
-export const DEDUCTIBLE = 45_000;
+/** 5% named-storm deductible on the dwelling limit. */
+export const DEDUCTIBLE = 31_250;
 
 /**
  * What the policy would actually pay on a total loss: each coverage to its

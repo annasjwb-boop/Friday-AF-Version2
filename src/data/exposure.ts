@@ -5,7 +5,7 @@ import { RISK_PERILS } from "./risks";
  *
  * ⚠ The one thing not to do with this data: stack the per-peril figures. Flood
  * and sinkhole each threaten the whole structure, so adding them gives $2.4M
- * of uncovered exposure on a $1.05M house. They're alternative scenarios, not
+ * of uncovered exposure on a $780K house. They're alternative scenarios, not
  * components of one.
  *
  * The probability-weighted figures (ANNUAL_P, expected, EXPECTED_BY_ASSET) are
@@ -30,7 +30,7 @@ export const ASSETS: Asset[] = [
     id: "rebuild",
     label: "Rebuild cost",
     short: "Rebuild",
-    value: 1_050_000,
+    value: 780_000,
     note: "What it would cost to build this house again",
   },
   {
@@ -60,11 +60,11 @@ export const TOTAL_ASSETS = ASSETS.reduce((n, a) => n + a.value, 0);
  * people assume the opposite.
  */
 export const UNCOVERED: Record<string, number[]> = {
-  flood: [1_050_000, 50_000, 0],
-  sinkhole: [1_050_000, 50_000, 0],
-  backup: [84_000, 22_000, 0],
-  dwelling: [200_000, 0, 0],
-  deductible: [45_000, 0, 0],
+  flood: [780_000, 50_000, 0],
+  sinkhole: [780_000, 50_000, 0],
+  backup: [62_000, 22_000, 0],
+  dwelling: [155_000, 0, 0],
+  deductible: [31_250, 0, 0],
   wind: [0, 0, 0],
   fire: [0, 0, 0],
 };

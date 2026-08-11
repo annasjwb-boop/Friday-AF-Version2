@@ -220,7 +220,7 @@ export function CasitaRecovery({
         <div className="casita-rec__card-divider" />
         <p className="casita-rec__card-text">
           {plan.covered
-            ? "Your policy pays about 90% of structure damage after the deductible, up to the $850K dwelling limit — plus up to $50K for belongings and $25K in loss-of-use while you're displaced."
+            ? "Your policy pays about 90% of structure damage after the deductible, up to the $625K dwelling limit — plus up to $50K for belongings and $25K in loss-of-use while you're displaced."
             : `${disasterLabel} damage isn't covered by your current policy. In this scenario, every dollar below comes from your own money or outside aid.`}
         </p>
         <p className="casita-rec__card-meta">

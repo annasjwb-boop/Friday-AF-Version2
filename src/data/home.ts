@@ -114,14 +114,14 @@ export const policyCoverages: PolicyCoverage[] = [
     id: "dwelling",
     name: "Dwelling",
     subtitle: "Your home’s structure",
-    limit: 850000,
+    limit: 625000,
     description:
       "Pays to repair or rebuild the physical structure of your home — the walls, roof, floors, foundation, and built-in systems like plumbing and wiring — after a covered disaster.",
     example:
       "If a fire burns through part of your house, this is the coverage that rebuilds it.",
     gap: {
       detail:
-        "Rebuilding this home is estimated at $1.05M — about $200K more than your $850K limit. In a total loss, you would cover that difference out of pocket. Ask your insurer about raising the limit or adding extended replacement cost.",
+        "Rebuilding this home is estimated at $780K — about $155K more than your $625K limit. In a total loss, you would cover that difference out of pocket. Ask your insurer about raising the limit or adding extended replacement cost.",
     },
   },
   {

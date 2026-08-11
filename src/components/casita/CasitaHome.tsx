@@ -159,7 +159,7 @@ export function CasitaHome() {
         <div className="casita__bar">
           <div className="casita__identity">
             <h1 className="casita__title">Casita</h1>
-            <p className="casita__address">123 Prado Rd NE, Atlanta, GA</p>
+            <p className="casita__address">1200 Edwards Dr, Fort Myers, FL 33901</p>
           </div>
           <div className="casita__actions">
             {/* Help follows whichever tab is open, so the explainers and

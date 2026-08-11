@@ -22,7 +22,7 @@ export function VaultHome() {
         <div className="vault__bar">
           <div>
             <h1 className="vault__title">Readiness</h1>
-            <p className="vault__address">123 Prado Rd NE, Atlanta, GA</p>
+            <p className="vault__address">1200 Edwards Dr, Fort Myers, FL 33901</p>
           </div>
           <button type="button" className="vault__avatar" aria-label="Profile">
             <span aria-hidden="true">JB</span>

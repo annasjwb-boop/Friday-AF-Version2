@@ -23,10 +23,10 @@ import { MAPBOX_TOKEN } from "../components/campaign/FloridaMap";
  * fetched real data invites people to trust numbers that were typed in by hand.
  * ------------------------------------------------------------------------- */
 
-export const DEFAULT_ADDRESS = "123 Prado Rd NE, Atlanta, GA";
+export const DEFAULT_ADDRESS = "1200 Edwards Dr, Fort Myers, FL 33901";
 
 /** Where the static map falls back to if geocoding fails or is unavailable. */
-const FALLBACK_CENTER: [number, number] = [-84.35, 33.77];
+const FALLBACK_CENTER: [number, number] = [-81.87, 26.64];
 
 /**
  * The property on a static map tile.
@@ -448,7 +448,7 @@ export function TextStep({
 /* --- Property ------------------------------------------------------------- */
 
 const FIELDS = [
-  { k: "Year built", v: "1994" },
+  { k: "Year built", v: "1998" },
   { k: "Living area", v: "2,410 sq ft" },
   { k: "Bedrooms", v: "4" },
   { k: "Bathrooms", v: "2.5" },
@@ -458,7 +458,7 @@ const FIELDS = [
 
 export function PropertyStep({ onDone }: { onDone: (v: string) => void }) {
   const [fields, setFields] = useState(FIELDS);
-  const [cost, setCost] = useState(1_050_000);
+  const [cost, setCost] = useState(780_000);
 
   return (
     <div className="ob-panel">
@@ -485,15 +485,15 @@ export function PropertyStep({ onDone }: { onDone: (v: string) => void }) {
         </p>
         <input
           type="range"
-          min={600_000}
-          max={1_600_000}
+          min={450_000}
+          max={1_200_000}
           step={10_000}
           value={cost}
           onChange={(e) => setCost(Number(e.target.value))}
           aria-label="Estimated rebuild cost"
         />
         <p className="ob-slider__note">
-          $1,050,000 is the average for homes of this size in your town. Move it
+          $780,000 is the average for homes of this size in your area. Move it
           if you know your build costs more or less.
         </p>
       </div>
