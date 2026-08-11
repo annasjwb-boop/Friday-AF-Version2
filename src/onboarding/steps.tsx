@@ -343,9 +343,9 @@ export function ResiliencyStep({ onDone }: { onDone: (v: string) => void }) {
         <button
           type="button"
           className="ob-chip"
-          onClick={() => onDone("Yes, I want to apply")}
+          onClick={() => onDone("Yes interested")}
         >
-          Yes, I want to apply
+          Yes interested
         </button>
         <button
           type="button"
