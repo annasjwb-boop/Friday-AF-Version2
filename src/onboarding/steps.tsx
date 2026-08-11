@@ -350,9 +350,9 @@ export function ResiliencyStep({ onDone }: { onDone: (v: string) => void }) {
         <button
           type="button"
           className="ob-chip"
-          onClick={() => onDone("Tell me more first")}
+          onClick={() => onDone("Maybe — save for now")}
         >
-          Tell me more first
+          Maybe — save for now
         </button>
         <button
           type="button"
