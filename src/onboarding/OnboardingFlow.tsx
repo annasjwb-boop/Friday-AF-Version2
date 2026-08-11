@@ -82,8 +82,15 @@ export function OnboardingFlow() {
   /* Advance through passive steps on a timer. */
   useEffect(() => {
     if (!current || waiting) return;
-    const wait = instant ? 0 : current.kind === "say" ? DELAY : 260;
-    if (current.kind === "say" && !instant) setTyping(true);
+    /* A step can set its own pause; otherwise a line gets the default beat and
+       a card appears almost immediately. */
+    const wait = instant
+      ? 0
+      : (current.pause ?? (current.kind === "say" ? DELAY : 260));
+
+    /* Dots run for the whole wait, whatever comes next — a two-second gap with
+       nothing moving reads as a stall rather than as thinking. */
+    if (!instant && wait >= 400) setTyping(true);
     const t = setTimeout(() => {
       setTyping(false);
       setEntries((e) => [...e, { step: current, address }]);

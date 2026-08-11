@@ -11,6 +11,12 @@
 /** Steps can be jumped to by label, which is what makes the address loop work. */
 export interface StepBase {
   label?: string;
+  /**
+   * How long to hold before this step appears, in ms. The typing indicator
+   * runs for the whole wait, so a longer pause reads as the assistant
+   * composing rather than as the app having stalled.
+   */
+  pause?: number;
 }
 
 export type Step = StepBase &
@@ -102,7 +108,8 @@ export const SCRIPTS: Record<string, Script> = {
         kind: "say",
         text: "There are 4 programs open for your address right now. Three are for damage from past storms and are still accepting applications. One is for improvements that make your home stand up better to the next one.",
       },
-      { kind: "grants" },
+      { kind: "say", text: "Here are the storms:", pause: 2000 },
+      { kind: "grants", pause: 1000 },
       {
         kind: "say",
         text: "Which of these storms actually damaged your home? Pick the ones you remember — I'll work out which programs that opens for you.",
