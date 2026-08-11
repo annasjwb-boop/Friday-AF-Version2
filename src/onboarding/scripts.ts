@@ -112,7 +112,7 @@ export const SCRIPTS: Record<string, Script> = {
       { kind: "grants", pause: 1000 },
       {
         kind: "say",
-        text: "Which of these storms actually damaged your home? Pick the ones you remember — I'll work out which programs that opens for you.",
+        text: "Which of these storms actually damaged your home? I'll save the programs to your profile and we'll review them together in detail shortly.",
       },
       { kind: "pickGrants" },
       {
