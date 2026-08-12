@@ -63,8 +63,15 @@
   gap: 8px;
 }
 
+/* Centred explicitly rather than inheriting: the text was picking up
+   alignment from an ancestor while the icon, a fixed-width block, stayed at
+   the left edge — so the two disagreed. */
 .cov-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 13px 12px;
+  text-align: center;
   background: #fff;
   border: 1px solid rgb(22 22 24 / 7%);
   border-radius: 14px;
@@ -111,6 +118,7 @@
 }
 
 .cov-tile__meter {
+  width: 100%;
   height: 4px;
   margin-top: 10px;
   overflow: hidden;
