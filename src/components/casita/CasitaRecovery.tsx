@@ -14,6 +14,7 @@ import {
 import { METAPHOR_LABELS, type MetaphorId } from "./metaphors";
 import { getTurntableFrames } from "./turntableFrames";
 import { CasitaRecoveryTune } from "./CasitaRecoveryTune";
+import { RecoveryPlanBlock } from "./RecoveryPlanBlock";
 import {
   RecoveryAidSheet,
   RecoveryInsuranceSheet,
@@ -198,6 +199,8 @@ export function CasitaRecovery({
           </button>
         </p>
       </motion.section>
+
+      <RecoveryPlanBlock />
 
       <motion.section
         className="casita-rec__card casita-rec__card--tap"

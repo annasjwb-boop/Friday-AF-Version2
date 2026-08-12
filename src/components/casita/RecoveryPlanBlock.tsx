@@ -13,15 +13,15 @@ import {
   REBUILD_COST,
   coverageForPeril,
   money,
-} from "../casita/protection";
-import "./ReadinessPlan.css";
+} from "./protection";
+import "./RecoveryPlanBlock.css";
 
 /* ---------------------------------------------------------------------------
- * Getting ready for a specific peril, and deciding how to fund the rest.
+ * Recovering from a specific peril, and deciding how to fund the rest.
  *
  * The cards and the peril picker are the risk view's, deliberately: the two
  * tabs ask different questions of the same numbers. Risk asks how exposed you
- * are; this asks what you intend to do about it.
+ * are; recovery asks how you intend to fund what your policy leaves.
  *
  * Selecting an option fills the bar, so the plan either closes the gap or
  * visibly doesn't. Two of the six put no money in at all — they change the
@@ -29,7 +29,7 @@ import "./ReadinessPlan.css";
  * a plan made entirely of them still shows an open gap.
  * ------------------------------------------------------------------------- */
 
-export function ReadinessPlan() {
+export function RecoveryPlanBlock() {
   const [perilId, setPerilId] = useState("wind");
   const [open, setOpen] = useState(false);
   const [chosen, setChosen] = useState<string[]>([]);

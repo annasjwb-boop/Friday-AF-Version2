@@ -26,8 +26,9 @@ import {
 } from "../../data/vault";
 import {
   buildSections,
+  readinessPercent,
 } from "../../data/vaultSections";
-import { ReadinessPlan } from "./ReadinessPlan";
+import { ProgressArc } from "../casita/ProgressArc";
 import { VaultSections } from "./VaultSections";
 import { VaultDocsSheet } from "./VaultDocs";
 import { VaultUpload } from "./VaultUpload";
@@ -75,6 +76,10 @@ export function VaultBody() {
   const [uploadDoc, setUploadDoc] = useState<VaultDocument | null>(null);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
 
+  const totalValue = useMemo(
+    () => rooms.reduce((sum, room) => sum + roomValue(room), 0),
+    [rooms],
+  );
   const roomsStarted = rooms.filter((r) => r.items.length > 0).length;
 
   /* One figure across documents and assets alike, as a plain count of what's
@@ -85,6 +90,7 @@ export function VaultBody() {
     () => buildSections(documents, rooms),
     [documents, rooms],
   );
+  const ready = readinessPercent(sections);
 
   /* One task at a time: the next missing document first, then the room
      with the most undocumented items. */
@@ -133,7 +139,24 @@ export function VaultBody() {
   return (
     <div className="vault-body">
       {/* --- Documented value hero ------------------------------------- */}
-      <ReadinessPlan />
+      {/* Same arc as the risk scenario. Readiness is one number over documents
+          and assets alike, so the arc is measuring the same kind of thing:
+          how much of what's needed is accounted for. */}
+      <section className="vault-hero" aria-label="Readiness">
+        <p className="vault-hero__intro">
+          Let's get all the documents you need for insurance and aid organized.
+        </p>
+        <ProgressArc
+          pct={ready.pct}
+          caption="of what you need, gathered"
+          label={`${ready.pct}% of the documents and assets you need`}
+        />
+        {/* The documents/assets split is hidden here — the sections below break
+            the same figure down by name, which is more use than the totals. */}
+        <p className="vault-hero__value2">
+          <b>+{formatValue(totalValue)}</b> in personal property!
+        </p>
+      </section>
 
       {/* --- One task at a time ----------------------------------------- */}
       <AnimatePresence initial={false}>
