@@ -3,10 +3,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown, Plus } from "lucide-react";
 import { RISK_PERILS } from "../../data/risks";
 import {
+  COVERAGE_BY_PERIL,
   GAP_OPTIONS,
   contributionOf,
   defaultSettings,
   type Control,
+  type GapOption,
   type Settings,
 } from "../../data/gapOptions";
 import {
@@ -38,6 +40,14 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
   const [chosen, setChosen] = useState<string[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [settings, setSettings] = useState<Settings>(defaultSettings);
+
+  /* Coverage first and specific to the peril, then the ways that apply
+     whatever hit — recommending flood cover for a tornado was the bug this
+     replaces. */
+  const options: GapOption[] = [
+    ...(COVERAGE_BY_PERIL[perilId] ?? []),
+    ...GAP_OPTIONS,
+  ];
 
   const peril = RISK_PERILS.find((p) => p.id === perilId) ?? RISK_PERILS[0];
   const cover = coverageForPeril(perilId);
@@ -121,6 +131,15 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
                     onClick={() => {
                       setPerilId(p.id);
                       setOpen(false);
+                      /* Coverage chosen for the last peril doesn't apply to
+                         this one, so it's dropped rather than silently
+                         counted. The peril-independent options stay. */
+                      setChosen((all) =>
+                        all.filter((id) =>
+                          GAP_OPTIONS.some((o) => o.id === id),
+                        ),
+                      );
+                      setOpenId(null);
                     }}
                   >
                     {p.name}
@@ -234,9 +253,11 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
       </div>
 
       <div className="rp__options">
-        {GAP_OPTIONS.map((o) => {
+        {options.map((o) => {
           const on = chosen.includes(o.id);
-          const set = settings[o.id] ?? {};
+          const set =
+            settings[o.id] ??
+            Object.fromEntries(o.controls.map((c) => [c.id, c.default]));
           const c = contributionOf(o.id, set, REBUILD_COST);
           const open = openId === o.id && on;
 
