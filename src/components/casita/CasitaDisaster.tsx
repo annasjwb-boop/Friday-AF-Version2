@@ -73,6 +73,10 @@ export function CasitaDisaster({
   const [recording, setRecording] = useState(false);
   const [findingPro, setFindingPro] = useState(false);
   const [submitting, setSubmitting] = useState<string | null>(null);
+  /* Applications are state now rather than a constant: starting a submission
+     moves that row to In progress, so the list reflects what the person just
+     did rather than still inviting them to do it. */
+  const [apps, setApps] = useState(APPLICATIONS);
 
   const extras = extrasTotal(cats);
   const documented = structuralTotal(cats) + itemLoss(items) + extras;
@@ -431,7 +435,7 @@ export function CasitaDisaster({
 
           <section className="dis-card">
             <h3>Your applications</h3>
-            {APPLICATIONS.map((ap) => {
+            {apps.map((ap) => {
               const open = openApp === ap.id;
               return (
                 <div className="dis-app" key={ap.id}>
@@ -464,13 +468,32 @@ export function CasitaDisaster({
                         transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
                       >
                         <p>{ap.docs}</p>
-                        {ap.status === "ready" && (
+                        {/* Stays reachable once it's running: the sheet can be
+                            closed mid-fill, and without this there'd be no way
+                            back to a submission already under way. */}
+                        {(ap.status === "ready" ||
+                          ap.status === "progress") && (
                           <button
                             type="button"
                             className="dis-prog__cta is-on"
-                            onClick={() => setSubmitting(ap.name)}
+                            onClick={() => {
+                              setSubmitting(ap.name);
+                              setApps((all) =>
+                                all.map((a) =>
+                                  a.id === ap.id
+                                    ? {
+                                        ...a,
+                                        status: "progress",
+                                        line: "Filling your application automatically",
+                                      }
+                                    : a,
+                                ),
+                              );
+                            }}
                           >
-                            Review &amp; submit
+                            {ap.status === "progress"
+                              ? "Check progress"
+                              : "Review & submit"}
                           </button>
                         )}
                       </motion.div>

@@ -786,3 +786,10 @@
   background: rgb(192 52 28 / 70%);
   border-radius: 999px;
 }
+
+/* In progress sits between ready and submitted — blue rather than amber or
+   green, because nothing is waiting on the person while it runs. */
+.dis-app__status.is-progress {
+  color: #0a5fbf;
+  background: rgb(10 132 255 / 12%);
+}

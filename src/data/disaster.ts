@@ -242,11 +242,19 @@ export const PROGRAMS: Program[] = [
   },
 ];
 
-export type AppStatus = "sub" | "ready" | "draft" | "watch" | "action";
+export type AppStatus =
+  | "sub"
+  | "ready"
+  /** Being filled in — set once the person starts a submission. */
+  | "progress"
+  | "draft"
+  | "watch"
+  | "action";
 
 export const APP_STATUS_LABEL: Record<AppStatus, string> = {
   sub: "Submitted",
   ready: "Ready to submit",
+  progress: "In progress",
   draft: "Drafted",
   watch: "Watching",
   action: "Action needed",
