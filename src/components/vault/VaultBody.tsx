@@ -80,10 +80,6 @@ export function VaultBody() {
     () => rooms.reduce((sum, room) => sum + roomValue(room), 0),
     [rooms],
   );
-  const totalItems = useMemo(
-    () => rooms.reduce((sum, room) => sum + room.items.length, 0),
-    [rooms],
-  );
   const roomsStarted = rooms.filter((r) => r.items.length > 0).length;
 
   /* One figure across documents and assets alike, as a plain count of what's
@@ -158,7 +154,7 @@ export function VaultBody() {
         {/* The documents/assets split is hidden here — the sections below break
             the same figure down by name, which is more use than the totals. */}
         <p className="vault-hero__value2">
-          <b>{formatValue(totalValue)}</b> documented across {totalItems} items
+          <b>+{formatValue(totalValue)}</b> in personal property!
         </p>
       </section>
 
