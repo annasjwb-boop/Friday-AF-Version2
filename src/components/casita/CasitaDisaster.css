@@ -795,3 +795,10 @@
   color: #0a5fbf;
   background: rgb(10 132 255 / 12%);
 }
+
+/* Reviewed and waiting to send — green, since the work is done and the only
+   thing left is the person's decision. */
+.dis-app__status.is-reviewed {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 15%);
+}

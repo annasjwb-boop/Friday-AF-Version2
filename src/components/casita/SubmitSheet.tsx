@@ -32,9 +32,12 @@ const STEPS = [
 export function SubmitSheet({
   name,
   onClose,
+  onReviewed,
 }: {
   name: string;
   onClose: () => void;
+  /** Fired once the draft has been read, so the row can report it. */
+  onReviewed: () => void;
 }) {
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
@@ -135,7 +138,14 @@ export function SubmitSheet({
               Your application is filled in and ready. Read it through before
               you submit — you're the one signing it.
             </p>
-            <button type="button" className="sub__cta">
+            <button
+              type="button"
+              className="sub__cta"
+              onClick={() => {
+                onReviewed();
+                onClose();
+              }}
+            >
               Review the completed form
             </button>
             <button type="button" className="sub__alt" onClick={onClose}>

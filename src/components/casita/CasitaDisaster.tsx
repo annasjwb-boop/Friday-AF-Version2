@@ -73,11 +73,17 @@ export function CasitaDisaster({
      each a task in their own right, not a control on this page. */
   const [recording, setRecording] = useState(false);
   const [findingPro, setFindingPro] = useState(false);
-  const [submitting, setSubmitting] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const [openProgram, setOpenProgram] = useState<string | null>(null);
   /* Status stays as filed rather than flipping on open: the sheet is where
      the application is reviewed, and it is only submitted at the end of it. */
-  const [apps] = useState(APPLICATIONS);
+  /* Reviewing a draft moves that row to Ready, which is the one status change
+     the person actually causes from here. */
+  const [apps, setApps] = useState(APPLICATIONS);
+  const [reviewed, setReviewed] = useState<string[]>([]);
 
   const extras = extrasTotal(cats);
   const documented = structuralTotal(cats) + itemLoss(items) + extras;
@@ -486,8 +492,14 @@ export function CasitaDisaster({
                       <b>{ap.name}</b>
                       <em>{ap.line}</em>
                     </span>
-                    <span className={`dis-app__status is-${ap.status}`}>
-                      {APP_STATUS_LABEL[ap.status]}
+                    <span
+                      className={`dis-app__status is-${
+                        reviewed.includes(ap.id) ? "reviewed" : ap.status
+                      }`}
+                    >
+                      {reviewed.includes(ap.id)
+                        ? "Ready"
+                        : APP_STATUS_LABEL[ap.status]}
                     </span>
                     <ChevronDown
                       size={15}
@@ -508,16 +520,15 @@ export function CasitaDisaster({
                         {/* Stays reachable once it's running: the sheet can be
                             closed mid-fill, and without this there'd be no way
                             back to a submission already under way. */}
-                        {(ap.status === "ready" ||
-                          ap.status === "progress") && (
+                        {ap.status === "ready" && !reviewed.includes(ap.id) && (
                           <button
                             type="button"
                             className="dis-prog__cta is-on"
-                            onClick={() => setSubmitting(ap.name)}
+                            onClick={() =>
+                              setSubmitting({ id: ap.id, name: ap.name })
+                            }
                           >
-                            {ap.status === "progress"
-                              ? "Check progress"
-                              : "Review & submit"}
+                            Review &amp; submit
                           </button>
                         )}
                       </motion.div>
@@ -584,8 +595,18 @@ export function CasitaDisaster({
 
         {submitting && (
           <SubmitSheet
-            name={submitting}
+            name={submitting.name}
             onClose={() => setSubmitting(null)}
+            onReviewed={() => {
+              setReviewed((r) => [...r, submitting.id]);
+              setApps((all) =>
+                all.map((a) =>
+                  a.id === submitting.id
+                    ? { ...a, line: "Reviewed · ready to send" }
+                    : a,
+                ),
+              );
+            }}
           />
         )}
 
