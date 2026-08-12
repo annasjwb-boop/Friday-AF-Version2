@@ -7,6 +7,7 @@ import {
   Users,
   Video,
   Wrench,
+  X,
 } from "lucide-react";
 import {
   APPLICATIONS,
@@ -28,6 +29,8 @@ import {
   type DamageItem,
   type Program,
 } from "../../data/disaster";
+import { InspectorSheet } from "./InspectorSheet";
+import { VideoScanStep } from "../../onboarding/steps";
 import "./CasitaDisaster.css";
 
 /* ---------------------------------------------------------------------------
@@ -64,6 +67,10 @@ export function CasitaDisaster({
   const [openApp, setOpenApp] = useState<string | null>(null);
   const [profileApplied, setProfileApplied] = useState(false);
   const [docsLoaded, setDocsLoaded] = useState(false);
+  /* Both open over the whole view: recording and choosing a contractor are
+     each a task in their own right, not a control on this page. */
+  const [recording, setRecording] = useState(false);
+  const [findingPro, setFindingPro] = useState(false);
 
   const extras = extrasTotal(cats);
   const documented = structuralTotal(cats) + itemLoss(items) + extras;
@@ -126,7 +133,9 @@ export function CasitaDisaster({
                 <b>Walk the next room</b>
                 <em>2 of 6 rooms still need a post-storm pass</em>
               </span>
-              <button type="button">Record</button>
+              <button type="button" onClick={() => setRecording(true)}>
+                Record
+              </button>
             </div>
             <div className="dis-act">
               <span className="dis-act__icon" aria-hidden="true">
@@ -138,7 +147,9 @@ export function CasitaDisaster({
                   A licensed contractor estimate strengthens FEMA and SBA awards
                 </em>
               </span>
-              <button type="button">Request</button>
+              <button type="button" onClick={() => setFindingPro(true)}>
+                Request
+              </button>
             </div>
             <button type="button" className="dis-upload">
               <FileUp size={15} strokeWidth={1.9} aria-hidden="true" />
@@ -474,6 +485,44 @@ export function CasitaDisaster({
       <button type="button" className="dis-exit" onClick={onExit}>
         Leave disaster mode
       </button>
+
+      <AnimatePresence>
+        {recording && (
+          <motion.div
+            className="dis-sheet"
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+          >
+            <header className="dis-sheet__top">
+              <h2>Walk a room</h2>
+              <button
+                type="button"
+                onClick={() => setRecording(false)}
+                aria-label="Close"
+              >
+                <X size={19} strokeWidth={2} aria-hidden="true" />
+              </button>
+            </header>
+            <div className="dis-sheet__body">
+              {/* The same walkthrough the vault uses. After a storm it is
+                  recording damage rather than inventory, but the task and the
+                  output are identical, so it would be strange to build a
+                  second one. */}
+              <VideoScanStep onDone={() => setRecording(false)} />
+            </div>
+          </motion.div>
+        )}
+
+        {findingPro && (
+          <InspectorSheet
+            damage={documented}
+            address="1200 Edwards Dr, Fort Myers, FL"
+            onClose={() => setFindingPro(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
