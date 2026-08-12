@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Gauge, ShieldCheck, Umbrella } from "lucide-react";
-import { readinessProgress } from "../../data/home";
+import { currentReadiness } from "../../data/vaultSections";
 import {
   RISK_LABEL,
   RISK_OUT_OF_100,
@@ -32,6 +32,9 @@ export function CasitaOverview({
      peril strip is that what you should do next changes with it. */
   const actions = nextActionsForPeril(peril);
   const covered = coveredPercent(peril);
+  /* Derived from the same documents and rooms the vault counts, rather than a
+     separate constant — the two disagreed by nine points. */
+  const readiness = currentReadiness().pct;
 
   /* The black card is a deck: skip cycles to the next action for this
      condition. Reset on peril change, since the deck itself is different. */
@@ -98,12 +101,12 @@ export function CasitaOverview({
           </span>
           <p className="cov-tile__label">Readiness</p>
           <p className="cov-tile__num">
-            {readinessProgress}
+            {readiness}
             <span>%</span>
           </p>
           <div className="cov-tile__meter" aria-hidden="true">
             <motion.i
-              animate={{ width: `${readinessProgress}%` }}
+              animate={{ width: `${readiness}%` }}
               transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
             />
           </div>

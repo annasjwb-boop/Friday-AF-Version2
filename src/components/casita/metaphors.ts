@@ -1,4 +1,5 @@
-import { readinessProgress, riskScore } from "../../data/home";
+import { riskScore } from "../../data/home";
+import { currentReadiness } from "../../data/vaultSections";
 
 export const METAPHORS = [
   "sanctuary",
@@ -49,7 +50,9 @@ export const METAPHOR_NAMES: Record<MetaphorId, string> = {
 const risk = riskScore.value;
 const zone = riskScore.label;
 const delta = Math.abs(riskScore.delta ?? 0);
-const ready = readinessProgress;
+/* Same figure the vault and the overview tile show; these lines quote it in
+   prose, so a separate constant would put a third number in the product. */
+const ready = currentReadiness().pct;
 const fund = "$18,200";
 const funded = "45%";
 

@@ -73,6 +73,12 @@ export const riskActions: RiskAction[] = [
   },
 ];
 
+/**
+ * @deprecated Readiness is derived from the documents and rooms on file —
+ * use currentReadiness() in data/vaultSections.ts. This constant drifted to 35
+ * while the derived figure was 44. Kept only for the desktop variant, which is
+ * unreachable while the variant picker is off.
+ */
 export const readinessProgress = 35;
 
 export const readinessCards: ReadinessCard[] = [

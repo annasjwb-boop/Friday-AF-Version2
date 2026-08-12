@@ -1,4 +1,9 @@
-import type { VaultDocument, VaultRoom } from "./vault";
+import {
+  VAULT_DOCUMENTS,
+  VAULT_ROOMS,
+  type VaultDocument,
+  type VaultRoom,
+} from "./vault";
 
 /* ---------------------------------------------------------------------------
  * Readiness, grouped into the sections an application actually asks for.
@@ -141,6 +146,17 @@ export function buildSections(
  * which split 55% documents and 45% rooms for no stated reason. A count is
  * something a person can check against what they see on screen.
  */
+/**
+ * The readiness figure, derived from the documents and rooms actually on file.
+ *
+ * Exported as a ready-made number so any view can show it without rebuilding
+ * the sections first — the overview tile did not, and drifted to a hardcoded
+ * 35 while this said 44.
+ */
+export function currentReadiness() {
+  return readinessPercent(buildSections(VAULT_DOCUMENTS, VAULT_ROOMS));
+}
+
 export function readinessPercent(sections: ReadinessSection[]): {
   pct: number;
   done: number;

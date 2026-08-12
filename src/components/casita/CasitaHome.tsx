@@ -11,7 +11,8 @@ import {
   Signal,
   Wifi,
 } from "lucide-react";
-import { readinessProgress, riskScore } from "../../data/home";
+import { riskScore } from "../../data/home";
+import { currentReadiness } from "../../data/vaultSections";
 import { METAPHOR_LABELS, METAPHORS, type MetaphorId } from "./metaphors";
 import { getTurntableFrames } from "./turntableFrames";
 import { CasitaHomePicker } from "./CasitaHomePicker";
@@ -97,7 +98,7 @@ const TABS: TabConfig[] = [
   {
     id: "readiness",
     label: "Readiness",
-    left: { label: "Aid Readiness", value: `${readinessProgress}%` },
+    left: { label: "Aid Readiness", value: `${currentReadiness().pct}%` },
     right: {
       label: "Tasks complete",
       value: "2 of 6",
