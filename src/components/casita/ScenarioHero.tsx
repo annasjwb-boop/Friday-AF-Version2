@@ -139,8 +139,13 @@ export function ScenarioHero() {
               transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
             />
           )}
-          <text x={CX} y={CY - 22} textAnchor="middle" className="sh__total">
-            {money(total)}
+          <text x={CX} y={CY - 30} textAnchor="middle" className="sh__total">
+            {pct}%
+          </text>
+          {/* The total stays, smaller, so the percentage has something to be a
+              percentage of — without it the arc is a proportion of nothing. */}
+          <text x={CX} y={CY - 6} textAnchor="middle" className="sh__of">
+            of {money(total)} covered
           </text>
         </svg>
 
@@ -157,7 +162,9 @@ export function ScenarioHero() {
       </div>
 
       <p className="sh__pays">
-        your coverage pays <b>{pct}%</b> of this total-loss scenario
+        {cover.covered
+          ? "what your policy pays on a total loss"
+          : `${peril.name.toLowerCase()} is excluded — your policy pays nothing`}
       </p>
 
       <div className="sh__cards">
