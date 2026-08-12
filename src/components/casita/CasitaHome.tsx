@@ -265,7 +265,11 @@ export function CasitaHome() {
       </header>
 
       <div
-        className={`casita__sheet${disasterMode ? " casita__sheet--alert" : ""}`}
+        /* Only the incident screen carries the colour. The working tabs below
+           it are ordinary screens and read better as such. */
+        className={`casita__sheet${
+          disasterMode && activeTab === "overview" ? " casita__sheet--alert" : ""
+        }`}
       >
         <nav className="casita__tabs" aria-label="Home views">
           {(disasterMode ? DISASTER_TABS : TABS).map((t) => (
