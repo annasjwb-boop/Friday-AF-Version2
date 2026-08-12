@@ -289,6 +289,30 @@ function Field({
         </div>
       )}
 
+      {def.kind === "multi" && (
+        <div className="rt-field__toggle rt-field__toggle--multi">
+          {(def.options ?? []).map((o) => {
+            const list = Array.isArray(value) ? value : [];
+            const on = list.includes(o);
+            return (
+              <button
+                key={o}
+                type="button"
+                aria-pressed={on}
+                className={on ? "is-on" : undefined}
+                onClick={() =>
+                  onChange(
+                    on ? list.filter((x) => x !== o) : [...list, o],
+                  )
+                }
+              >
+                {o}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {def.kind === "choice" && (
         <div className="rt-field__toggle">
           {(def.options ?? []).map((o) => (

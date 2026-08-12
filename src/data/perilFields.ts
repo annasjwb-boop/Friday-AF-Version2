@@ -16,18 +16,18 @@
  * SAMPLE DATA: defaults are illustrative.
  * ------------------------------------------------------------------------- */
 
-export type FieldValue = number | boolean | string;
+export type FieldValue = number | boolean | string | string[];
 
 export interface PerilField {
   id: string;
   label: string;
-  kind: "number" | "toggle" | "choice";
+  kind: "number" | "toggle" | "choice" | "multi";
   /** number */
   unit?: string;
   min?: number;
   max?: number;
   step?: number;
-  /** choice */
+  /** choice and multi */
   options?: string[];
   default: FieldValue;
   /** Why it matters, one line. */
@@ -118,6 +118,38 @@ export const PERIL_FIELDS: Record<string, PerilField[]> = {
   ],
   fire: [
     {
+      id: "fires",
+      label: "Wildfires within 10 miles, last 20 years",
+      kind: "number",
+      unit: "",
+      min: 0,
+      max: 20,
+      step: 1,
+      default: 2,
+    },
+    {
+      id: "weatherDays",
+      label: "Red flag days a year",
+      kind: "number",
+      unit: "days",
+      min: 0,
+      max: 90,
+      step: 1,
+      default: 12,
+      note: "Days when wind and dryness combine — when fires spread fastest",
+    },
+    {
+      id: "intensity",
+      label: "How a fire here would burn",
+      kind: "choice",
+      options: [
+        "Grass — fast, low intensity",
+        "Brush — moderate",
+        "Timber — slow, very hot",
+      ],
+      default: "Brush — moderate",
+    },
+    {
       id: "station",
       label: "Distance to fire station",
       kind: "number",
@@ -134,17 +166,20 @@ export const PERIL_FIELDS: Record<string, PerilField[]> = {
       default: false,
     },
     {
-      id: "roofClass",
-      label: "Roof fire rating",
-      kind: "choice",
-      options: ["Class A", "Class B", "Class C", "Unrated"],
-      default: "Class A",
-    },
-    {
-      id: "defensible",
-      label: "Defensible space kept clear",
-      kind: "toggle",
-      default: true,
+      id: "protection",
+      label: "Protection you have",
+      kind: "multi",
+      options: [
+        "Exterior sprinklers",
+        "Structure wrap on hand",
+        "Ember-resistant vents",
+        "Non-combustible siding",
+        "Class A roof",
+        "Gutter guards",
+        "Defensible space kept clear",
+      ],
+      default: ["Class A roof", "Defensible space kept clear"],
+      note: "Each one buys time — most homes are lost to embers, not flame front",
     },
   ],
   sinkhole: [
@@ -321,10 +356,19 @@ export function suggestSeverity(
       return clamp(s);
     }
     case "fire": {
-      let s = Number(v.station) > 6 ? 3 : Number(v.station) > 3 ? 2 : 1;
-      if (v.interface) s += 1;
-      if (v.roofClass === "Unrated" || v.roofClass === "Class C") s += 0.5;
-      if (v.defensible) s -= 0.5;
+      /* Frequency and how it would burn set the band; protection pulls it back
+         down. Half a point per measure — no single one saves a house, which is
+         why the field is a list rather than a yes/no. */
+      const fires = Number(v.fires);
+      let s = fires === 0 ? 1 : fires < 3 ? 2 : fires < 6 ? 3 : 4;
+      if (String(v.intensity).startsWith("Timber")) s += 0.5;
+      if (String(v.intensity).startsWith("Grass")) s -= 0.5;
+      if (Number(v.weatherDays) > 25) s += 0.5;
+      if (v.interface) s += 0.5;
+      if (Number(v.station) > 6) s += 0.5;
+
+      const measures = Array.isArray(v.protection) ? v.protection.length : 0;
+      s -= measures * 0.5;
       return clamp(s);
     }
     case "sinkhole": {
