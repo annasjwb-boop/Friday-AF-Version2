@@ -34,6 +34,17 @@ export type TipCategory =
   | "state"
   | "planning";
 
+/** What each screen is called, so the filter names where the tips came from. */
+export const TIP_VIEW_LABEL: Record<TipView, string> = {
+  overview: "Overview",
+  risk: "Risk Score",
+  readiness: "Readiness",
+  recovery: "Recovery",
+  damage: "Damage",
+  plan: "Recovery plan",
+  apply: "Apply & track",
+};
+
 export const TIP_CATEGORY_LABEL: Record<TipCategory, string> = {
   insurance: "Insurance",
   federal: "Federal programs",

@@ -6,6 +6,7 @@ import { answersFor, type Answer, type HelpContext } from "../../data/help";
 import {
   TIPS,
   TIP_CATEGORY_LABEL,
+  TIP_VIEW_LABEL,
   tipsFor,
   type TipCategory,
   type TipView,
@@ -169,10 +170,11 @@ function Chat({ context }: { context: HelpContext }) {
 /* ---------------------------------------------------------------------------
  * Tips, filtered to the screen the person is on.
  *
- * The filter opens on "This screen" rather than "All": someone who taps the
- * lightbulb on the damage view wants the tip about photographing before
- * cleanup, not nine tips of which one applies. Every other filter stays one
- * tap away, and the count on each makes it obvious what widening will do.
+ * The filter opens on the screen the person came from, named — "Risk Score",
+ * "Damage" — rather than on "All". Someone who taps the lightbulb on the
+ * damage view wants the tip about photographing before cleanup, not ten tips
+ * of which one applies. Every other filter stays one tap away, and the count
+ * on each makes it obvious what widening will do.
  * ------------------------------------------------------------------------- */
 
 function Tips({ view }: { view: TipView }) {
@@ -193,7 +195,9 @@ function Tips({ view }: { view: TipView }) {
           );
 
   const filters: [typeof filter, string, number][] = [
-    ["view", "This screen", relevant.length],
+    /* Named for the screen rather than "This screen", so it's obvious the
+       tips are the ones relevant to where the person just was. */
+    ["view", TIP_VIEW_LABEL[view], relevant.length],
     ["all", "All", TIPS.length],
     ...(Object.keys(TIP_CATEGORY_LABEL) as TipCategory[]).map(
       (c) =>
