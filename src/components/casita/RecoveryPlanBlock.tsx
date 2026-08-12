@@ -133,90 +133,95 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
         and decide how you want to recover
       </h2>
 
-      <div className="rp__cards">
-        <div className="rp-card rp-card--covered">
-          <p className="rp-card__k">Covered</p>
-          <motion.p
-            key={covered}
-            className="rp-card__v"
-            initial={{ opacity: 0.4 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            {money(covered)}
-          </motion.p>
-          <p className="rp-card__n">
-            {cover.covered
-              ? "Your policy, less the deductible"
-              : `${peril.name} isn't in your policy`}
-          </p>
+      {/* Cards and bar stay put while the options scroll under them, so the
+          effect of a change is visible at the moment it's made rather than
+          two screens above it. */}
+      <div className="rp__sticky">
+        <div className="rp__cards">
+          <div className="rp-card rp-card--covered">
+            <p className="rp-card__k">Covered</p>
+            <motion.p
+              key={covered}
+              className="rp-card__v"
+              initial={{ opacity: 0.4 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {money(covered)}
+            </motion.p>
+            <p className="rp-card__n">
+              {cover.covered
+                ? "Your policy, less the deductible"
+                : `${peril.name} isn't in your policy`}
+            </p>
+          </div>
+
+          <div className="rp-card rp-card--gap">
+            <p className="rp-card__k">Uncovered</p>
+            <motion.p
+              key={remaining}
+              className="rp-card__v"
+              initial={{ opacity: 0.4 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {money(remaining)}
+            </motion.p>
+            <p className="rp-card__n">
+              {planned > 0
+                ? `${money(planned)} covered by your plan`
+                : "No funding source yet"}
+            </p>
+          </div>
         </div>
 
-        <div className="rp-card rp-card--gap">
-          <p className="rp-card__k">Uncovered</p>
-          <motion.p
-            key={remaining}
-            className="rp-card__v"
-            initial={{ opacity: 0.4 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            {money(remaining)}
-          </motion.p>
-          <p className="rp-card__n">
-            {planned > 0
-              ? `${money(planned)} covered by your plan`
-              : "No funding source yet"}
-          </p>
-        </div>
-      </div>
+        {/* Policy, then whatever the plan adds, then what's still open. */}
+        <div className="rp-bar">
+          <div className="rp-bar__head">
+            <span>Funding</span>
+            <span className="rp-bar__of">
+              {totals.reduces > 0 ? (
+                <>
+                  <s>{money(total)}</s> {money(total - totals.reduces)} needed
+                </>
+              ) : (
+                `${money(total)} needed`
+              )}
+            </span>
+          </div>
 
-      {/* Policy, then whatever the plan adds, then what's still open. */}
-      <div className="rp-bar">
-        <div className="rp-bar__head">
-          <span>Funding</span>
-          <span className="rp-bar__of">
-            {totals.reduces > 0 ? (
-              <>
-                <s>{money(total)}</s> {money(total - totals.reduces)} needed
-              </>
-            ) : (
-              `${money(total)} needed`
-            )}
-          </span>
-        </div>
+          <div className="rp-bar__track">
+            <motion.i
+              className="rp-bar__seg rp-bar__seg--policy"
+              animate={{
+                width: `${(covered / Math.max(total - totals.reduces, 1)) * 100}%`,
+              }}
+              transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+            />
+            <motion.i
+              className="rp-bar__seg rp-bar__seg--plan"
+              animate={{
+                width: `${(planned / Math.max(total - totals.reduces, 1)) * 100}%`,
+              }}
+              transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+            />
+          </div>
 
-        <div className="rp-bar__track">
-          <motion.i
-            className="rp-bar__seg rp-bar__seg--policy"
-            animate={{
-              width: `${(covered / Math.max(total - totals.reduces, 1)) * 100}%`,
-            }}
-            transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-          />
-          <motion.i
-            className="rp-bar__seg rp-bar__seg--plan"
-            animate={{
-              width: `${(planned / Math.max(total - totals.reduces, 1)) * 100}%`,
-            }}
-            transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-          />
+          <ul className="rp-bar__key">
+            <li>
+              <span className="rp-bar__dot rp-bar__dot--policy" />
+              Policy {money(covered)}
+            </li>
+            <li>
+              <span className="rp-bar__dot rp-bar__dot--plan" />
+              Your plan {money(planned)}
+            </li>
+            <li>
+              <span className="rp-bar__dot rp-bar__dot--open" />
+              Still open {money(remaining)}
+            </li>
+          </ul>
         </div>
-
-        <ul className="rp-bar__key">
-          <li>
-            <span className="rp-bar__dot rp-bar__dot--policy" />
-            Policy {money(covered)}
-          </li>
-          <li>
-            <span className="rp-bar__dot rp-bar__dot--plan" />
-            Your plan {money(planned)}
-          </li>
-          <li>
-            <span className="rp-bar__dot rp-bar__dot--open" />
-            Still open {money(remaining)}
-          </li>
-        </ul>
       </div>
 
       <div className="rp__subhead">

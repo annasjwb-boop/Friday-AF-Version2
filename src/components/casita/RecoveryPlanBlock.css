@@ -18,6 +18,7 @@
 
 .rp__picker {
   position: relative;
+  z-index: 8;
   display: inline-block;
 }
 
@@ -35,11 +36,12 @@
   border-radius: 999px;
 }
 
+/* Above the sticky summary, which it drops down over. */
 .rp__menu {
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  z-index: 5;
+  z-index: 8;
   min-width: 210px;
   padding: 5px;
   list-style: none;
@@ -531,4 +533,37 @@
 .rp-opt__remove:hover {
   color: #a3341c;
   border-color: rgb(212 84 48 / 40%);
+}
+
+/* --- Sticky summary -----------------------------------------------------------
+ * The cards and bar pin to the top of the scroller. The background is opaque so
+ * options passing underneath don't show through, and the negative card offsets
+ * are absorbed by padding rather than leaking past the edge.
+ * ------------------------------------------------------------------------------ */
+
+.rp__sticky {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  padding-top: 10px;
+  margin: 0 -16px;
+  padding-right: 16px;
+  padding-left: 16px;
+  background: #fff;
+}
+
+.rp__sticky::after {
+  position: absolute;
+  right: 0;
+  bottom: -14px;
+  left: 0;
+  height: 14px;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(#fff, rgb(255 255 255 / 0%));
+}
+
+.rp__sticky .rp__cards {
+  margin-top: 12px;
+  margin-bottom: 26px;
 }
