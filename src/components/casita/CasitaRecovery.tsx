@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, animate, motion } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { disasterOptions, formatMoneyCompact, supportOptions } from "../../data/recovery";
 import {
@@ -8,13 +8,11 @@ import {
   loadTuning,
   reservesTotal,
   saveTuning,
-  type RecoveryPlan,
   type RecoveryTuning,
 } from "./recoveryPlan";
-import { METAPHOR_LABELS, type MetaphorId } from "./metaphors";
-import { getTurntableFrames } from "./turntableFrames";
 import { CasitaRecoveryTune } from "./CasitaRecoveryTune";
 import { RecoveryPlanBlock } from "./RecoveryPlanBlock";
+import type { MetaphorId } from "./metaphors";
 import {
   RecoveryAidSheet,
   RecoveryInsuranceSheet,
@@ -23,20 +21,6 @@ import {
 import "./CasitaRecovery.css";
 
 /** Animates a dollar figure toward its target whenever the target changes. */
-function useAnimatedMoney(target: number): number {
-  const [value, setValue] = useState(0);
-  const previous = useRef(0);
-  useEffect(() => {
-    const controls = animate(previous.current, target, {
-      duration: 0.9,
-      ease: [0.3, 0.75, 0.25, 1],
-      onUpdate: (v) => setValue(Math.round(v)),
-    });
-    previous.current = target;
-    return () => controls.stop();
-  }, [target]);
-  return value;
-}
 
 const cardMotion = (index: number) => ({
   initial: { opacity: 0, y: 16 },
@@ -56,63 +40,16 @@ const cardMotion = (index: number) => ({
  * carry whitespace above the roofline and below the plot).
  * ------------------------------------------------------------------------- */
 
-const FILL_BAND_TOP = 21; // % from the top of the frame at 100% funded
-const FILL_BAND_BOTTOM = 80; // % from the top at 0% funded (plot stays lit)
 
-function RecoveryHomeFill({
-  src,
-  plan,
-  label,
-  onTap,
-}: {
-  src: string;
-  plan: RecoveryPlan;
-  label: string;
-  onTap?: () => void;
-}) {
-  const ratio =
-    plan.total > 0 ? Math.max(0, Math.min(1, plan.funded / plan.total)) : 0;
-  const clipTop =
-    FILL_BAND_TOP + (1 - ratio) * (FILL_BAND_BOTTOM - FILL_BAND_TOP);
-  const ease = [0.32, 0.72, 0, 1] as const;
-
-  return (
-    <button
-      type="button"
-      className="casita-rec__home"
-      onClick={onTap}
-      aria-label={label}
-    >
-      <img
-        src={src}
-        alt=""
-        draggable={false}
-        className="casita-rec__home-img is-ghost"
-      />
-      <motion.div
-        className="casita-rec__home-color"
-        initial={{ clipPath: `inset(${FILL_BAND_BOTTOM}% 0% 0% 0%)` }}
-        animate={{ clipPath: `inset(${clipTop}% 0% 0% 0%)` }}
-        transition={{ duration: 1.1, ease }}
-      >
-        <img src={src} alt="" draggable={false} className="casita-rec__home-img" />
-      </motion.div>
-      <motion.div
-        className="casita-rec__waterline"
-        initial={{ top: `${FILL_BAND_BOTTOM}%`, opacity: 0 }}
-        animate={{ top: `${clipTop}%`, opacity: 1 }}
-        transition={{ duration: 1.1, ease }}
-        aria-hidden="true"
-      />
-    </button>
-  );
-}
 
 /* --------------------------------------------------------------------------- */
 
 export function CasitaRecovery({
-  metaphor,
-  onHomeTap,
+  /* Kept in the props for the caller; the house it selected is hidden. */
+  metaphor: _metaphor,
+  /* Still accepted so the caller's contract is unchanged; the tap target it
+     served was the hero house, which is hidden. */
+  onHomeTap: _onHomeTap,
 }: {
   metaphor: MetaphorId;
   onHomeTap?: () => void;
@@ -122,7 +59,6 @@ export function CasitaRecovery({
   const [sheet, setSheet] = useState<"insurance" | "money" | "aid" | null>(
     null,
   );
-  const heroFrame = getTurntableFrames(metaphor)[0];
 
   // Makes a funding card behave like a button without losing card semantics.
   const tapCard = (target: "insurance" | "money" | "aid") => ({
@@ -138,9 +74,6 @@ export function CasitaRecovery({
   });
 
   const plan = computePlan(tuning);
-  const total = useAnimatedMoney(plan.total);
-  const fundedPct =
-    plan.total > 0 ? Math.round((plan.funded / plan.total) * 100) : 0;
   const disasterLabel =
     disasterOptions.find((d) => d.id === tuning.disasterType)?.label ?? "Fire";
   const selectedPrograms = supportOptions.filter((o) =>
@@ -154,53 +87,12 @@ export function CasitaRecovery({
 
   return (
     <div className="casita-rec">
-      {/*
-        One hero composition — the filled home IS the chart, with the dollar
-        readout nested inside it the way the Risk Score nests its number
-        inside the gauge. No card chrome, no stacked panels.
-      */}
-      <motion.section
-        className="casita-rec__hero"
-        aria-label={`Total recovery cost $${total.toLocaleString("en-US")}, ${fundedPct}% funded`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        <div className="casita-rec__viz">
-          {heroFrame && (
-            <RecoveryHomeFill
-              src={heroFrame}
-              plan={plan}
-              label={`Your ${METAPHOR_LABELS[metaphor]}, ${fundedPct}% funded. Tap to change your home.`}
-              onTap={onHomeTap}
-            />
-          )}
-          <div className="casita-rec__readout" aria-hidden="true">
-            <p className="casita-rec__hero-label">Total Recovery Cost</p>
-            <p className="casita-rec__hero-value">
-              ${total.toLocaleString("en-US")}
-            </p>
-          </div>
-        </div>
-
-        <p className="casita-rec__summary">
-          <span
-            className={`casita-rec__summary-dot${plan.gap > 0 ? " is-gap" : ""}`}
-            aria-hidden="true"
-          />
-          {fundedPct}% funded · {disasterLabel}
-          {plan.gap > 0 ? ` · ${formatMoneyCompact(plan.gap)} gap` : ""}
-          <button
-            type="button"
-            className="casita-rec__tune"
-            onClick={() => setTuneOpen(true)}
-          >
-            Tune
-          </button>
-        </p>
-      </motion.section>
-
-      <RecoveryPlanBlock />
+      {/* House, total recovery cost and the funded/gap summary are hidden.
+          The plan block below carries the peril, the funding split and the
+          gap, so this was a second set of the same figures sitting above it.
+          Tune moved onto that block. The values and the metaphor frame are
+          still computed — the tune sheet and the source cards use them. */}
+      <RecoveryPlanBlock onTune={() => setTuneOpen(true)} />
 
       <motion.section
         className="casita-rec__card casita-rec__card--tap"

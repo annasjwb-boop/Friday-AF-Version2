@@ -29,7 +29,7 @@ import "./RecoveryPlanBlock.css";
  * a plan made entirely of them still shows an open gap.
  * ------------------------------------------------------------------------- */
 
-export function RecoveryPlanBlock() {
+export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
   const [perilId, setPerilId] = useState("wind");
   const [open, setOpen] = useState(false);
   const [chosen, setChosen] = useState<string[]>([]);
@@ -164,7 +164,14 @@ export function RecoveryPlanBlock() {
         </ul>
       </div>
 
-      <h3 className="rp__sub">Ways to close the funding gap</h3>
+      <div className="rp__subhead">
+        <h3 className="rp__sub">Ways to close the funding gap</h3>
+        {onTune && (
+          <button type="button" className="rp__tune" onClick={onTune}>
+            Tune
+          </button>
+        )}
+      </div>
 
       <div className="rp__options">
         {GAP_OPTIONS.map((o) => {

@@ -306,3 +306,30 @@
   background: rgb(45 160 90 / 12%);
   border-radius: 10px;
 }
+
+/* Tune moved here when the hero above was hidden — it belongs with the plan
+   it adjusts rather than with a summary that no longer exists. */
+.rp__subhead {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 22px 0 10px;
+}
+
+.rp__subhead .rp__sub {
+  margin: 0;
+}
+
+.rp__tune {
+  padding: 7px 15px;
+  margin-left: auto;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #16161a;
+  white-space: nowrap;
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(22 22 24 / 14%);
+  border-radius: 999px;
+}
