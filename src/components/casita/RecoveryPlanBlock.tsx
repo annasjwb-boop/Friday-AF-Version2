@@ -290,7 +290,18 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
                           }
                         />
                       ))}
-                      {o.note && <p className="rp-opt__note">{o.note}</p>}
+                      {o.id === "relocate" &&
+                      settings.relocate?.route === "second" ? (
+                        <p className="rp-opt__note">
+                          Good — that removes the hardest part of a total loss,
+                          which is finding somewhere to live while you decide.
+                          It doesn't reduce the gap above: the damaged property
+                          is still a loss, and your policy still pays what it
+                          pays. What it buys you is time to choose.
+                        </p>
+                      ) : (
+                        o.note && <p className="rp-opt__note">{o.note}</p>
+                      )}
 
                       {/* Values already count as they're moved, so this closes
                           rather than saves — the label says so. */}

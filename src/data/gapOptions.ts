@@ -193,6 +193,12 @@ export const GAP_OPTIONS: GapOption[] = [
             worth: 0,
           },
           { id: "sell", label: "Sell as-is", note: "Fastest, lowest return", worth: 0 },
+          {
+            id: "second",
+            label: "I already have somewhere",
+            note: "A second home I'd move to",
+            worth: 0,
+          },
         ],
         default: "sba",
       },
@@ -287,6 +293,10 @@ export function contributionOf(
     case "smaller":
       return { ...EMPTY, reduces: rebuildCost * (Number(set.reduce) / 100) };
     case "relocate":
+      /* Somewhere to go changes what the money is for, not how much of it you
+         need. It removes the cost of finding housing after a loss — real, and
+         the reason it's worth recording — but the damaged property is still a
+         loss, so nothing is credited to the gap. */
       return EMPTY;
     case "wait": {
       const picked = (set.programs as string[]) ?? [];
