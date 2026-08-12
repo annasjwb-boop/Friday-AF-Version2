@@ -1,11 +1,9 @@
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import { SlidersHorizontal } from "lucide-react";
 import {
   RISK_PERILS,
   perilPoints,
-  scoreBand,
   totalScore,
   type RiskPeril,
 } from "../../data/risks";
@@ -16,17 +14,6 @@ import { allDefaults } from "../../data/perilFields";
 import "./CasitaRisk.css";
 
 
-
-/** Staggers the cards in under the dial. */
-const cardMotion = (index: number) => ({
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  transition: {
-    duration: 0.34,
-    delay: 0.3 + index * 0.09,
-    ease: [0.32, 0.72, 0, 1] as const,
-  },
-});
 
 export function CasitaRisk() {
   /* Perils are state because Tune edits them, and the score is derived from
@@ -52,15 +39,6 @@ export function CasitaRisk() {
   return (
     <div className="casita-risk">
       <ScenarioHero />
-
-      <motion.p className="casita-risk__summary" {...cardMotion(-1)}>
-        <span className="casita-risk__summary-dot" aria-hidden="true" />
-        {scoreBand(score)} · {uninsured.length} perils your policy doesn't
-        cover at all
-      </motion.p>
-
-      {/* Ring chart hidden for now. The component and its data are intact —
-          restore by importing ExposureViz and rendering it here. */}
 
       <div className="casita-risk__listhead">
         <h2 className="casita-risk__listtitle">
