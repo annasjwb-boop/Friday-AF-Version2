@@ -71,11 +71,18 @@
   border-radius: 14px;
 }
 
+/* Absolutely positioned rather than height: 100%, which doesn't resolve
+   against a parent sized by aspect-ratio — the image fell back to its own
+   height and left the frame showing beneath it. The source is wider than the
+   frame, so cover crops the sides and keeps the eye centred. */
 .dh-map__img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 /* Markers are positioned as percentages of the frame, so they stay put as the
