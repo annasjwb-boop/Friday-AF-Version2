@@ -158,14 +158,17 @@ export function ScenarioHero() {
           Adjust
         </button>
 
-        <p className="sh__label">Total-loss rebuild cost</p>
+
       </div>
 
-      <p className="sh__pays">
-        {cover.covered
-          ? "what your policy pays on a total loss"
-          : `${peril.name.toLowerCase()} is excluded — your policy pays nothing`}
-      </p>
+      {/* Only shown when the peril is excluded. On a covered peril this line
+          restated the dial; on an excluded one it explains why the arc is
+          empty, which the dial alone doesn't say. */}
+      {!cover.covered && (
+        <p className="sh__pays">
+          {peril.name.toLowerCase()} is excluded — your policy pays nothing
+        </p>
+      )}
 
       <div className="sh__cards">
         <div className="sh-card sh-card--covered">
