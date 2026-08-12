@@ -155,10 +155,8 @@ export function VaultBody() {
           caption="of what you need, gathered"
           label={`${ready.pct}% of the documents and assets you need`}
         />
-        <p className="vault-hero__sub">
-          {ready.docsDone} of {ready.docsTotal} documents ·{" "}
-          {ready.assetsDone} of {ready.assetsTotal} assets documented
-        </p>
+        {/* The documents/assets split is hidden here — the sections below break
+            the same figure down by name, which is more use than the totals. */}
         <p className="vault-hero__value2">
           <b>{formatValue(totalValue)}</b> documented across {totalItems} items
         </p>
