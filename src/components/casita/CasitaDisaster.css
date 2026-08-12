@@ -20,9 +20,11 @@
   color: #c0341c;
 }
 
+/* Two sentences now, so it steps down slightly and the record prompt below
+   keeps its prominence. */
 .dis__title {
   font-family: var(--font-display);
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.2;

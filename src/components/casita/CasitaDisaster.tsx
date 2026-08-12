@@ -105,12 +105,10 @@ export function CasitaDisaster({
       {section === "damage" && (
         <>
           <p className="dis__eyebrow">Damage documentation · Hurricane Elena</p>
-          <h2 className="dis__title">Document everything before you clean up</h2>
-          <p className="dis__lede">
-            Adjusters and FEMA inspectors pay for what you can prove. Documented
-            now, before cleanup, is the difference between an estimate and an
-            argument — and it's how you get every dollar you're owed.
-          </p>
+          <h2 className="dis__title">
+            Document everything before you clean up. Insurance and aid programs
+            pay for what you can prove.
+          </h2>
 
           {/* The primary action, above the numbers rather than buried in a
               card below them. Everything on this screen depends on it having
