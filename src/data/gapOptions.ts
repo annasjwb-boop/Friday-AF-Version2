@@ -48,6 +48,8 @@ export interface GapOption {
   name: string;
   sub: string;
   tone: "buy" | "save" | "change" | "wait";
+  /** A tip worth reading before deciding — opens the card from the library. */
+  tip?: string;
   controls: Control[];
   /** Shown under the controls once open. */
   note?: string;
@@ -434,6 +436,38 @@ export const GAP_OPTIONS: GapOption[] = [
     note: "Only counts once it's actually saved — a plan is not a balance.",
   },
   {
+    id: "sba",
+    name: "SBA disaster loans",
+    sub: "Borrowed, not granted — but the cheapest money most households are offered",
+    tone: "buy",
+    tip: "sba",
+    note: "Two separate loans, and you can take both. Rates are capped, and drop further if you can't get credit elsewhere — the cheaper rate is for people with fewer options, not fewer needs. Applying costs nothing and you can decline the offer.",
+    controls: [
+      {
+        id: "home",
+        label: "Home loan — repairs and rebuilding",
+        kind: "slider",
+        min: 0,
+        max: 500_000,
+        step: 25_000,
+        unit: "money",
+        default: 0,
+        note: "Capped at $500,000 for your primary residence",
+      },
+      {
+        id: "property",
+        label: "Personal property loan — contents",
+        kind: "slider",
+        min: 0,
+        max: 100_000,
+        step: 10_000,
+        unit: "money",
+        default: 0,
+        note: "Capped at $100,000 for furniture, appliances and clothing",
+      },
+    ],
+  },
+  {
     id: "smaller",
     name: "Rebuild smaller",
     sub: "Lower the rebuild cost to fit funding",
@@ -512,13 +546,6 @@ export const GAP_OPTIONS: GapOption[] = [
             range: "$0 – $43,600",
             note: "Average award under $5,000 — covers contents, vehicle, medical",
             worth: 2_400,
-          },
-          {
-            id: "sba",
-            label: "SBA home loan",
-            range: "Up to $500,000",
-            note: "A loan, repaid with interest — needs reasonable credit",
-            worth: 110_000,
           },
           {
             id: "state",

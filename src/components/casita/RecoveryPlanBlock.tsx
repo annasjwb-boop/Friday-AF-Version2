@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronDown, Plus } from "lucide-react";
+import { Check, ChevronDown, Lightbulb, Plus } from "lucide-react";
 import { RISK_PERILS } from "../../data/risks";
 import {
   COVERAGE_BY_PERIL,
@@ -19,6 +19,7 @@ import {
   coverageForPeril,
   money,
 } from "./protection";
+import { TipSheet } from "./TipSheet";
 import "./RecoveryPlanBlock.css";
 
 /* ---------------------------------------------------------------------------
@@ -40,6 +41,7 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
   const [chosen, setChosen] = useState<string[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [settings, setSettings] = useState<Settings>(defaultSettings);
+  const [tipOpen, setTipOpen] = useState<string | null>(null);
 
   /* Coverage first and specific to the peril, then the ways that apply
      whatever hit — recommending flood cover for a tornado was the bug this
@@ -270,7 +272,33 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
                 onClick={() => openOrAdd(o.id)}
               >
                 <span className="rp-opt__body">
-                  <span className="rp-opt__name">{o.name}</span>
+                  <span className="rp-opt__name">
+                    {o.name}
+                    {o.tip && (
+                      /* Not a button — this sits inside one. The click is
+                         caught below so it opens the tip rather than the
+                         option. */
+                      <span
+                        className="rp-opt__tip"
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`Read the tip about ${o.name}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTipOpen(o.tip!);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setTipOpen(o.tip!);
+                          }
+                        }}
+                      >
+                        <Lightbulb size={13} strokeWidth={2.2} />
+                      </span>
+                    )}
+                  </span>
                   <span className="rp-opt__sub">{o.sub}</span>
                 </span>
                 <span className="rp-opt__amt">
@@ -361,6 +389,12 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
           if your disaster is declared, and months after you need it.
         </p>
       )}
+
+      <AnimatePresence>
+        {tipOpen && (
+          <TipSheet tipId={tipOpen} onClose={() => setTipOpen(null)} />
+        )}
+      </AnimatePresence>
 
       {remaining === 0 && (
         <p className="rp__done">
