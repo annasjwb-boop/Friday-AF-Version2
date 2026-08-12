@@ -189,6 +189,12 @@ export function OnboardingFlow() {
     if ("id" in current && current.id) {
       setAnswers((a) => ({ ...a, [current.id]: v }));
     }
+    /* A step reached more than once appends, so the flow can name everything
+       collected rather than only the most recent answer. */
+    if (current.accumulate) {
+      const key = current.accumulate;
+      setAnswers((a) => ({ ...a, [key]: a[key] ? `${a[key]}|${v}` : v }));
+    }
     setEntries((e) => [...e, { step: current, answer: v, address }]);
 
     if (jumpTo) {

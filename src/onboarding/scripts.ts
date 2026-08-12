@@ -12,6 +12,12 @@
 export interface StepBase {
   label?: string;
   /**
+   * Append this step's answer to the named key instead of replacing it, so a
+   * step reached more than once builds a list rather than overwriting what
+   * came before. Entries are joined with "|".
+   */
+  accumulate?: string;
+  /**
    * How long to hold before this step appears, in ms. The typing indicator
    * runs for the whole wait, so a longer pause reads as the assistant
    * composing rather than as the app having stalled.
@@ -84,6 +90,24 @@ export interface Script {
 
 /** Matches the reply the storm picker sends when nothing is selected. */
 export const NO_STORMS = "Neither of these damaged my home";
+
+/**
+ * The policies collected so far, as readable phrases.
+ *
+ * Answers that aren't a connected policy — no insurance, carrier not listed —
+ * are dropped, since listing them as things we hold would be false.
+ */
+function policyList(raw?: string): string[] {
+  return (raw ?? "")
+    .split("|")
+    .map((v) => v.replace(/^Connected my /, "").trim())
+    .filter((v) => v && !/^(I don't|Couldn't|Uploaded)/.test(v));
+}
+
+function joinList(items: string[]): string {
+  if (items.length < 2) return items.join("");
+  return `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
+}
 
 const METAPHOR_Q =
   "One last question. Can you tell me how you think about your home? A castle? An igloo? A cabin? A secret lair?";
@@ -215,7 +239,7 @@ export const SCRIPTS: Record<string, Script> = {
         kind: "say",
         text: "Last piece is your insurance. We can connect to your policy directly, you can upload your declarations page, or you can tell me you don't carry insurance.",
       },
-      { kind: "insurance", label: "policy" },
+      { kind: "insurance", label: "policy", accumulate: "policies" },
 
       /* Households routinely hold more than one policy, and the vehicle one
          matters here — comprehensive auto covers flood damage to a car that
@@ -224,7 +248,21 @@ export const SCRIPTS: Record<string, Script> = {
       {
         kind: "say",
         label: "afterPolicy",
-        text: "Got it — that's on file. Anything else to connect?",
+        /* Names what's on file rather than saying "that's on file", so someone
+           connecting a second policy can see the first one is still there —
+           otherwise the only evidence is a reply bubble scrolled off screen. */
+        text: (a) => {
+          const list = policyList(a.policies);
+          if (list.length === 0) {
+            return "Got it. Anything else to connect?";
+          }
+          if (list.length === 1) {
+            return `Got it — I have your ${list[0]} on file. Anything else to connect?`;
+          }
+          return `Got it — I now have all ${list.length} on file: ${joinList(
+            list,
+          )}. Anything else to connect?`;
+        },
       },
       { kind: "morePolicies", againTo: "policy", doneTo: "wrapUp" },
 

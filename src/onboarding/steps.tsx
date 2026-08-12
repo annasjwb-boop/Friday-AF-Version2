@@ -911,7 +911,7 @@ export function InsuranceStep({
               onDone(
                 vehicle
                   ? `Connected my ${carrier} auto policy`
-                  : `Connected my ${carrier} policy`,
+                  : `Connected my ${carrier} home policy`,
               )
             }
           >

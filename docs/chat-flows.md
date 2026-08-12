@@ -85,7 +85,7 @@ Reached from ads 02, 05 · 23 of 23 steps reachable
              ├─ "Connect my policy" → step 20
              ├─ "Upload my declarations page" → step 20
              ├─ "I don't carry insurance" → step 20
- 20  SAY             [afterPolicy] Got it — that's on file. Anything else to connect?
+ 20  SAY             [afterPolicy] (depends on answers)
  21  MOREPOLICIES    another policy, a vehicle policy, or done
              ├─ "Another property policy" loops back to step 19
              ├─ "My vehicle policy" loops back to step 19
