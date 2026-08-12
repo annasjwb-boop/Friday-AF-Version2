@@ -75,10 +75,9 @@ export function CasitaDisaster({
   const [findingPro, setFindingPro] = useState(false);
   const [submitting, setSubmitting] = useState<string | null>(null);
   const [openProgram, setOpenProgram] = useState<string | null>(null);
-  /* Applications are state now rather than a constant: starting a submission
-     moves that row to In progress, so the list reflects what the person just
-     did rather than still inviting them to do it. */
-  const [apps, setApps] = useState(APPLICATIONS);
+  /* Status stays as filed rather than flipping on open: the sheet is where
+     the application is reviewed, and it is only submitted at the end of it. */
+  const [apps] = useState(APPLICATIONS);
 
   const extras = extrasTotal(cats);
   const documented = structuralTotal(cats) + itemLoss(items) + extras;
@@ -514,20 +513,7 @@ export function CasitaDisaster({
                           <button
                             type="button"
                             className="dis-prog__cta is-on"
-                            onClick={() => {
-                              setSubmitting(ap.name);
-                              setApps((all) =>
-                                all.map((a) =>
-                                  a.id === ap.id
-                                    ? {
-                                        ...a,
-                                        status: "progress",
-                                        line: "Filling your application automatically",
-                                      }
-                                    : a,
-                                ),
-                              );
-                            }}
+                            onClick={() => setSubmitting(ap.name)}
                           >
                             {ap.status === "progress"
                               ? "Check progress"

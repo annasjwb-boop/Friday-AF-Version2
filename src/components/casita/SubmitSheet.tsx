@@ -22,8 +22,11 @@ import "./SubmitSheet.css";
 const STEPS = [
   "Opening DisasterAssistance.gov",
   "Filling your household details",
-  "Attaching damage photos and estimate",
   "Cross-checking against your policy",
+  "Preparing supporting documentation",
+  /* Last on purpose: nothing is filed until a person has read it, and the
+     sequence should end where the decision does. */
+  "Manual review before submission",
 ];
 
 export function SubmitSheet({
