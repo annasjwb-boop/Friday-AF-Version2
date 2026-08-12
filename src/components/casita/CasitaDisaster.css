@@ -1,0 +1,700 @@
+/* ---------------------------------------------------------------------------
+ * Disaster mode. The source deck was navy and gold on dark; this is the same
+ * information in the app's language — white cards, near-black ink, coral for
+ * loss, green for what's covered.
+ * ------------------------------------------------------------------------- */
+
+.dis {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 16px 24px;
+}
+
+.dis__tabs {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  background: rgb(22 22 24 / 5%);
+  border-radius: 999px;
+}
+
+.dis__tab {
+  flex: 1;
+  padding: 9px 8px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgb(52 52 58 / 62%);
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 999px;
+}
+
+.dis__tab.is-on {
+  color: #fff;
+  background: #16161a;
+}
+
+.dis__eyebrow {
+  margin-top: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #c0341c;
+}
+
+.dis__title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #16161a;
+}
+
+.dis__lede {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgb(52 52 58 / 66%);
+}
+
+/* --- Stats -------------------------------------------------------------------- */
+
+.dis-stats {
+  display: grid;
+  gap: 8px;
+}
+
+.dis-stat {
+  padding: 14px 15px;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 8%);
+  border-radius: 13px;
+}
+
+.dis-stat span {
+  font-size: 11.5px;
+  color: rgb(52 52 58 / 62%);
+}
+
+.dis-stat b {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #16161a;
+}
+
+.dis-stat i {
+  font-size: 14px;
+  font-style: normal;
+  color: rgb(52 52 58 / 45%);
+}
+
+.dis-stat em {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.4;
+  color: rgb(52 52 58 / 55%);
+}
+
+.dis-stat--hi b {
+  color: #c0341c;
+}
+
+/* --- Cards -------------------------------------------------------------------- */
+
+.dis-card {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 8%);
+  border-radius: 14px;
+}
+
+.dis-card h3 {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.dis-card__sub {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgb(52 52 58 / 60%);
+}
+
+.dis-card--ask {
+  background: rgb(10 132 255 / 6%);
+  border-color: rgb(10 132 255 / 26%);
+}
+
+.dis-card--voad {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.dis-card--voad b {
+  font-size: 13.5px;
+  color: #16161a;
+}
+
+.dis-card--voad p {
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgb(52 52 58 / 62%);
+}
+
+/* --- Actions ------------------------------------------------------------------ */
+
+.dis-act {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.dis-act:first-of-type {
+  margin-top: 10px;
+}
+
+.dis-act__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: #3c4149;
+  background: #f2f3f5;
+  border-radius: 9px;
+}
+
+.dis-act span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.dis-act b {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.dis-act em {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  font-style: normal;
+  line-height: 1.4;
+  color: rgb(52 52 58 / 58%);
+}
+
+.dis-act button {
+  flex: none;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #16161a;
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(22 22 24 / 16%);
+  border-radius: 999px;
+}
+
+.dis-upload {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 11px;
+  margin-top: 12px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #3c4149;
+  cursor: pointer;
+  background: none;
+  border: 1px dashed rgb(22 22 24 / 22%);
+  border-radius: 10px;
+}
+
+/* --- Damage items --------------------------------------------------------------- */
+
+.dis-item {
+  padding: 13px 0;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.dis-item:first-of-type {
+  margin-top: 10px;
+}
+
+.dis-item__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.dis-item__meta {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: rgb(52 52 58 / 58%);
+}
+
+.dis-conds {
+  display: flex;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.dis-cond {
+  flex: 1;
+  padding: 7px 4px;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 65%);
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(22 22 24 / 12%);
+  border-radius: 999px;
+}
+
+.dis-cond.is-on {
+  color: #fff;
+  border-color: transparent;
+}
+
+.dis-cond.is-dest { background: #a3281a; }
+.dis-cond.is-major { background: #c0341c; }
+.dis-cond.is-minor { background: #d99b32; }
+.dis-cond.is-ok { background: #2f7d55; }
+
+/* --- Rows ---------------------------------------------------------------------- */
+
+.dis-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 0;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.dis-card > .dis-row:first-of-type {
+  margin-top: 8px;
+}
+
+.dis-row__id {
+  flex: 1;
+  min-width: 0;
+}
+
+.dis-row__id b {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #16161a;
+}
+
+.dis-row__id em {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.4;
+  color: rgb(52 52 58 / 55%);
+}
+
+.dis-row__amt {
+  flex: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.dis-row__amt.is-empty {
+  color: rgb(52 52 58 / 35%);
+}
+
+.dis-row__tag {
+  flex: none;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgb(52 52 58 / 62%);
+  background: rgb(22 22 24 / 7%);
+  border-radius: 999px;
+}
+
+.dis-row__tag.is-done {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 15%);
+}
+
+/* --- Funding bar ----------------------------------------------------------------- */
+
+.dis-fund {
+  padding: 15px 16px;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 8%);
+  border-radius: 14px;
+}
+
+.dis-fund__bar {
+  height: 12px;
+  overflow: hidden;
+  background: rgb(22 22 24 / 8%);
+  border-radius: 999px;
+}
+
+.dis-fund__bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #2f7d55, #d99b32);
+  border-radius: 999px;
+}
+
+.dis-fund__cap {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: rgb(52 52 58 / 58%);
+}
+
+.dis-fund__gap {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c0341c;
+}
+
+.dis-fund__gap.is-closed {
+  color: #1d6b3f;
+}
+
+.dis-ask {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dis-ask button {
+  padding: 10px 15px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #16161a;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 16%);
+  border-radius: 999px;
+}
+
+.dis-ask button.is-done {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 12%);
+  border-color: rgb(45 160 90 / 34%);
+}
+
+/* --- Programs --------------------------------------------------------------------- */
+
+.dis-prog {
+  padding: 14px 0;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.dis-card > .dis-prog:first-of-type {
+  margin-top: 8px;
+}
+
+.dis-prog.is-na {
+  opacity: 0.6;
+}
+
+.dis-prog__top {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.dis-prog__tag {
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 999px;
+}
+
+.dis-prog__tag.is-grant { color: #1d6b3f; background: rgb(45 160 90 / 15%); }
+.dis-prog__tag.is-loan { color: #8a6412; background: rgb(217 155 50 / 20%); }
+.dis-prog__tag.is-tax { color: #3c4149; background: rgb(22 22 24 / 8%); }
+.dis-prog__tag.is-state { color: #0a5fbf; background: rgb(10 132 255 / 12%); }
+
+.dis-prog__amt {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.dis-prog__name {
+  margin-top: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.dis-prog__up {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: rgb(52 52 58 / 58%);
+}
+
+.dis-prog__desc {
+  margin-top: 7px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #3c4149;
+}
+
+/* A loan moves the bar without reducing the bill — said next to the option
+   rather than in a footnote. */
+.dis-prog__warn {
+  padding: 9px 11px;
+  margin-top: 8px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #8a6412;
+  background: rgb(217 155 50 / 13%);
+  border-radius: 8px;
+}
+
+.dis-prog__cta {
+  width: 100%;
+  padding: 10px;
+  margin-top: 11px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: #16161a;
+  border: 1px solid #16161a;
+  border-radius: 10px;
+}
+
+.dis-prog__cta.is-on {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 12%);
+  border-color: rgb(45 160 90 / 34%);
+}
+
+.dis-prog__cta:disabled {
+  color: rgb(52 52 58 / 45%);
+  cursor: default;
+  background: none;
+  border-color: rgb(22 22 24 / 12%);
+}
+
+/* --- Apply ------------------------------------------------------------------------ */
+
+.dis-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.dis-facts span {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 11px;
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 12%);
+  border-radius: 999px;
+}
+
+.dis-stepper {
+  display: flex;
+  gap: 4px;
+  padding: 0 2px;
+}
+
+.dis-step {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  font-size: 9.5px;
+  line-height: 1.2;
+  color: rgb(52 52 58 / 50%);
+  text-align: center;
+}
+
+.dis-step i {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: #fff;
+  background: rgb(22 22 24 / 12%);
+  border-radius: 50%;
+}
+
+.dis-step.is-done i { background: #2f7d55; }
+.dis-step.is-now i { background: #16161a; }
+.dis-step.is-now { font-weight: 700; color: #16161a; }
+
+.dis-app {
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.dis-card > .dis-app:first-of-type {
+  margin-top: 8px;
+}
+
+.dis-app__head {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  width: 100%;
+  padding: 12px 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.dis-app__status {
+  flex: none;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.dis-app__status.is-sub { color: #1d6b3f; background: rgb(45 160 90 / 15%); }
+.dis-app__status.is-ready { color: #8a6412; background: rgb(217 155 50 / 20%); }
+.dis-app__status.is-draft { color: #3c4149; background: rgb(22 22 24 / 8%); }
+.dis-app__status.is-watch { color: #0a5fbf; background: rgb(10 132 255 / 12%); }
+.dis-app__status.is-action { color: #a3341c; background: rgb(212 84 48 / 14%); }
+
+.dis-app__chev {
+  flex: none;
+  color: rgb(52 52 58 / 40%);
+  transition: transform 0.26s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dis-app__head[aria-expanded="true"] .dis-app__chev {
+  transform: rotate(180deg);
+}
+
+.dis-app__body {
+  overflow: hidden;
+}
+
+.dis-app__body p {
+  padding-bottom: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgb(52 52 58 / 62%);
+}
+
+.dis-feed {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-top: 1px solid rgb(22 22 24 / 7%);
+}
+
+.dis-card > .dis-feed:first-of-type {
+  margin-top: 8px;
+}
+
+.dis-feed__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 5px;
+  border-radius: 50%;
+}
+
+.dis-feed__dot.is-coral { background: #c0341c; }
+.dis-feed__dot.is-gold { background: #d99b32; }
+.dis-feed__dot.is-green { background: #2f7d55; }
+
+.dis-feed b {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.dis-feed p {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 62%);
+}
+
+.dis-feed__cta {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #0a84ff;
+}
+
+.dis-feed__time {
+  flex: none;
+  font-size: 10.5px;
+  color: rgb(52 52 58 / 45%);
+}
+
+/* --- Navigation -------------------------------------------------------------------- */
+
+.dis-next {
+  width: 100%;
+  padding: 14px;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: #16161a;
+  border: none;
+  border-radius: 13px;
+}
+
+.dis-exit {
+  padding: 10px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 58%);
+  cursor: pointer;
+  background: none;
+  border: none;
+}

@@ -16,6 +16,8 @@ import { METAPHOR_LABELS, METAPHORS, type MetaphorId } from "./metaphors";
 import { getTurntableFrames } from "./turntableFrames";
 import { CasitaHomePicker } from "./CasitaHomePicker";
 import { CasitaRecovery } from "./CasitaRecovery";
+import { CasitaDisaster } from "./CasitaDisaster";
+import { CasitaDisasterPrompt } from "./CasitaDisasterPrompt";
 import { CasitaHelp } from "./CasitaHelp";
 import { CasitaOverview } from "./CasitaOverview";
 import { CasitaReadiness } from "./CasitaReadiness";
@@ -131,6 +133,9 @@ const ACTIVITY = [
 export function CasitaHome() {
   const [metaphor, setMetaphor] = useState<MetaphorId>(loadMetaphor);
   const [pickerOpen, setPickerOpen] = useState(false);
+  /* Disaster mode replaces the recovery tab's contents rather than routing
+     elsewhere, so leaving it puts the person back where they were. */
+  const [disasterMode, setDisasterMode] = useState(false);
   /* Lifted so the section below the stage can respond to the condition. */
   const [peril, setPeril] = useState<PerilId>("clear");
   /* Onboarding hands off with ?tab=risk or ?tab=readiness, so a flow can land
@@ -245,10 +250,19 @@ export function CasitaHome() {
         ) : activeTab === "readiness" ? (
           <CasitaReadiness />
         ) : activeTab === "recovery" ? (
-          <CasitaRecovery
-            metaphor={metaphor}
-            onHomeTap={() => setPickerOpen(true)}
-          />
+          disasterMode ? (
+            <CasitaDisaster onExit={() => setDisasterMode(false)} />
+          ) : (
+            <>
+              <CasitaRecovery
+                metaphor={metaphor}
+                onHomeTap={() => setPickerOpen(true)}
+              />
+              {/* Sits over the recovery view rather than in it: the switch is
+                  a mode change, not another item on the plan. */}
+              <CasitaDisasterPrompt onSwitch={() => setDisasterMode(true)} />
+            </>
+          )
         ) : (
           <>
         <div
