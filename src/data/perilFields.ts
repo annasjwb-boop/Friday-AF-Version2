@@ -78,6 +78,34 @@ export const PERIL_FIELDS: Record<string, PerilField[]> = {
   ],
   wind: [
     {
+      id: "storms",
+      label: "Named storms per decade",
+      kind: "number",
+      unit: "",
+      min: 0,
+      max: 10,
+      step: 0.5,
+      default: 1.5,
+    },
+    {
+      id: "coast",
+      label: "Distance to open water",
+      kind: "number",
+      unit: "mi",
+      min: 0,
+      max: 60,
+      step: 0.5,
+      default: 6,
+      note: "Storms weaken inland — the first few miles matter most",
+    },
+    {
+      id: "major",
+      label: "Chance of a major hurricane in 30 years",
+      kind: "choice",
+      options: ["Low", "Moderate", "High", "Very high"],
+      default: "High",
+    },
+    {
       id: "gust",
       label: "Peak gust modelled here",
       kind: "number",
@@ -213,103 +241,127 @@ export const PERIL_FIELDS: Record<string, PerilField[]> = {
       kind: "toggle",
       default: false,
     },
-  ],
-  backup: [
+  ],  tornado: [
     {
-      id: "finished",
-      label: "Finished lower floor",
-      kind: "toggle",
-      default: true,
-      note: "An unfinished basement turns this from a claim into a mop",
-    },
-    {
-      id: "sump",
-      label: "Working sump pump",
-      kind: "toggle",
-      default: false,
-    },
-    {
-      id: "valve",
-      label: "Backflow valve fitted",
-      kind: "toggle",
-      default: false,
-    },
-    {
-      id: "plumbingAge",
-      label: "Age of the plumbing",
-      kind: "number",
-      unit: "yrs",
-      min: 0,
-      max: 100,
-      step: 1,
-      default: 32,
-    },
-  ],
-  dwelling: [
-    {
-      id: "rebuild",
-      label: "Cost to rebuild",
-      kind: "number",
-      unit: "$",
-      min: 300_000,
-      max: 1_500_000,
-      step: 10_000,
-      default: 780_000,
-      note: "County average for this size. Move it if you know your build",
-    },
-    {
-      id: "limit",
-      label: "Your dwelling limit",
-      kind: "number",
-      unit: "$",
-      min: 150_000,
-      max: 1_500_000,
-      step: 10_000,
-      default: 625_000,
-      note: "From your declarations page",
-    },
-  ],
-  deductible: [
-    {
-      id: "storms",
-      label: "Named storms per decade",
+      id: "nearby",
+      label: "Damaging tornadoes within 10 miles, last 30 years",
       kind: "number",
       unit: "",
       min: 0,
-      max: 10,
+      max: 30,
+      step: 1,
+      default: 2,
+    },
+    {
+      id: "shelter",
+      label: "Interior room or shelter",
+      kind: "toggle",
+      default: false,
+      note: "Doesn't reduce damage, but it's the part that matters most",
+    },
+  ],
+  hail: [
+    {
+      id: "events",
+      label: "Damaging hail days a decade",
+      kind: "number",
+      unit: "",
+      min: 0,
+      max: 20,
       step: 0.5,
       default: 1.5,
-      note: "How often a named storm is close enough to trigger the deductible",
     },
     {
-      id: "gust",
-      label: "Peak sustained wind here",
+      id: "roofAge",
+      label: "Age of your roof",
       kind: "number",
-      unit: "mph",
-      min: 60,
-      max: 200,
-      step: 5,
-      default: 120,
+      unit: "yrs",
+      min: 0,
+      max: 40,
+      step: 1,
+      default: 10,
     },
     {
-      id: "coast",
-      label: "Distance to open water",
+      id: "impact",
+      label: "Impact-rated roof",
+      kind: "toggle",
+      default: false,
+    },
+  ],
+  lightning: [
+    {
+      id: "density",
+      label: "Strikes per square mile a year",
+      kind: "number",
+      unit: "",
+      min: 0,
+      max: 30,
+      step: 0.5,
+      default: 14,
+      note: "This state records more than any other",
+    },
+    {
+      id: "surge",
+      label: "Whole-home surge protection",
+      kind: "toggle",
+      default: false,
+    },
+  ],
+  freeze: [
+    {
+      id: "freezeDays",
+      label: "Hard freeze days a year",
+      kind: "number",
+      unit: "days",
+      min: 0,
+      max: 60,
+      step: 1,
+      default: 1,
+    },
+    {
+      id: "insulated",
+      label: "Exposed pipes insulated",
+      kind: "toggle",
+      default: false,
+    },
+  ],
+  earthquake: [
+    {
+      id: "faults",
+      label: "Distance to nearest mapped fault",
       kind: "number",
       unit: "mi",
       min: 0,
-      max: 60,
-      step: 0.5,
-      default: 6,
-      note: "Storms weaken inland — the first few miles matter most",
+      max: 400,
+      step: 5,
+      default: 320,
     },
     {
-      id: "major",
-      label: "Chance of a major hurricane in 30 years",
-      kind: "choice",
-      options: ["Low", "Moderate", "High", "Very high"],
-      default: "High",
+      id: "felt",
+      label: "Felt a quake at this address",
+      kind: "toggle",
+      default: false,
     },
   ],
+  landslide: [
+    {
+      id: "slope",
+      label: "Steepest slope on or beside the parcel",
+      kind: "number",
+      unit: "°",
+      min: 0,
+      max: 45,
+      step: 1,
+      default: 1,
+    },
+    {
+      id: "history",
+      label: "Debris flow recorded nearby",
+      kind: "toggle",
+      default: false,
+    },
+  ],
+
 };
 
 export function defaultsFor(perilId: string): Record<string, FieldValue> {
@@ -352,7 +404,45 @@ export function suggestSeverity(
       let s = gust < 90 ? 1 : gust < 110 ? 2 : gust < 140 ? 3 : 4;
       if (v.shutters) s -= 1;
       if (Number(v.roofAge) > 20) s += 0.5;
-      if (Number(v.storms) >= 3) s += 0.5;
+      if (Number(v.storms) >= 2.5) s += 0.5;
+      if (Number(v.coast) < 3) s += 0.5;
+      if (Number(v.coast) > 25) s -= 1;
+      if (v.major === "Very high") s += 0.5;
+      if (v.major === "Low") s -= 0.5;
+      return clamp(s);
+    }
+    case "tornado": {
+      const n = Number(v.nearby);
+      return clamp(n === 0 ? 0 : n < 2 ? 1 : n < 5 ? 2 : n < 10 ? 3 : 4);
+    }
+    case "hail": {
+      let s = Number(v.events) < 0.5 ? 1 : Number(v.events) < 2 ? 2 : 3;
+      if (Number(v.roofAge) > 15) s += 0.5;
+      if (v.impact) s -= 1;
+      return clamp(s);
+    }
+    case "lightning": {
+      let s = Number(v.density) < 6 ? 1 : Number(v.density) < 14 ? 2 : 3;
+      if (v.surge) s -= 1;
+      return clamp(s);
+    }
+    case "freeze": {
+      let s = Number(v.freezeDays) < 1 ? 0 : Number(v.freezeDays) < 5 ? 1 : 2;
+      if (v.insulated) s -= 0.5;
+      return clamp(s);
+    }
+    case "earthquake": {
+      /* Distance to a mapped fault is the whole story at this scale — nothing
+         within 100 miles means nothing to score. */
+      const d = Number(v.faults);
+      let s = d > 200 ? 0 : d > 100 ? 1 : d > 40 ? 2 : d > 15 ? 3 : 4;
+      if (v.felt) s += 1;
+      return clamp(s);
+    }
+    case "landslide": {
+      const slope = Number(v.slope);
+      let s = slope < 5 ? 0 : slope < 15 ? 1 : slope < 25 ? 2 : 3;
+      if (v.history) s += 1;
       return clamp(s);
     }
     case "fire": {
@@ -377,33 +467,6 @@ export function suggestSeverity(
       if (v.nearby) s += 0.5;
       if (v.cracks) s += 0.5;
       if (v.survey) s -= 0.5;
-      return clamp(s);
-    }
-    case "backup": {
-      let s = v.finished ? 3 : 1;
-      if (v.sump) s -= 0.5;
-      if (v.valve) s -= 1;
-      if (Number(v.plumbingAge) > 40) s += 0.5;
-      return clamp(s);
-    }
-    case "dwelling": {
-      // The gap is the whole risk: how far short the limit falls.
-      const short = Number(v.rebuild) - Number(v.limit);
-      const ratio = short / Math.max(1, Number(v.rebuild));
-      return clamp(ratio <= 0 ? 0 : ratio < 0.1 ? 1 : ratio < 0.2 ? 2 : ratio < 0.35 ? 3 : 4);
-    }
-    case "deductible": {
-      /* This peril costs you the deductible every time a named storm lands, so
-         the exposure is driven by how often and how hard they come — not by
-         the percentage itself, which is a fixed policy term. */
-      const gust = Number(v.gust);
-      let s = gust < 90 ? 1 : gust < 120 ? 2 : gust < 150 ? 3 : 4;
-      if (Number(v.storms) >= 2.5) s += 0.5;
-      if (Number(v.storms) < 1) s -= 0.5;
-      if (Number(v.coast) < 3) s += 0.5;
-      if (Number(v.coast) > 25) s -= 1;
-      if (v.major === "Very high") s += 0.5;
-      if (v.major === "Low") s -= 0.5;
       return clamp(s);
     }
     default:

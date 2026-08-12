@@ -114,8 +114,8 @@ export const RISK_PERILS: RiskPeril[] = [
   },
   {
     id: "sinkhole",
-    name: "Sinkhole",
-    sub: "Ground collapse · narrow default coverage",
+    name: "Sinkhole & ground collapse",
+    sub: "Earth movement · excluded by default",
     status: "uninsured",
     max: 26,
     severity: 3,
@@ -152,153 +152,106 @@ export const RISK_PERILS: RiskPeril[] = [
     sources: ["State geological survey", "Policy exclusions"],
   },
   {
-    id: "backup",
-    name: "Water / sewer backup",
-    sub: "Drain and sump-pump failures",
-    status: "uninsured",
-    max: 20,
-    severity: 2,
-    blurb:
-      "Water coming back up through drains is excluded by default on most policies, and it's one of the most common claims there is. The endorsement that covers it is usually inexpensive, which is what makes this the cheapest gap on your list to close.",
-    howOften: {
-      value: "1-in-12 years",
-      note: "Common, and more likely with age of plumbing",
-    },
-    howIntense: {
-      value: "~8% of the home",
-      note: "Concentrated in the lowest floor and its contents",
-    },
-    yourShare: {
-      value: "$4K/yr",
-      note: "Expected out-of-pocket from this peril at today's coverage",
-    },
-    whoPays: [
-      { label: "Insurance", pct: 0 },
-      { label: "Federal & charity", pct: 4 },
-      { label: "You", pct: 96 },
-    ],
-    fix: {
-      title: "Add a backup endorsement",
-      est: "Est. ~$60/yr",
-      options: [
-        { name: "Water backup rider", note: "Typically $5K–$25K of cover" },
-        { name: "Backflow valve", note: "One-time fix, may reduce premium" },
-      ],
-    },
-    sources: ["Policy exclusions", "Plumbing age · ATTOM"],
-  },
-  {
-    id: "dwelling",
-    name: "Underinsured dwelling",
-    sub: "$625K covered vs $780K rebuild",
-    status: "partial",
-    max: 8,
-    severity: 3,
-    blurb:
-      "Your dwelling limit hasn't kept up with what it now costs to rebuild. Every covered peril inherits this shortfall, so it isn't a risk on its own so much as a multiplier on all the others.",
-    howOften: {
-      value: "Every claim",
-      note: "Applies to any total loss, whatever caused it",
-    },
-    howIntense: {
-      value: "$155K",
-      note: "Rebuild cost above your dwelling limit",
-    },
-    yourShare: {
-      value: "$155K",
-      note: "Uninsured by definition — no peril pays above the limit",
-    },
-    whoPays: [
-      { label: "Insurance", pct: 0 },
-      { label: "Federal & charity", pct: 6 },
-      { label: "You", pct: 94 },
-    ],
-    fix: {
-      title: "Raise your dwelling limit",
-      est: "Est. ~$340/yr",
-      options: [
-        {
-          name: "Extended replacement cost",
-          note: "Adds 25–50% above the limit",
-        },
-        { name: "Reappraise the rebuild", note: "Confirms the real figure" },
-      ],
-    },
-    sources: ["Policy declarations", "Rebuild estimate · county averages"],
-  },
-  {
-    id: "deductible",
-    name: "Hurricane deductible",
-    sub: "$31K out of pocket before anything pays",
+    id: "wind",
+    name: "Hurricane & windstorm",
+    sub: "Covered — but a 5% named-storm deductible applies",
     status: "partial",
     max: 13,
     severity: 3,
     blurb:
-      "Named storms carry their own deductible, set as a percentage of the dwelling limit rather than a flat amount. It's much larger than your standard deductible, and it applies per storm — two landfalls in a season means paying it twice.",
+      "Wind damage is covered. What isn't is the named-storm deductible — 5% of your dwelling limit, $45,000, payable per storm rather than per year. Two landfalls in a season means paying it twice, and rebuild cost above your $850,000 limit is yours whatever caused the damage.",
     howOften: {
       value: "1-in-7 years",
       note: "Frequency of a named storm affecting the property",
-    },
-    howIntense: {
-      value: "$31K",
-      note: "Payable before the policy contributes anything",
-    },
-    yourShare: {
-      value: "$6K/yr",
-      note: "Expected out-of-pocket from this peril at today's coverage",
-    },
-    whoPays: [
-      { label: "Insurance", pct: 0 },
-      { label: "Federal & charity", pct: 10 },
-      { label: "You", pct: 90 },
-    ],
-    fix: {
-      title: "Build the deductible in cash",
-      est: "No premium change",
-      options: [
-        { name: "Set aside $31K", note: "Reachable within a week" },
-        { name: "Lower the percentage", note: "Raises premium, cuts exposure" },
-      ],
-    },
-    sources: ["Policy declarations"],
-  },
-  {
-    id: "wind",
-    name: "Windstorm / hurricane",
-    sub: "Covered to your dwelling limit",
-    status: "covered",
-    max: 0,
-    severity: 3,
-    blurb:
-      "Wind damage is covered by your policy, subject to the named-storm deductible above. Mitigation grants can reduce both the damage and usually the premium, even though the coverage itself is already in place.",
-    howOften: {
-      value: "1-in-7 years",
-      note: "Named storm affecting the property",
     },
     howIntense: {
       value: "~22% of the home",
       note: "Typical wind event across structure and contents",
     },
     yourShare: {
-      value: "Deductible only",
-      note: "Beyond the deductible, the policy responds",
+      value: "$45K per storm",
+      note: "The deductible, before the policy contributes anything",
     },
     whoPays: [
-      { label: "Insurance", pct: 86 },
-      { label: "Federal & charity", pct: 2 },
-      { label: "You", pct: 12 },
+      { label: "Insurance", pct: 74 },
+      { label: "Federal & charity", pct: 4 },
+      { label: "You", pct: 22 },
     ],
+    fix: {
+      title: "Cut what the deductible costs you",
+      est: "Est. ~$340/yr",
+      options: [
+        { name: "Wind mitigation grant", note: "Roof and opening upgrades" },
+        { name: "Lower the percentage", note: "Raises premium, cuts exposure" },
+      ],
+    },
     sources: ["Policy declarations", "NOAA storm history"],
   },
   {
+    id: "tornado",
+    name: "Tornado",
+    sub: "Covered under windstorm · same deductible",
+    status: "partial",
+    max: 7,
+    severity: 2,
+    blurb:
+      "Tornado damage is treated as windstorm, so it's covered on the same terms — including the named-storm deductible when it comes with a tropical system. Damage is usually total where it lands and nil fifty yards away, which makes it hard to plan for beyond documentation.",
+    howOften: {
+      value: "1-in-25 years",
+      note: "Chance of a damaging tornado within a mile",
+    },
+    howIntense: {
+      value: "Total, where it lands",
+      note: "Little middle ground between untouched and destroyed",
+    },
+    yourShare: {
+      value: "Deductible",
+      note: "Beyond that, the policy responds to its limit",
+    },
+    whoPays: [
+      { label: "Insurance", pct: 78 },
+      { label: "Federal & charity", pct: 4 },
+      { label: "You", pct: 18 },
+    ],
+    sources: ["NOAA Storm Prediction Center"],
+  },
+  {
+    id: "hail",
+    name: "Hail",
+    sub: "Covered · may carry a separate deductible",
+    status: "partial",
+    max: 5,
+    severity: 2,
+    blurb:
+      "Hail is covered, though some policies carry a separate wind-and-hail deductible. The damage is usually to the roof and often isn't visible from the ground, which is why claims are frequently filed late and then disputed.",
+    howOften: {
+      value: "1-in-6 years",
+      note: "Damaging hail within the county",
+    },
+    howIntense: {
+      value: "Roof and openings",
+      note: "Rarely structural, frequently expensive",
+    },
+    yourShare: {
+      value: "Deductible",
+      note: "Higher if your policy separates wind and hail",
+    },
+    whoPays: [
+      { label: "Insurance", pct: 82 },
+      { label: "Federal & charity", pct: 1 },
+      { label: "You", pct: 17 },
+    ],
+    sources: ["NOAA storm reports"],
+  },
+  {
     id: "fire",
-    name: "Fire",
+    name: "Wildfire",
     sub: "Covered to your dwelling limit",
     status: "covered",
     max: 0,
     severity: 2,
     blurb:
-      "Fire is the peril homeowner policies were built around, and yours covers it to the dwelling limit. The shortfall above that limit still applies, which is why it appears separately in this list.",
+      "Fire is the peril homeowner policies were built around, and yours covers it to the dwelling limit. Most homes lost to wildfire are lost to embers landing on the house rather than to the flame front reaching it, which is why the protection measures matter as much as the distance.",
     howOften: {
       value: "1-in-70 years",
       note: "Low frequency, high severity",
@@ -316,7 +269,119 @@ export const RISK_PERILS: RiskPeril[] = [
       { label: "Federal & charity", pct: 1 },
       { label: "You", pct: 7 },
     ],
-    sources: ["Policy declarations"],
+    sources: ["Policy declarations", "State forestry service"],
+  },
+  {
+    id: "lightning",
+    name: "Lightning",
+    sub: "Covered · including electronics",
+    status: "covered",
+    max: 0,
+    severity: 2,
+    blurb:
+      "Lightning and the surge that follows it are covered, electronics included. This state records more strikes than any other, so the frequency is high even though a single strike rarely threatens the structure itself.",
+    howOften: {
+      value: "1-in-12 years",
+      note: "Strike close enough to damage something",
+    },
+    howIntense: {
+      value: "Electronics and wiring",
+      note: "Structural fire is the rarer outcome",
+    },
+    yourShare: {
+      value: "Deductible only",
+      note: "Beyond the deductible, the policy responds",
+    },
+    whoPays: [
+      { label: "Insurance", pct: 94 },
+      { label: "Federal & charity", pct: 0 },
+      { label: "You", pct: 6 },
+    ],
+    sources: ["NOAA lightning density"],
+  },
+  {
+    id: "freeze",
+    name: "Winter freeze",
+    sub: "Covered · pipes and resulting water damage",
+    status: "covered",
+    max: 0,
+    severity: 1,
+    blurb:
+      "Burst pipes and the water damage that follows are covered, provided the home was heated or properly drained. Rare here, but a single hard freeze produces more claims in a week than a normal year does.",
+    howOften: {
+      value: "1-in-20 years",
+      note: "Hard freeze long enough to burst pipes",
+    },
+    howIntense: {
+      value: "Localised water damage",
+      note: "Contents and finishes rather than structure",
+    },
+    yourShare: {
+      value: "Deductible only",
+      note: "Provided the home was heated or drained",
+    },
+    whoPays: [
+      { label: "Insurance", pct: 90 },
+      { label: "Federal & charity", pct: 0 },
+      { label: "You", pct: 10 },
+    ],
+    sources: ["NOAA climate normals"],
+  },
+  {
+    id: "earthquake",
+    name: "Earthquake",
+    sub: "Excluded — but negligible here",
+    status: "uninsured",
+    max: 20,
+    severity: 0,
+    blurb:
+      "Earthquake is excluded from every standard homeowner policy, so a shake would be entirely yours. It's listed because the exclusion is real, not because the hazard is: this region has no significant seismic activity, so the exposure scores nothing. Somewhere else, this line would be the largest number on the page.",
+    howOften: {
+      value: "Negligible",
+      note: "No mapped active faults within 200 miles",
+    },
+    howIntense: {
+      value: "Not modelled",
+      note: "Ground acceleration below the threshold for damage",
+    },
+    yourShare: {
+      value: "$0/yr",
+      note: "Excluded, but the hazard doesn't arise here",
+    },
+    whoPays: [
+      { label: "Insurance", pct: 0 },
+      { label: "Federal & charity", pct: 20 },
+      { label: "You", pct: 80 },
+    ],
+    sources: ["USGS seismic hazard map"],
+  },
+  {
+    id: "landslide",
+    name: "Landslide & mudflow",
+    sub: "Excluded as earth movement · negligible here",
+    status: "uninsured",
+    max: 14,
+    severity: 0,
+    blurb:
+      "Earth movement is excluded, and mudflow specifically is only covered by a flood policy rather than a homeowner one. On flat coastal ground the hazard is negligible, so it scores nothing — but it's worth knowing the exclusion exists before moving somewhere it matters.",
+    howOften: {
+      value: "Negligible",
+      note: "No slope within the parcel or adjacent to it",
+    },
+    howIntense: {
+      value: "Not modelled",
+      note: "Terrain doesn't support debris flow",
+    },
+    yourShare: {
+      value: "$0/yr",
+      note: "Excluded, but the hazard doesn't arise here",
+    },
+    whoPays: [
+      { label: "Insurance", pct: 0 },
+      { label: "Federal & charity", pct: 12 },
+      { label: "You", pct: 88 },
+    ],
+    sources: ["USGS landslide inventory"],
   },
 ];
 
@@ -439,74 +504,10 @@ export const PROVIDERS: Record<string, Provider[]> = {
       ],
     },
   ],
-  backup: [
-    {
-      name: "Water backup rider",
-      kind: "Added to your existing policy",
-      monthly: 5,
-      covers: 25_000,
-      coversLabel: "$25K of backup damage",
-      upsides: [
-        "The cheapest gap on your list to close, by a wide margin",
-        "No inspection, effective at next renewal",
-      ],
-      downsides: [
-        "Limits are low relative to a finished lower floor",
-        "Doesn't cover flooding from outside the home",
-      ],
-    },
-    {
-      name: "Backflow valve",
-      kind: "One-time plumbing fix",
-      monthly: 9,
-      covers: 25_000,
-      coversLabel: "Prevents rather than pays",
-      upsides: [
-        "Stops the damage happening instead of reimbursing it",
-        "Some carriers discount the rider once it's fitted",
-      ],
-      downsides: [
-        "Upfront cost around $1,100 rather than a monthly premium",
-        "Needs maintenance to keep working",
-      ],
-    },
-  ],
-  dwelling: [
-    {
-      name: "Extended replacement cost",
-      kind: "Endorsement on your existing policy",
-      monthly: 28,
-      covers: 156_250,
-      coversLabel: "25% above your $625K limit",
-      upsides: [
-        "Closes most of the $155K shortfall for a small premium change",
-        "Applies to every covered peril at once",
-      ],
-      downsides: [
-        "Capped at a percentage, so it can still fall short if costs spike",
-        "Doesn't help with perils that aren't covered at all",
-      ],
-    },
-    {
-      name: "Guaranteed replacement cost",
-      kind: "Endorsement on your existing policy",
-      monthly: 46,
-      covers: 780_000,
-      coversLabel: "Whatever rebuilding actually costs",
-      upsides: [
-        "Removes the shortfall entirely, whatever construction costs do",
-        "The only option that survives a post-disaster price surge",
-      ],
-      downsides: [
-        "Not offered by every carrier, and often needs a current appraisal",
-        "Costs more than the extended version for a risk you may not hit",
-      ],
-    },
-  ],
-  deductible: [
+  wind: [
     {
       name: "Lower to 2% of dwelling",
-      kind: "Change to your existing policy",
+      kind: "Change to your named-storm deductible",
       monthly: 37,
       covers: 18_750,
       coversLabel: "Cuts the deductible from $31K to $12.5K",

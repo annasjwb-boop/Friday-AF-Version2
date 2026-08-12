@@ -106,9 +106,10 @@ export function CasitaRisk() {
           <span className="risk-cap__to">{floor}</span>
         </p>
         <p className="risk-cap__note">
-          {floor} is the floor coverage alone can reach. What remains is your
-          deductible and the shortfall above your dwelling limit — money you
-          hold rather than risk you carry.
+          {floor} is the floor coverage alone can reach. What's left sits inside
+          perils you already have — the named-storm deductible and rebuild cost
+          above your dwelling limit — so closing it means changing terms rather
+          than buying another policy.
         </p>
       </section>
 
