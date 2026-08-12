@@ -251,15 +251,10 @@ export function CasitaHome() {
           <div className="casita__actions">
             {/* Help follows whichever tab is open, so the explainers and
                 questions match what's on screen. */}
-            <CasitaHelp
-              context={
-                activeTab === "damage" ||
-                activeTab === "plan" ||
-                activeTab === "apply"
-                  ? "recovery"
-                  : activeTab
-              }
-            />
+            {/* Disaster tabs keep their own identity for tips; the answer
+                sheet has no content of its own for them, so it falls back to
+                recovery inside CasitaHelp. */}
+            <CasitaHelp context={activeTab} />
             <button type="button" className="casita__avatar" aria-label="Profile">
               <span aria-hidden="true">JB</span>
             </button>

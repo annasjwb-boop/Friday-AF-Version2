@@ -1,13 +1,15 @@
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Lightbulb, Play, Sparkles, X } from "lucide-react";
+import { ChevronUp, Lightbulb, Sparkles, X } from "lucide-react";
+import { answersFor, type Answer, type HelpContext } from "../../data/help";
 import {
-  EXPLAINERS,
-  answersFor,
-  type Answer,
-  type HelpContext,
-} from "../../data/help";
+  TIPS,
+  TIP_CATEGORY_LABEL,
+  tipsFor,
+  type TipCategory,
+  type TipView,
+} from "../../data/tips";
 import { useThreadScroll } from "../../hooks/useThreadScroll";
 import "./CasitaHelp.css";
 
@@ -19,7 +21,22 @@ import "./CasitaHelp.css";
  * specific numbers is the kind of thing people learn to ignore.
  * ------------------------------------------------------------------------- */
 
-export function CasitaHelp({ context }: { context: HelpContext }) {
+const ANSWER_CONTEXTS: HelpContext[] = [
+  "overview",
+  "risk",
+  "readiness",
+  "recovery",
+];
+
+export function CasitaHelp({ context }: { context: TipView }) {
+  /* Tips are keyed per screen including the disaster tabs; the answer sheet
+     only has content for the four preparedness contexts, so anything else
+     falls back to recovery. */
+  const answerContext: HelpContext = ANSWER_CONTEXTS.includes(
+    context as HelpContext,
+  )
+    ? (context as HelpContext)
+    : "recovery";
   const [open, setOpen] = useState<null | "video" | "chat">(null);
 
   return (
@@ -43,34 +60,14 @@ export function CasitaHelp({ context }: { context: HelpContext }) {
 
       <AnimatePresence>
         {open === "video" && (
-          <Sheet title="Explainers" onClose={() => setOpen(null)}>
-            <p className="ch__lede">
-              Short videos about what's on this screen.
-            </p>
-            {EXPLAINERS[context].map((e) => (
-              <div className="ch-vid" key={e.id}>
-                <span className="ch-vid__thumb" aria-hidden="true">
-                  <Play size={16} strokeWidth={2} />
-                </span>
-                <span className="ch-vid__body">
-                  <span className="ch-vid__title">{e.title}</span>
-                  <span className="ch-vid__blurb">{e.blurb}</span>
-                  <span className="ch-vid__meta">
-                    {e.length} · not recorded yet
-                  </span>
-                </span>
-              </div>
-            ))}
-            <p className="ch__note">
-              These are planned, not made. Titles and runtimes are here so the
-              library can be reviewed before anything is filmed.
-            </p>
+          <Sheet title="From people who've been through it" onClose={() => setOpen(null)}>
+            <Tips view={context} />
           </Sheet>
         )}
 
         {open === "chat" && (
           <Sheet title="Ask about this" onClose={() => setOpen(null)}>
-            <Chat context={context} />
+            <Chat context={answerContext} />
           </Sheet>
         )}
       </AnimatePresence>
@@ -166,5 +163,114 @@ function Chat({ context }: { context: HelpContext }) {
         aren't wired up in this prototype.
       </p>
     </div>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * Tips, filtered to the screen the person is on.
+ *
+ * The filter opens on "This screen" rather than "All": someone who taps the
+ * lightbulb on the damage view wants the tip about photographing before
+ * cleanup, not nine tips of which one applies. Every other filter stays one
+ * tap away, and the count on each makes it obvious what widening will do.
+ * ------------------------------------------------------------------------- */
+
+function Tips({ view }: { view: TipView }) {
+  const [filter, setFilter] = useState<"view" | "all" | TipCategory>("view");
+  const [voted, setVoted] = useState<string[]>([]);
+
+  const relevant = tipsFor(view);
+  const list =
+    filter === "view"
+      ? relevant
+      : filter === "all"
+        ? [...TIPS].sort((a, b) => b.votes - a.votes)
+        : TIPS.filter((t) => t.category === filter).sort(
+            (a, b) => b.votes - a.votes,
+          );
+
+  const filters: [typeof filter, string, number][] = [
+    ["view", "This screen", relevant.length],
+    ["all", "All", TIPS.length],
+    ...(Object.keys(TIP_CATEGORY_LABEL) as TipCategory[]).map(
+      (c) =>
+        [c, TIP_CATEGORY_LABEL[c], TIPS.filter((t) => t.category === c).length] as [
+          typeof filter,
+          string,
+          number,
+        ],
+    ),
+  ];
+
+  return (
+    <>
+      <p className="ch__lede">
+        Shared by past survivors and the AidFinder team, checked by the people
+        who ran the programs.
+      </p>
+
+      <div className="ch-filters" role="tablist" aria-label="Filter tips">
+        {filters.map(([id, label, count]) => (
+          <button
+            key={String(id)}
+            type="button"
+            role="tab"
+            aria-selected={filter === id}
+            className={`ch-filter${filter === id ? " is-on" : ""}`}
+            onClick={() => setFilter(id)}
+          >
+            {label}
+            <em>{count}</em>
+          </button>
+        ))}
+      </div>
+
+      {list.length === 0 ? (
+        <p className="ch__note">
+          Nothing filed under this yet. Try another filter.
+        </p>
+      ) : (
+        list.map((t) => {
+          const up = voted.includes(t.id);
+          return (
+            <article className="ch-tip" key={t.id}>
+              <div className="ch-tip__who">
+                <span className="ch-tip__av" aria-hidden="true">
+                  {t.initials}
+                </span>
+                {t.source}
+              </div>
+              <p className="ch-tip__title">{t.title}</p>
+              <p className="ch-tip__body">{t.body}</p>
+              <div className="ch-tip__foot">
+                <span
+                  className={`ch-tip__badge${t.pending ? " is-pending" : ""}`}
+                >
+                  {t.verified}
+                </span>
+                <button
+                  type="button"
+                  className={`ch-tip__vote${up ? " is-on" : ""}`}
+                  aria-pressed={up}
+                  onClick={() =>
+                    setVoted((v) =>
+                      up ? v.filter((x) => x !== t.id) : [...v, t.id],
+                    )
+                  }
+                >
+                  <ChevronUp size={13} strokeWidth={2.6} aria-hidden="true" />
+                  {(t.votes + (up ? 1 : 0)).toLocaleString()}
+                </button>
+              </div>
+            </article>
+          );
+        })
+      )}
+
+      <p className="ch__note">
+        Survivor tips are experiences, not program guarantees — caps and rules
+        change, so check them each year.
+      </p>
+    </>
   );
 }
