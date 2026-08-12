@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Plus, X } from "lucide-react";
+import { Check, ChevronDown, Plus } from "lucide-react";
 import { RISK_PERILS } from "../../data/risks";
 import {
   GAP_OPTIONS,
@@ -70,10 +70,20 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
   const planned = Math.min(totals.funds, need);
   const remaining = Math.max(need - planned, 0);
 
-  const toggle = (id: string) => {
-    setChosen((all) =>
-      all.includes(id) ? all.filter((x) => x !== id) : [...all, id],
-    );
+  /* Adding and opening were one action, which meant removing an option to
+     collapse it. They're separate now: the row opens, the icon adds. */
+  const add = (id: string) => {
+    setChosen((all) => (all.includes(id) ? all : [...all, id]));
+    setOpenId(id);
+  };
+
+  const remove = (id: string) => {
+    setChosen((all) => all.filter((x) => x !== id));
+    setOpenId((cur) => (cur === id ? null : cur));
+  };
+
+  const openOrAdd = (id: string) => {
+    if (!chosen.includes(id)) return add(id);
     setOpenId((cur) => (cur === id ? null : id));
   };
 
@@ -230,8 +240,8 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
               <button
                 type="button"
                 className="rp-opt__head"
-                aria-pressed={on}
-                onClick={() => toggle(o.id)}
+                aria-expanded={open}
+                onClick={() => openOrAdd(o.id)}
               >
                 <span className="rp-opt__body">
                   <span className="rp-opt__name">{o.name}</span>
@@ -247,7 +257,7 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
                   )}
                   <span className="rp-opt__icon" aria-hidden="true">
                     {on ? (
-                      <X size={15} strokeWidth={2.4} />
+                      <Check size={15} strokeWidth={2.6} />
                     ) : (
                       <Plus size={15} strokeWidth={2.4} />
                     )}
@@ -276,6 +286,26 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
                         />
                       ))}
                       {o.note && <p className="rp-opt__note">{o.note}</p>}
+
+                      {/* Values already count as they're moved, so this closes
+                          rather than saves — the label says so. */}
+                      <div className="rp-opt__acts">
+                        <button
+                          type="button"
+                          className="rp-opt__done"
+                          onClick={() => setOpenId(null)}
+                        >
+                          <Check size={14} strokeWidth={2.6} aria-hidden="true" />
+                          Done
+                        </button>
+                        <button
+                          type="button"
+                          className="rp-opt__remove"
+                          onClick={() => remove(o.id)}
+                        >
+                          Remove from plan
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 )}
