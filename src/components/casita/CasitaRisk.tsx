@@ -9,7 +9,6 @@ import {
   totalScore,
   type RiskPeril,
 } from "../../data/risks";
-import { ExposureViz } from "./ExposureViz";
 import { RiskRow } from "./RiskRow";
 import { RiskTune } from "./RiskTune";
 import { ScoreGauge, RISK_ZONES } from "./ScoreGauge";
@@ -73,7 +72,8 @@ export function CasitaRisk() {
         {uninsured.length} uninsured perils
       </motion.p>
 
-      <ExposureViz />
+      {/* Ring chart hidden for now. The component and its data are intact —
+          restore by importing ExposureViz and rendering it here. */}
 
       <div className="casita-risk__listhead">
         <h2 className="casita-risk__listtitle">How your exposure breaks down</h2>
