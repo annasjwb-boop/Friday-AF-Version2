@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronUp, Lightbulb, Sparkles, X } from "lucide-react";
+import { ChevronUp, Lightbulb, Play, Sparkles, X } from "lucide-react";
 import { answersFor, type Answer, type HelpContext } from "../../data/help";
 import {
   TIPS,
@@ -178,6 +178,9 @@ function Chat({ context }: { context: HelpContext }) {
 function Tips({ view }: { view: TipView }) {
   const [filter, setFilter] = useState<"view" | "all" | TipCategory>("view");
   const [voted, setVoted] = useState<string[]>([]);
+  const [open, setOpen] = useState<string | null>(null);
+  const [draft, setDraft] = useState({ title: "", body: "" });
+  const [sent, setSent] = useState(false);
 
   const relevant = tipsFor(view);
   const list =
@@ -204,9 +207,10 @@ function Tips({ view }: { view: TipView }) {
 
   return (
     <>
+      <h3 className="ch-tips__title">From people who've been through it</h3>
       <p className="ch__lede">
-        Shared by past survivors and the AidFinder team, checked by the people
-        who ran the programs.
+        Shared by past disaster survivors and the AidFinder team, checked by the
+        people who ran the programs. Vote for what helped you.
       </p>
 
       <div className="ch-filters" role="tablist" aria-label="Filter tips">
@@ -240,8 +244,52 @@ function Tips({ view }: { view: TipView }) {
                 </span>
                 {t.source}
               </div>
-              <p className="ch-tip__title">{t.title}</p>
-              <p className="ch-tip__body">{t.body}</p>
+              <button
+                type="button"
+                className="ch-tip__open"
+                aria-expanded={open === t.id}
+                onClick={() => setOpen(open === t.id ? null : t.id)}
+              >
+                <span className="ch-tip__title">{t.title}</span>
+                <span className="ch-tip__body">{t.body}</span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {open === t.id && (
+                  <motion.div
+                    className="ch-tip__more"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
+                  >
+                    <div className="ch-tip__inner">
+                      <button
+                        type="button"
+                        className="ch-video"
+                        style={{
+                          background: `linear-gradient(150deg, ${t.video.tint[0]}, ${t.video.tint[1]})`,
+                        }}
+                      >
+                        <span className="ch-video__len">{t.video.length}</span>
+                        <span className="ch-video__play" aria-hidden="true">
+                          <Play size={17} strokeWidth={2.4} />
+                        </span>
+                        <span className="ch-video__cap">
+                          <b>{t.video.title}</b>
+                          <em>{t.video.presenter}</em>
+                        </span>
+                      </button>
+
+                      <p className="ch-tip__detail">{t.detail}</p>
+
+                      <button type="button" className="ch-tip__cta">
+                        {t.cta}
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <div className="ch-tip__foot">
                 <span
                   className={`ch-tip__badge${t.pending ? " is-pending" : ""}`}
@@ -266,6 +314,46 @@ function Tips({ view }: { view: TipView }) {
           );
         })
       )}
+
+      {/* Anyone reading these has been through something the next person
+          hasn't. The form is short on purpose — a long one collects nothing. */}
+      <section className="ch-add">
+        <h4>Leave a tip of your own</h4>
+        {sent ? (
+          <p className="ch-add__done">
+            Thank you — it goes to the review queue, and a former program
+            official checks it before anyone else sees it.
+          </p>
+        ) : (
+          <>
+            <p className="ch-add__sub">
+              Something you wish someone had told you. It's checked before it
+              appears.
+            </p>
+            <input
+              value={draft.title}
+              placeholder="What you learned, in a line"
+              aria-label="Your tip's headline"
+              onChange={(e) => setDraft({ ...draft, title: e.target.value })}
+            />
+            <textarea
+              value={draft.body}
+              rows={4}
+              placeholder="What happened, and what you'd do differently"
+              aria-label="Your tip"
+              onChange={(e) => setDraft({ ...draft, body: e.target.value })}
+            />
+            <button
+              type="button"
+              className="ch-add__send"
+              disabled={!draft.title.trim() || !draft.body.trim()}
+              onClick={() => setSent(true)}
+            >
+              Submit for review
+            </button>
+          </>
+        )}
+      </section>
 
       <p className="ch__note">
         Survivor tips are experiences, not program guarantees — caps and rules

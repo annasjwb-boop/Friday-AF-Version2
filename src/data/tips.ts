@@ -41,6 +41,16 @@ export const TIP_CATEGORY_LABEL: Record<TipCategory, string> = {
   planning: "Planning",
 };
 
+export interface TipVideo {
+  /** Shown over the thumbnail. */
+  title: string;
+  /** Who is speaking, and where they are. */
+  presenter: string;
+  length: string;
+  /** Two-stop gradient standing in for a still, so each reads distinctly. */
+  tint: [string, string];
+}
+
 export interface Tip {
   id: string;
   category: TipCategory;
@@ -54,6 +64,11 @@ export interface Tip {
   pending?: boolean;
   votes: number;
   views: TipView[];
+  /** The fuller version, shown when the tip is opened. */
+  detail: string;
+  video: TipVideo;
+  /** Where the tip points once read. */
+  cta: string;
 }
 
 export const TIPS: Tip[] = [
@@ -67,6 +82,15 @@ export const TIPS: Tip[] = [
     verified: "Verified by former FEMA program leadership",
     votes: 2412,
     views: ["overview", "risk", "plan"],
+    detail:
+      "Every federal program is designed to fill the gap left after insurance pays, not to replace it. That ordering is why a household with a policy in force almost always recovers faster than one without — and why the first thing any application asks for is your declarations page. Only about 5% of disasters receive the presidential declaration that switches FEMA and SBA on at all, so treating federal aid as the plan rather than the backstop leaves most households waiting for something that never arrives.",
+    video: {
+      title: "Watch: Why insurance comes first",
+      presenter: "Dana R. · AidFinder",
+      length: "1:52",
+      tint: ["#1c2740", "#2f3f63"],
+    },
+    cta: "See what my policy covers",
   },
   {
     id: "deductible",
@@ -79,6 +103,15 @@ export const TIPS: Tip[] = [
     pending: true,
     votes: 1847,
     views: ["risk", "plan", "apply", "recovery"],
+    detail:
+      "When a presidential declaration is issued, FEMA's Other Needs Assistance can treat your insurance deductible as an eligible expense — for this household that's the first $5,000 of any claim. Keep your declarations page and your claim paperwork in the vault so the deductible is documented the day you apply.",
+    video: {
+      title: "Watch: How our deductible came back",
+      presenter: "Maria S. · Fort Myers, FL",
+      length: "2:14",
+      tint: ["#1d2b45", "#3a4a6d"],
+    },
+    cta: "See my deductible",
   },
   {
     id: "sba",
@@ -90,6 +123,15 @@ export const TIPS: Tip[] = [
     verified: "Verified by retired SBA program officials",
     votes: 1315,
     views: ["plan", "apply", "recovery"],
+    detail:
+      "Most people hear 'disaster loan' and assume it only pays to rebuild what was there. It can also fund a down payment on a home somewhere safer, or refinance an existing mortgage on the damaged property. Up to $500,000 at rates capped near 2.5%, and the rate drops further if you can't get credit elsewhere. It is still debt you repay — but it is the cheapest debt most households will ever be offered.",
+    video: {
+      title: "Watch: Three things an SBA loan can do",
+      presenter: "Ray T. · Paradise, CA",
+      length: "2:41",
+      tint: ["#2a2038", "#453458"],
+    },
+    cta: "Look at the loan options",
   },
   {
     id: "rebuildcost",
@@ -101,6 +143,15 @@ export const TIPS: Tip[] = [
     verified: "Verified by former FEMA program leadership",
     votes: 928,
     views: ["overview", "risk", "damage"],
+    detail:
+      "A tree crushes a 200 sq ft bedroom in a $1M, 1,000 sq ft home. You did not lose 20% of your value — you lost whatever a contractor charges to rebuild that room, which after a regional disaster is usually more per square foot than the house cost to build. Every program prices from rebuild cost, so that is the number worth arguing about.",
+    video: {
+      title: "Watch: Value versus rebuild cost",
+      presenter: "Dana R. · AidFinder",
+      length: "1:35",
+      tint: ["#1b3330", "#2d5049"],
+    },
+    cta: "Check my rebuild cost",
   },
   {
     id: "limitcheck",
@@ -112,6 +163,15 @@ export const TIPS: Tip[] = [
     verified: "Verified by former FEMA program leadership",
     votes: 1104,
     views: ["overview", "risk"],
+    detail:
+      "Rebuild costs surge after big disasters, and building codes change between when a house was built and when it is rebuilt. Extended replacement cost adds a percentage above your dwelling limit; ordinance or law coverage pays for the code upgrades an insurer would otherwise refuse. Neither is expensive, and most policies do not include them unless asked.",
+    video: {
+      title: "Watch: The two endorsements to ask for",
+      presenter: "Dana R. · AidFinder",
+      length: "2:03",
+      tint: ["#33291b", "#57452d"],
+    },
+    cta: "Review my limits",
   },
   {
     id: "dob",
@@ -123,6 +183,15 @@ export const TIPS: Tip[] = [
     verified: "Verified by former FEMA program leadership",
     votes: 1592,
     views: ["plan", "apply", "recovery"],
+    detail:
+      "The Stafford Act forbids two programs paying for the same loss. In practice every program checks what insurance and every other program already paid, and FEMA can ask for money back years later if payments overlapped. This is not a reason to apply for less — it is a reason to document precisely which loss each payment covered.",
+    video: {
+      title: "Watch: Duplication of benefits, plainly",
+      presenter: "Former FEMA program lead",
+      length: "3:06",
+      tint: ["#1c2740", "#334463"],
+    },
+    cta: "See my recovery plan",
   },
   {
     id: "irs",
@@ -135,6 +204,15 @@ export const TIPS: Tip[] = [
     pending: true,
     votes: 1573,
     views: ["plan", "apply", "recovery"],
+    detail:
+      "A casualty loss from a federally declared disaster is deductible, and you can elect to claim it on the prior year's return by amending it — which means a refund in weeks rather than waiting for the next filing season. Keep the damage log and the insurance settlement letter; both are what the deduction is calculated from.",
+    video: {
+      title: "Watch: Claiming the loss on last year",
+      presenter: "Priya N. · CPA",
+      length: "2:28",
+      tint: ["#22303a", "#3a4f5e"],
+    },
+    cta: "See the tax option",
   },
   {
     id: "moreprograms",
@@ -146,6 +224,15 @@ export const TIPS: Tip[] = [
     verified: "Verified by former FEMA program leadership",
     votes: 1312,
     views: ["plan", "apply", "recovery"],
+    detail:
+      "Beyond FEMA and SBA: your county often runs a bridge grant, your mortgage servicer must offer forbearance after a declared disaster, retirement accounts allow penalty-free disaster withdrawals, and a flood policy pays loss-avoidance costs for sandbags and pumps. None of these are advertised, and all of them have deadlines.",
+    video: {
+      title: "Watch: The help nobody mentions",
+      presenter: "Former FEMA program lead",
+      length: "2:55",
+      tint: ["#2b1f2c", "#4a3549"],
+    },
+    cta: "See every program",
   },
   {
     id: "stateprog",
@@ -157,6 +244,15 @@ export const TIPS: Tip[] = [
     verified: "Verified by former FEMA program leadership",
     votes: 764,
     views: ["readiness", "plan", "apply", "recovery"],
+    detail:
+      "State rebuild grants and long-term recovery groups arrive months after the federal programs close, and they ask for exactly the records you gathered at the start. Households that kept their documentation get through in weeks; households that did not spend the time reconstructing it from memory.",
+    video: {
+      title: "Watch: What arrives months later",
+      presenter: "Former state recovery officer",
+      length: "2:12",
+      tint: ["#1f2a33", "#354957"],
+    },
+    cta: "Open my vault",
   },
   {
     id: "document",
@@ -168,6 +264,15 @@ export const TIPS: Tip[] = [
     verified: "Verified by former FEMA program leadership",
     votes: 2106,
     views: ["damage", "readiness", "recovery"],
+    detail:
+      "We tore out soaked drywall the first day because it stank. The adjuster came a week later and we had nothing to show him for the worst of it — no photographs, no moisture readings, nothing but a clean room and our word for it. Film everything before you touch it, even if it means living with the smell another day.",
+    video: {
+      title: "Watch: What we tore out too soon",
+      presenter: "Alan W. · Asheville, NC",
+      length: "1:47",
+      tint: ["#33231f", "#573b33"],
+    },
+    cta: "Record my damage",
   },
 ];
 
