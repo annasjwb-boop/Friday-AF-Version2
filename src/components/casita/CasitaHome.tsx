@@ -1,4 +1,4 @@
-import { lazy, Suspense, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   DEFAULT_HOME_NAME,
@@ -179,6 +179,16 @@ export function CasitaHome() {
     const t = params.get("tab");
     return TABS.some((x) => x.id === t) ? (t as TabId) : "overview";
   });
+
+  /* Switching tabs keeps the scroller where it was, so arriving on a new tab
+     could land mid-page — most visibly on the disaster tabs, which are entered
+     from a prompt at the bottom of a scrolled Recovery view. */
+  useEffect(() => {
+    document
+      .querySelector(".app-content")
+      ?.scrollTo({ top: 0, behavior: "auto" });
+  }, [activeTab, disasterMode]);
+
   const stageTap = useRef<{ x: number; y: number; t: number } | null>(null);
 
   const frames = getTurntableFrames(metaphor);
