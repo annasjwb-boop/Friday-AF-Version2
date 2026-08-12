@@ -236,21 +236,43 @@ export const PERIL_FIELDS: Record<string, PerilField[]> = {
   ],
   deductible: [
     {
-      id: "pct",
-      label: "Named-storm deductible",
+      id: "storms",
+      label: "Named storms per decade",
       kind: "number",
-      unit: "%",
-      min: 0.5,
+      unit: "",
+      min: 0,
       max: 10,
       step: 0.5,
-      default: 5,
+      default: 1.5,
+      note: "How often a named storm is close enough to trigger the deductible",
     },
     {
-      id: "reachable",
-      label: "Could reach it within a week",
-      kind: "toggle",
-      default: false,
-      note: "The deductible is only survivable if the cash is actually there",
+      id: "gust",
+      label: "Peak sustained wind here",
+      kind: "number",
+      unit: "mph",
+      min: 60,
+      max: 200,
+      step: 5,
+      default: 120,
+    },
+    {
+      id: "coast",
+      label: "Distance to open water",
+      kind: "number",
+      unit: "mi",
+      min: 0,
+      max: 60,
+      step: 0.5,
+      default: 6,
+      note: "Storms weaken inland — the first few miles matter most",
+    },
+    {
+      id: "major",
+      label: "Chance of a major hurricane in 30 years",
+      kind: "choice",
+      options: ["Low", "Moderate", "High", "Very high"],
+      default: "High",
     },
   ],
 };
@@ -327,8 +349,17 @@ export function suggestSeverity(
       return clamp(ratio <= 0 ? 0 : ratio < 0.1 ? 1 : ratio < 0.2 ? 2 : ratio < 0.35 ? 3 : 4);
     }
     case "deductible": {
-      let s = Number(v.pct) < 2 ? 1 : Number(v.pct) < 4 ? 2 : Number(v.pct) < 7 ? 3 : 4;
-      if (v.reachable) s -= 1;
+      /* This peril costs you the deductible every time a named storm lands, so
+         the exposure is driven by how often and how hard they come — not by
+         the percentage itself, which is a fixed policy term. */
+      const gust = Number(v.gust);
+      let s = gust < 90 ? 1 : gust < 120 ? 2 : gust < 150 ? 3 : 4;
+      if (Number(v.storms) >= 2.5) s += 0.5;
+      if (Number(v.storms) < 1) s -= 0.5;
+      if (Number(v.coast) < 3) s += 0.5;
+      if (Number(v.coast) > 25) s -= 1;
+      if (v.major === "Very high") s += 0.5;
+      if (v.major === "Low") s -= 0.5;
       return clamp(s);
     }
     default:
