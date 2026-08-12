@@ -479,3 +479,9 @@
   line-height: 1.55;
   color: #1d6b3f;
 }
+
+/* Survivor provenance reads as attribution rather than as a status, so it
+   takes the neutral ink instead of the verified green or pending amber. */
+.ch-tip__badge.is-survivor {
+  color: rgb(52 52 58 / 68%);
+}

@@ -73,6 +73,14 @@ export interface Tip {
   verified: string;
   /** Verification still outstanding — shown differently, not hidden. */
   pending?: boolean;
+  /**
+   * For survivor tips: which disaster they lived through, and when. Shown in
+   * place of the verification line, because provenance is what makes a
+   * survivor tip worth reading — a named storm and a date can be checked,
+   * where "validation pending" only says we haven't finished our own process.
+   */
+  survivedName?: string;
+  survivedWhen?: string;
   votes: number;
   views: TipView[];
   /** The fuller version, shown when the tip is opened. */
@@ -107,7 +115,9 @@ export const TIPS: Tip[] = [
     id: "deductible",
     category: "federal",
     initials: "HS",
-    source: "Hurricane survivor · Florida, 2024",
+    source: "Maria S. · Fort Myers, FL",
+    survivedName: "Hurricane Ian",
+    survivedWhen: "September 2022",
     title: "FEMA can cover your deductible",
     body: "Nobody told us this. When the declaration came through, our $5k insurance deductible was an eligible FEMA expense — that's real money back.",
     verified: "FEMA validation pending",
@@ -128,7 +138,9 @@ export const TIPS: Tip[] = [
     id: "sba",
     category: "federal",
     initials: "WS",
-    source: "Wildfire survivor · California, 2025",
+    source: "Ray T. · Paradise, CA",
+    survivedName: "Camp Fire",
+    survivedWhen: "November 2018",
     title: "SBA loans have three uses",
     body: "We thought SBA was rebuild-only. It can also fund a down payment somewhere safer, or refinance your mortgage — up to $500k at 2.5%.",
     verified: "Verified by retired SBA program officials",
@@ -269,7 +281,9 @@ export const TIPS: Tip[] = [
     id: "document",
     category: "planning",
     initials: "FS",
-    source: "Flood survivor · North Carolina, 2024",
+    source: "Alan W. · Asheville, NC",
+    survivedName: "Hurricane Helene",
+    survivedWhen: "September 2024",
     title: "Photograph it before you touch anything",
     body: "We tore out soaked drywall the first day because it stank. The adjuster came a week later and we had nothing to show him for the worst of it.",
     verified: "Verified by former FEMA program leadership",

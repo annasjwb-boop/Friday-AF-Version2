@@ -294,10 +294,16 @@ function Tips({ view }: { view: TipView }) {
                 )}
               </AnimatePresence>
               <div className="ch-tip__foot">
+                {/* A survivor's storm and date says where the advice comes
+                    from; the verification line is for tips without one. */}
                 <span
-                  className={`ch-tip__badge${t.pending ? " is-pending" : ""}`}
+                  className={`ch-tip__badge${
+                    t.survivedName ? " is-survivor" : t.pending ? " is-pending" : ""
+                  }`}
                 >
-                  {t.verified}
+                  {t.survivedName
+                    ? `${t.survivedName} survivor, ${t.survivedWhen}`
+                    : t.verified}
                 </span>
                 <button
                   type="button"
