@@ -154,11 +154,16 @@
 
 /* --- Cards ------------------------------------------------------------------- */
 
+/* The two cards are stepped rather than aligned: the gap sits lower and laps
+   over the covered card, so they read as one figure split in two rather than
+   as a pair of equal statistics. Bottom margin absorbs the offset so the
+   section below keeps its spacing. */
 .sh__cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  align-items: start;
   margin-top: 16px;
+  margin-bottom: 26px;
 }
 
 .sh-card {
@@ -167,13 +172,23 @@
 }
 
 .sh-card--covered {
+  position: relative;
+  z-index: 0;
+  margin-right: -16px;
   background: #16161a;
 }
 
 .sh-card--gap {
+  position: relative;
+  z-index: 1;
+  margin-top: 26px;
+  margin-left: -8px;
   background: #faefd4;
   border: 1px solid rgb(217 155 50 / 40%);
+  box-shadow: -6px 0 22px rgb(22 22 24 / 10%);
 }
+
+
 
 .sh-card__k {
   font-size: 10.5px;
@@ -221,9 +236,23 @@
   color: #7a5c22;
 }
 
+/* Stacked on the narrowest phones, where an overlap would leave the gap card
+   too tight to read. */
 @media (max-width: 360px) {
   .sh__cards {
     grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  .sh-card--covered {
+    margin-right: 0;
+  }
+
+  .sh-card--gap {
+    margin-top: 0;
+    margin-left: 0;
+    box-shadow: none;
   }
 }
 
