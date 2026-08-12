@@ -101,8 +101,34 @@ export function CasitaDisaster({
           <p className="dis__eyebrow">Damage documentation · Hurricane Elena</p>
           <h2 className="dis__title">Document everything before you clean up</h2>
           <p className="dis__lede">
-            Tell your story once — this feeds every application.
+            Adjusters and FEMA inspectors pay for what you can prove. Documented
+            now, before cleanup, is the difference between an estimate and an
+            argument — and it's how you get every dollar you're owed.
           </p>
+
+          {/* The primary action, above the numbers rather than buried in a
+              card below them. Everything on this screen depends on it having
+              been done. */}
+          <button
+            type="button"
+            className="dis-record"
+            onClick={() => setRecording(true)}
+          >
+            <span className="dis-record__icon" aria-hidden="true">
+              <Video size={19} strokeWidth={1.9} />
+            </span>
+            <span className="dis-record__body">
+              <span className="dis-record__title">Record your damage</span>
+              <span className="dis-record__sub">
+                Walk each room and say what happened out loud — where the water
+                reached, what it ruined, what was already broken. Your voice
+                becomes the record, and we price it against what you owned.
+              </span>
+              <span className="dis-record__meta">
+                2 of 6 rooms still need a post-storm pass
+              </span>
+            </span>
+          </button>
 
           <div className="dis-stats">
             <div className="dis-stat dis-stat--hi">
@@ -121,22 +147,10 @@ export function CasitaDisaster({
           </div>
 
           <section className="dis-card">
-            <h3>Room walkthroughs</h3>
+            <h3>Other evidence</h3>
             <p className="dis-card__sub">
-              Film a slow pan — we grab a frame of each damaged item.
+              What strengthens a claim beyond your own footage.
             </p>
-            <div className="dis-act">
-              <span className="dis-act__icon" aria-hidden="true">
-                <Video size={16} strokeWidth={1.9} />
-              </span>
-              <span>
-                <b>Walk the next room</b>
-                <em>2 of 6 rooms still need a post-storm pass</em>
-              </span>
-              <button type="button" onClick={() => setRecording(true)}>
-                Record
-              </button>
-            </div>
             <div className="dis-act">
               <span className="dis-act__icon" aria-hidden="true">
                 <Wrench size={16} strokeWidth={1.9} />
