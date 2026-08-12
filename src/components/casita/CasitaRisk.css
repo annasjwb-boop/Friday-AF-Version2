@@ -196,10 +196,9 @@
 }
 
 .risk-cap__from {
-  font-size: 30px;
-  font-weight: 600;
-  color: rgb(255 255 255 / 40%);
-  text-decoration: line-through;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgb(255 255 255 / 55%);
 }
 
 .risk-cap__arrow {
@@ -218,4 +217,40 @@
   font-size: 12.5px;
   line-height: 1.55;
   color: rgb(255 255 255 / 62%);
+}
+
+/* --- What you can act on -------------------------------------------------------
+ * Replaces the score projection. The count leads; the breakdown says what kind
+ * of action each group needs.
+ * ------------------------------------------------------------------------------ */
+
+.risk-cap__list {
+  margin-top: 12px;
+  list-style: none;
+}
+
+.risk-cap__list li {
+  padding: 7px 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 72%);
+  border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+.risk-cap__list li:first-child {
+  border-top: none;
+}
+
+.risk-cap__list b {
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Nothing to do here — dimmed so the actionable lines lead. */
+.risk-cap__list li.is-done {
+  color: rgb(255 255 255 / 45%);
+}
+
+.risk-cap__list li.is-done b {
+  color: rgb(255 255 255 / 70%);
 }

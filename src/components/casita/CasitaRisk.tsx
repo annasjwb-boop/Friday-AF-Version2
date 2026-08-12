@@ -4,8 +4,6 @@ import { SlidersHorizontal } from "lucide-react";
 import {
   RISK_PERILS,
   byUncovered,
-  perilPoints,
-  totalScore,
   type RiskPeril,
 } from "../../data/risks";
 import { RiskRow } from "./RiskRow";
@@ -26,20 +24,19 @@ export function CasitaRisk() {
   /* Lifted out of the sheet so an edit isn't thrown away on close. */
   const [fields, setFields] = useState(allDefaults);
 
-  const score = totalScore(perils);
   /* Sorted by what each leaves with the household, so the list opens on the
      worst rather than on whatever order the data happens to be in. */
   const ordered = useMemo(() => [...perils].sort(byUncovered), [perils]);
 
-  const uninsured = useMemo(
-    () => perils.filter((p) => p.status === "uninsured"),
-    [perils],
+  /* Split by what the person can actually do, not by score contribution:
+     buying cover, changing terms on cover they hold, or nothing to do. */
+  const buyable = ordered.filter(
+    (p) => p.status === "uninsured" && p.severity > 0,
   );
-  const uninsuredPoints = uninsured.reduce((n, p) => n + perilPoints(p), 0);
-  /* What the score would be with the uninsured perils covered — the ceiling
-     on what buying coverage can do, and the honest limit of this screen's
-     advice. */
-  const floor = score - uninsuredPoints;
+  const tunable = ordered.filter((p) => p.status === "partial");
+  const settled = ordered.filter((p) => p.status === "covered");
+  const negligible = ordered.filter((p) => p.severity === 0);
+
 
   return (
     <div className="casita-risk">
@@ -70,21 +67,39 @@ export function CasitaRisk() {
         ))}
       </div>
 
+      {/* Counts what the person can act on rather than projecting a score.
+          A risk score measures the hazard, which buying coverage does not
+          change — so a card saying "63 → 17 if you closed every gap" was
+          moving a number that would not have moved. */}
       <section className="risk-cap">
-        <p className="risk-cap__label">
-          Your risk score if you closed every uninsured gap
-        </p>
+        <p className="risk-cap__label">What you can do something about</p>
         <p className="risk-cap__nums">
-          <span className="risk-cap__from">{score}</span>
-          <span className="risk-cap__arrow">→</span>
-          <span className="risk-cap__to">{floor}</span>
+          <span className="risk-cap__to">{buyable.length + tunable.length}</span>
+          <span className="risk-cap__from">of {perils.length} risks</span>
         </p>
-        <p className="risk-cap__note">
-          {floor} is the floor coverage alone can reach. What's left sits inside
-          perils you already have — the named-storm deductible and rebuild cost
-          above your dwelling limit — so closing it means changing terms rather
-          than buying another policy.
-        </p>
+        <ul className="risk-cap__list">
+          {buyable.length > 0 && (
+            <li>
+              <b>{buyable.length}</b> you could buy cover for —{" "}
+              {buyable.map((p) => p.name.split(" ")[0].toLowerCase()).join(", ")}
+            </li>
+          )}
+          {tunable.length > 0 && (
+            <li>
+              <b>{tunable.length}</b> where changing terms would close the gap
+            </li>
+          )}
+          {settled.length > 0 && (
+            <li className="is-done">
+              <b>{settled.length}</b> already covered by your policy
+            </li>
+          )}
+          {negligible.length > 0 && (
+            <li className="is-done">
+              <b>{negligible.length}</b> the hazard doesn't reach you here
+            </li>
+          )}
+        </ul>
       </section>
 
       <AnimatePresence>
