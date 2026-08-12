@@ -134,22 +134,9 @@ export function CasitaDisaster({
             </span>
           </button>
 
-          <div className="dis-stats">
-            <div className="dis-stat dis-stat--hi">
-              <span>Documented damage</span>
-              <b>{money(documented)}</b>
-              <em>Structure, contents, vehicle, exterior & extra costs</em>
-            </div>
-            <div className="dis-stat">
-              <span>Items flagged from your library</span>
-              <b>
-                {items.filter((i) => i.cond !== "ok").length}
-                <i> of {items.length}</i>
-              </b>
-              <em>Pre-disaster values already on file</em>
-            </div>
-          </div>
-
+          {/* Documented damage and the flagged-items count are hidden. The
+              items list below shows the same total building up as conditions
+              are marked, which is where the number means something. */}
           <section className="dis-card">
             <h3>Other evidence</h3>
             <p className="dis-card__sub">
