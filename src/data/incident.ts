@@ -7,7 +7,7 @@
  * emerges months later. Applications come sixth on that list — after the four
  * things that determine what they're worth.
  *
- * SAMPLE DATA. The incident, acreage, centre and distances are illustrative.
+ * SAMPLE DATA. The incident, strength, centre and distances are illustrative.
  * The programme mechanics — two separate declarations, ~60-day windows — are
  * real and are the reason the list is ordered this way.
  * ------------------------------------------------------------------------- */
@@ -30,23 +30,26 @@ export interface TimelineStep {
 }
 
 export const INCIDENT = {
-  name: "Palisades Fire",
+  name: "Hurricane Milton",
   day: "Day 1",
-  acres: "23,713 acres",
-  address: "952 Las Lomas",
-  /* Real coordinates for the Palisades area, so the map centres correctly. */
-  lat: 34.0448,
-  lng: -118.5265,
-  perimeter: "Your address sits inside the evacuation perimeter",
+  /* Category and wind rather than acreage — the measure that decides what a
+     policy pays and which deductible applies. */
+  strength: "Category 3 at landfall · 120 mph sustained",
+  address: "1200 Edwards Dr, Fort Myers",
+  perimeter: "Your address is inside the warning area",
+  /* Where the marker sits over the satellite frame, as a percentage of the
+     image, since the image is a fixed picture rather than a slippy map. */
+  markerX: 46,
+  markerY: 62,
 };
 
 export const RECOVERY_CENTRE = {
-  name: "Palisades Rec Center",
+  name: "Lee County Rec Center",
   distance: "2.3 mi",
   hours: "Open today until 7 PM",
   offers: "Documents, FEMA staff, one-on-one help",
-  lat: 34.0522,
-  lng: -118.5426,
+  markerX: 66,
+  markerY: 44,
 };
 
 export const TIMELINE: TimelineStep[] = [
@@ -65,12 +68,12 @@ export const TIMELINE: TimelineStep[] = [
       {
         kind: "note",
         title: "Tonight's roof",
-        body: "Red Cross shelter at Westwood Rec Center, pets OK. Or use your policy's loss-of-use cover for a hotel starting tonight — save every receipt.",
+        body: "Red Cross shelter at Estero High School, pets OK. Or use your policy's loss-of-use cover for a hotel starting tonight — save every receipt.",
       },
       {
         kind: "place",
         title: "Disaster Recovery Center — 2.3 mi",
-        body: "Palisades Rec Center · open until 7 PM · FEMA staff, documents, one-on-one help.",
+        body: "Lee County Rec Center · open until 7 PM · FEMA staff, documents, one-on-one help.",
       },
     ],
     cta: "I'm safe",
@@ -92,7 +95,7 @@ export const TIMELINE: TimelineStep[] = [
   {
     id: "claim",
     title: "File your insurance claim — today",
-    body: "Carriers and policy numbers are in your vault. The adjuster photographs the damage; if the home is gone, FEMA satellite assessment can verify it without a visit.",
+    body: "Carriers and policy numbers are in your vault. Wind and flood are separate claims with separate adjusters — file both if you have both policies, and keep the causes documented separately.",
     state: "next",
   },
   {

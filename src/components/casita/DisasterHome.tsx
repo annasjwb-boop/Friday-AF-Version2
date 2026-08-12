@@ -1,10 +1,8 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Map, { Layer, Marker, Source } from "react-map-gl/mapbox";
-import type { FillLayerSpecification, LineLayerSpecification } from "mapbox-gl";
+
 import { Check, ChevronRight, MapPin, Play, Siren } from "lucide-react";
-import "mapbox-gl/dist/mapbox-gl.css";
-import { MAPBOX_TOKEN } from "../campaign/FloridaMap";
+import satellite from "../../assets/incident/milton-satellite.jpg";
 import { INCIDENT, RECOVERY_CENTRE, TIMELINE } from "../../data/incident";
 import "./DisasterHome.css";
 
@@ -22,53 +20,8 @@ import "./DisasterHome.css";
  * ahead without being asked to act on all of it now.
  * ------------------------------------------------------------------------- */
 
-/** A rough perimeter around the incident, drawn as a polygon. */
-function perimeterRing(lat: number, lng: number) {
-  const points: [number, number][] = [];
-  for (let i = 0; i < 40; i += 1) {
-    const a = (i / 40) * Math.PI * 2;
-    /* Irregular on purpose — a perfect circle reads as a radius rather than a
-       fire boundary. */
-    const wobble = 0.055 + Math.sin(a * 3) * 0.012 + Math.cos(a * 5) * 0.008;
-    points.push([lng + Math.cos(a) * wobble * 1.5, lat + Math.sin(a) * wobble]);
-  }
-  points.push(points[0]);
-  return points;
-}
-
 export function DisasterHome({ onOpenDamage }: { onOpenDamage: () => void }) {
   const [done, setDone] = useState<string[]>([]);
-
-  const perimeter = useMemo(
-    () => ({
-      type: "FeatureCollection" as const,
-      features: [
-        {
-          type: "Feature" as const,
-          properties: {},
-          geometry: {
-            type: "Polygon" as const,
-            coordinates: [perimeterRing(INCIDENT.lat, INCIDENT.lng)],
-          },
-        },
-      ],
-    }),
-    [],
-  );
-
-  const fill: FillLayerSpecification = {
-    id: "fire-fill",
-    type: "fill",
-    source: "fire",
-    paint: { "fill-color": "#c0341c", "fill-opacity": 0.22 },
-  };
-
-  const edge: LineLayerSpecification = {
-    id: "fire-edge",
-    type: "line",
-    source: "fire",
-    paint: { "line-color": "#a3281a", "line-width": 2 },
-  };
 
   return (
     <div className="dh">
@@ -79,45 +32,32 @@ export function DisasterHome({ onOpenDamage }: { onOpenDamage: () => void }) {
         </p>
         <h2 className="dh__name">{INCIDENT.name}</h2>
         <p className="dh__acres">
-          {INCIDENT.acres} · {INCIDENT.perimeter}
+          {INCIDENT.strength}
         </p>
+        <p className="dh__acres">{INCIDENT.perimeter}</p>
       </header>
 
-      <section className="dh-map" aria-label={`Map of the ${INCIDENT.name}`}>
-        {MAPBOX_TOKEN ? (
-          <Map
-            mapboxAccessToken={MAPBOX_TOKEN}
-            initialViewState={{
-              latitude: INCIDENT.lat,
-              longitude: INCIDENT.lng,
-              zoom: 10.6,
-            }}
-            mapStyle="mapbox://styles/mapbox/light-v11"
-            scrollZoom={false}
-            dragRotate={false}
-            style={{ width: "100%", height: "100%" }}
-          >
-            <Source id="fire" type="geojson" data={perimeter}>
-              <Layer {...fill} />
-              <Layer {...edge} />
-            </Source>
-            <Marker longitude={INCIDENT.lng} latitude={INCIDENT.lat}>
-              <span className="dh-map__home" aria-label="Your home" />
-            </Marker>
-            <Marker
-              longitude={RECOVERY_CENTRE.lng}
-              latitude={RECOVERY_CENTRE.lat}
-            >
-              <span className="dh-map__centre" aria-label="Recovery centre">
-                D
-              </span>
-            </Marker>
-          </Map>
-        ) : (
-          <div className="dh-map__fallback">Map unavailable</div>
-        )}
+      {/* A satellite frame rather than a slippy map: the storm's structure is
+          the information, and no basemap style conveys it. Markers are placed
+          as percentages of the image, so they hold at any width. */}
+      <section className="dh-map" aria-label={`Satellite view of ${INCIDENT.name}`}>
+        <img src={satellite} alt="" className="dh-map__img" />
+        <span
+          className="dh-map__home"
+          style={{ left: `${INCIDENT.markerX}%`, top: `${INCIDENT.markerY}%` }}
+        >
+          <em>Your home</em>
+        </span>
+        <span
+          className="dh-map__centre"
+          style={{
+            left: `${RECOVERY_CENTRE.markerX}%`,
+            top: `${RECOVERY_CENTRE.markerY}%`,
+          }}
+        >
+          D
+        </span>
       </section>
-
       <button type="button" className="dh-centre">
         <span className="dh-centre__pin" aria-hidden="true">
           <MapPin size={15} strokeWidth={2} />
