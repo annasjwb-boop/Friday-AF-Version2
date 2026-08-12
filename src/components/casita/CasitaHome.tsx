@@ -81,7 +81,7 @@ const TABS: TabConfig[] = [
   },
   {
     id: "risk",
-    label: "Risk Score",
+    label: "Risk",
     left: {
       label: "Risk Score",
       value: String(riskScore.value),

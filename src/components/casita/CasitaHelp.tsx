@@ -170,7 +170,7 @@ function Chat({ context }: { context: HelpContext }) {
 /* ---------------------------------------------------------------------------
  * Tips, filtered to the screen the person is on.
  *
- * The filter opens on the screen the person came from, named — "Risk Score",
+ * The filter opens on the screen the person came from, named — "Risk",
  * "Damage" — rather than on "All". Someone who taps the lightbulb on the
  * damage view wants the tip about photographing before cleanup, not ten tips
  * of which one applies. Every other filter stays one tap away, and the count

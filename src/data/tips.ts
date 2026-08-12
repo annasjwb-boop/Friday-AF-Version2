@@ -37,7 +37,7 @@ export type TipCategory =
 /** What each screen is called, so the filter names where the tips came from. */
 export const TIP_VIEW_LABEL: Record<TipView, string> = {
   overview: "Overview",
-  risk: "Risk Score",
+  risk: "Risk",
   readiness: "Readiness",
   recovery: "Recovery",
   damage: "Damage",
