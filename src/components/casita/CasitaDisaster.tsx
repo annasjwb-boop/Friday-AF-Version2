@@ -4,7 +4,7 @@ import {
   Check,
   ChevronDown,
   FileUp,
-  Users,
+  Plus,
   Video,
   Wrench,
   X,
@@ -32,6 +32,7 @@ import {
 import { InspectorSheet } from "./InspectorSheet";
 import { SubmitSheet } from "./SubmitSheet";
 import { VideoScanStep } from "../../onboarding/steps";
+import "./RecoveryPlanBlock.css";
 import "./CasitaDisaster.css";
 
 /* ---------------------------------------------------------------------------
@@ -73,6 +74,7 @@ export function CasitaDisaster({
   const [recording, setRecording] = useState(false);
   const [findingPro, setFindingPro] = useState(false);
   const [submitting, setSubmitting] = useState<string | null>(null);
+  const [openProgram, setOpenProgram] = useState<string | null>(null);
   /* Applications are state now rather than a constant: starting a submission
      moves that row to In progress, so the list reflects what the person just
      did rather than still inviting them to do it. */
@@ -236,25 +238,85 @@ export function CasitaDisaster({
         <>
           <p className="dis__eyebrow">Recovery plan · actual damages</p>
           <h2 className="dis__title">
-            Pick the path that funds your {money(need)} recovery
+            Piece together the {money(need)} it takes to recover
           </h2>
 
-          <div className="dis-fund">
-            <div className="dis-fund__bar">
-              <motion.i
-                animate={{ width: `${Math.min(funded / need, 1) * 100}%` }}
-                transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
-              />
+          {/* Same pattern as the pre-disaster plan: the summary stays put while
+              the programmes scroll under it, so adding one shows its effect
+              where it happens. The figures are real damage rather than a
+              modelled scenario. */}
+          <div className="rp__sticky">
+            <div className="rp__cards">
+              <div className="rp-card rp-card--covered">
+                <p className="rp-card__k">Funded</p>
+                <motion.p
+                  key={funded}
+                  className="rp-card__v"
+                  initial={{ opacity: 0.4 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {money(Math.min(funded, need))}
+                </motion.p>
+                <p className="rp-card__n">
+                  {programs.filter((p) => p.added).length} programmes plus{" "}
+                  {money(SAVINGS)} of your own
+                </p>
+              </div>
+
+              <div className="rp-card rp-card--gap">
+                <p className="rp-card__k">Still open</p>
+                <motion.p
+                  key={gap}
+                  className="rp-card__v"
+                  initial={{ opacity: 0.4 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {money(gap)}
+                </motion.p>
+                <p className="rp-card__n">
+                  {gap > 0
+                    ? "No source yet — keep adding, or plan for it"
+                    : "This plan covers your documented damage"}
+                </p>
+              </div>
             </div>
-            <p className="dis-fund__cap">
-              <span>{money(Math.min(funded, need))} funded</span>
-              <span>{money(need)} needed</span>
-            </p>
-            <p className={`dis-fund__gap${gap > 0 ? "" : " is-closed"}`}>
-              {gap > 0
-                ? `${money(gap)} still to find`
-                : "This plan fully funds your recovery"}
-            </p>
+
+            <div className="rp-bar">
+              <div className="rp-bar__head">
+                <span>Funding</span>
+                <span className="rp-bar__of">{money(need)} documented</span>
+              </div>
+              <div className="rp-bar__track">
+                <motion.i
+                  className="rp-bar__seg rp-bar__seg--policy"
+                  animate={{ width: `${(SAVINGS / need) * 100}%` }}
+                  transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+                />
+                <motion.i
+                  className="rp-bar__seg rp-bar__seg--plan"
+                  animate={{
+                    width: `${(Math.min(funded - SAVINGS, need) / need) * 100}%`,
+                  }}
+                  transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+                />
+              </div>
+              <ul className="rp-bar__key">
+                <li>
+                  <span className="rp-bar__dot rp-bar__dot--policy" />
+                  Your money {money(SAVINGS)}
+                </li>
+                <li>
+                  <span className="rp-bar__dot rp-bar__dot--plan" />
+                  Programmes {money(Math.max(funded - SAVINGS, 0))}
+                </li>
+                <li>
+                  <span className="rp-bar__dot rp-bar__dot--open" />
+                  Open {money(gap)}
+                </li>
+              </ul>
+            </div>
           </div>
 
           {loanOK === null && (
@@ -275,90 +337,81 @@ export function CasitaDisaster({
             </section>
           )}
 
-          <section className="dis-card">
-            <h3>Support options</h3>
-            <p className="dis-card__sub">
-              Matched to flood damage, no flood policy, and your county's
-              declaration.
-            </p>
-            {ordered.map((p) => (
-              <article
-                className={`dis-prog${p.added ? " is-added" : ""}${
-                  p.na ? " is-na" : ""
-                }`}
-                key={p.id}
-              >
-                <div className="dis-prog__top">
-                  <span className={`dis-prog__tag is-${p.tag}`}>
-                    {TAG_LABEL[p.tag]}
-                  </span>
-                  {p.amt > 0 && (
-                    <span className="dis-prog__amt">{money(p.amt)}</span>
-                  )}
-                </div>
-                <p className="dis-prog__name">{p.name}</p>
-                <p className="dis-prog__up">{p.up}</p>
-                <p className="dis-prog__desc">{p.desc}</p>
-                {p.loan && (
-                  <p className="dis-prog__warn">
-                    A loan closes the gap on the bar above without reducing what
-                    you eventually pay.
-                  </p>
-                )}
-                {p.na ? (
-                  <button type="button" className="dis-prog__cta" disabled={!p.watch}>
-                    {p.watch ? "Notify me when it opens" : "Not available"}
-                  </button>
-                ) : (
+          <div className="rp__subhead">
+            <h3 className="rp__sub">Programmes you can use</h3>
+          </div>
+
+          <div className="rp__options">
+            {ordered.map((p) => {
+              const open = openProgram === p.id;
+              return (
+                <div
+                  className={`rp-opt${p.added ? " is-on" : ""}`}
+                  key={p.id}
+                >
                   <button
                     type="button"
-                    className={`dis-prog__cta${p.added ? " is-on" : ""}`}
-                    onClick={() => toggle(p.id)}
+                    className="rp-opt__head"
+                    aria-expanded={open}
+                    onClick={() =>
+                      p.na ? undefined : setOpenProgram(open ? null : p.id)
+                    }
                   >
-                    {p.added ? "Added to plan — remove" : "Add to plan"}
+                    <span className="rp-opt__body">
+                      <span className="rp-opt__name">
+                        {p.name}
+                        <span className={`dis-prog__tag is-${p.tag}`}>
+                          {TAG_LABEL[p.tag]}
+                        </span>
+                      </span>
+                      <span className="rp-opt__sub">{p.up}</span>
+                    </span>
+                    <span className="rp-opt__amt">
+                      {p.amt > 0 && <em>{money(p.amt)}</em>}
+                      <span className="rp-opt__icon" aria-hidden="true">
+                        {p.added ? (
+                          <Check size={15} strokeWidth={2.6} />
+                        ) : (
+                          <Plus size={15} strokeWidth={2.4} />
+                        )}
+                      </span>
+                    </span>
                   </button>
-                )}
-              </article>
-            ))}
-          </section>
 
-          <section className="dis-card">
-            <h3>Personal resources</h3>
-            <div className="dis-row">
-              <span className="dis-row__id">
-                <b>Savings / cash</b>
-                <em>Counted in your plan</em>
-              </span>
-              <span className="dis-row__amt">{money(SAVINGS)}</span>
-            </div>
-            {[
-              ["Emergency fund", "Reserves set aside for crises"],
-              ["Family support", "Gifts or loans from family"],
-              ["Credit / HELOC", "Borrow against credit or equity"],
-              ["Retirement funds", "401(k) or IRA — last resort"],
-            ].map(([name, sub]) => (
-              <div className="dis-row" key={name}>
-                <span className="dis-row__id">
-                  <b>{name}</b>
-                  <em>{sub}</em>
-                </span>
-                <span className="dis-row__amt is-empty">+</span>
-              </div>
-            ))}
-          </section>
-
-          <section className="dis-card dis-card--voad">
-            <span className="dis-act__icon" aria-hidden="true">
-              <Users size={16} strokeWidth={1.9} />
-            </span>
-            <div>
-              <b>Complex situation?</b>
-              <p>
-                No insurance and credit trouble, life-safety needs, immigration
-                questions — talk to a local advisor by video.
-              </p>
-            </div>
-          </section>
+                  <AnimatePresence initial={false}>
+                    {open && (
+                      <motion.div
+                        className="rp-opt__more"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+                      >
+                        <div className="rp-opt__inner">
+                          <p className="rp-opt__note">{p.desc}</p>
+                          {p.loan && (
+                            <p className="dis-prog__warn">
+                              A loan closes the gap on the bar above without
+                              reducing what you eventually pay.
+                            </p>
+                          )}
+                          <div className="rp-opt__acts">
+                            <button
+                              type="button"
+                              className="rp-opt__done"
+                              onClick={() => toggle(p.id)}
+                            >
+                              {p.added ? "Remove from plan" : "Add to plan"}
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
 
           <button
             type="button"
