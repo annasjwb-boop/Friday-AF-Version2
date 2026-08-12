@@ -55,7 +55,7 @@ export function CasitaRisk() {
           onClick={() => setTuneOpen(true)}
         >
           <SlidersHorizontal size={14} strokeWidth={2} aria-hidden="true" />
-          Tune
+          Tune risk
         </button>
       </div>
 
