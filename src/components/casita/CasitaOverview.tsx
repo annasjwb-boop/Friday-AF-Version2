@@ -3,11 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Gauge, ShieldCheck } from "lucide-react";
 import { readinessProgress } from "../../data/home";
 import {
-  TOTAL_LOSS_ESTIMATE,
   RISK_LABEL,
   RISK_OUT_OF_100,
-  coverageForPeril,
-  money,
   nextActionsForPeril,
 } from "./protection";
 import type { PerilId } from "./perils";
@@ -30,10 +27,8 @@ export function CasitaOverview({
   /** Tiles jump to the tab that explains them. */
   onOpen: (tab: "risk" | "readiness") => void;
 }) {
-  /* Everything below tracks the selected condition — the whole point of the
-     peril strip is that the exposure changes with it. Protected value is the
-     one constant: it's the same house whatever the weather. */
-  const cover = coverageForPeril(peril);
+  /* The action deck tracks the selected condition — the whole point of the
+     peril strip is that what you should do next changes with it. */
   const actions = nextActionsForPeril(peril);
 
   /* The black card is a deck: skip cycles to the next action for this
@@ -44,27 +39,9 @@ export function CasitaOverview({
 
   return (
     <div className="cov">
-      <div className="cov__totals">
-        <div>
-          <p className="cov__label">Total loss estimate</p>
-          <p className="cov__value">{money(TOTAL_LOSS_ESTIMATE)}</p>
-          <p className="cov__sub">Home + Personal Property</p>
-        </div>
-        <div className="cov__right">
-          <p className="cov__label">Coverage gap</p>
-          <motion.p
-            key={cover.gap}
-            className="cov__value cov__value--gap"
-            initial={{ opacity: 0.35 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.35 }}
-          >
-            {money(cover.gap)}
-          </motion.p>
-          <p className="cov__sub">{cover.note}</p>
-        </div>
-      </div>
-
+      {/* Total loss estimate and coverage gap are hidden here — both now lead
+          the Risk tab's scenario, and repeating them on the overview meant the
+          same two figures twice, one tap apart. */}
       <div className="cov__tiles">
         <button
           type="button"
