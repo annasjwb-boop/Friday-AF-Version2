@@ -34,6 +34,7 @@ export const BRANCH_LABELS: Record<string, string[]> = {
     "That's everything",
   ],
   moreDocs: ["Add another document", "That's enough for now"],
+  videoScan: ["These look right", "Edit them in my vault"],
   uploadDoc: ["document added"],
 };
 
@@ -105,6 +106,13 @@ export function edgesOf(steps: Step[], i: number): Edge[] {
           broken: labelIndex(steps, s.backTo) < 0,
         },
       ];
+    case "videoScan": {
+      const [ok, edit] = BRANCH_LABELS.videoScan;
+      return [
+        { on: ok, to: at(s.okTo), broken: labelIndex(steps, s.okTo) < 0 },
+        { on: edit, to: at(s.editTo), broken: labelIndex(steps, s.editTo) < 0 },
+      ];
+    }
     case "moreDocs": {
       const [again, done] = BRANCH_LABELS.moreDocs;
       return [
@@ -262,6 +270,8 @@ function summarise(step: Step): string {
       return "another policy, a vehicle policy, or done";
     case "uploadDoc":
       return "pick a category and type, photograph pages, see what was read";
+    case "videoScan":
+      return "pick a room, record a walkthrough, price what was found";
     case "moreDocs":
       return "another document, or done";
     case "account":

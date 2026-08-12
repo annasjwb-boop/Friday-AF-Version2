@@ -21,6 +21,7 @@ import {
   RisksStep,
   TextStep,
   UploadDocStep,
+  VideoScanStep,
 } from "./steps";
 import { useThreadScroll } from "../hooks/useThreadScroll";
 import "./OnboardingFlow.css";
@@ -377,6 +378,12 @@ function Interactive({
           options={step.options}
           other={step.other}
           onDone={(v) => onDone(v, step.branch?.[v])}
+        />
+      );
+    case "videoScan":
+      return (
+        <VideoScanStep
+          onDone={(v, edit) => onDone(v, edit ? step.editTo : step.okTo)}
         />
       );
     case "uploadDoc":

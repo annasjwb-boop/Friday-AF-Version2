@@ -9,6 +9,7 @@ import {
   Link2,
   MapPin,
   ShieldOff,
+  Video,
   Wind,
   Waves,
   Flame,
@@ -19,6 +20,8 @@ import {
   type DocCategory,
   type DocType,
 } from "../data/docTypes";
+import { SCAN_AREAS, sumAcv, sumRcv, type ScanArea } from "../data/scan";
+import { addScanned } from "../data/scanStore";
 import { NO_STORMS } from "./scripts";
 import { policyCoverages } from "../data/home";
 import { MAPBOX_TOKEN } from "../components/campaign/FloridaMap";
@@ -1169,6 +1172,224 @@ export function MoreDocsStep({
       </button>
     </div>
   );
+}
+
+/* --- Video scan -------------------------------------------------------------- */
+
+type ScanStage = "area" | "ready" | "recording" | "processing" | "results";
+
+/**
+ * Walk a room narrating a video, and get back a priced inventory.
+ *
+ * Every object comes back with two values because a claim turns on the
+ * difference: actual cash value is what a policy pays by default, replacement
+ * cost is what buying it again costs. Showing one number would hide the gap
+ * most households only discover mid-claim.
+ *
+ * The recording is a mock with a running timer rather than a camera. It says
+ * so — but the timer is real, because how long this takes is part of what's
+ * being judged.
+ */
+export function VideoScanStep({
+  onDone,
+}: {
+  onDone: (v: string, edit: boolean) => void;
+}) {
+  const [stage, setStage] = useState<ScanStage>("area");
+  const [area, setArea] = useState<ScanArea | null>(null);
+  const [seconds, setSeconds] = useState(0);
+  const [basis, setBasis] = useState<"acv" | "rcv">("rcv");
+
+  useEffect(() => {
+    if (stage !== "recording") return;
+    const t = setInterval(() => setSeconds((n) => n + 1), 1000);
+    return () => clearInterval(t);
+  }, [stage]);
+
+  useEffect(() => {
+    if (stage !== "processing") return;
+    const t = setTimeout(() => setStage("results"), 2400);
+    return () => clearTimeout(t);
+  }, [stage]);
+
+  const save = (edit: boolean) => {
+    if (!area) return;
+    addScanned(
+      area.id,
+      area.objects.map((o, i) => ({
+        id: `scan-${area.id}-${i}`,
+        name: o.name,
+        value: basis === "rcv" ? o.rcv : o.acv,
+        photo: true,
+        receipt: false,
+      })),
+    );
+    onDone(
+      `Scanned my ${area.name.toLowerCase()} — ${area.objects.length} items`,
+      edit,
+    );
+  };
+
+  if (stage === "area") {
+    return (
+      <div className="ob-opts">
+        {SCAN_AREAS.map((a) => (
+          <button
+            key={a.id}
+            type="button"
+            className="ob-opt"
+            onClick={() => {
+              setArea(a);
+              setStage("ready");
+            }}
+          >
+            <span className="ob-opt__icon" aria-hidden="true">
+              <Video size={17} strokeWidth={1.8} />
+            </span>
+            <span>
+              <span className="ob-opt__label">{a.name}</span>
+              <span className="ob-opt__sub">{a.hint}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  if (stage === "ready" && area) {
+    return (
+      <div className="ob-panel">
+        <p className="ob-scan__q">Ready to walk the {area.name.toLowerCase()}</p>
+        <p className="ob-panel__src">
+          Hold your phone up and walk slowly, saying what things are as you pass
+          them. Open cupboards and wardrobes — anything the camera doesn't see
+          isn't documented. Thirty seconds a room is usually plenty.
+        </p>
+        <p className="ob-canopy__warn">
+          Prototype — the camera doesn't open and no video is recorded.
+        </p>
+        <button
+          type="button"
+          className="ob-send"
+          onClick={() => {
+            setSeconds(0);
+            setStage("recording");
+          }}
+        >
+          Start recording
+        </button>
+        <button
+          type="button"
+          className="ob-chip ob-chip--wide"
+          onClick={() => setStage("area")}
+        >
+          Pick a different room
+        </button>
+      </div>
+    );
+  }
+
+  if (stage === "recording" && area) {
+    return (
+      <div className="ob-scan__rec">
+        <div className="ob-scan__viewfinder">
+          <span className="ob-scan__dot" aria-hidden="true" />
+          <span className="ob-scan__time">
+            {String(Math.floor(seconds / 60)).padStart(2, "0")}:
+            {String(seconds % 60).padStart(2, "0")}
+          </span>
+          <p className="ob-scan__prompt">
+            Recording {area.name.toLowerCase()} — keep talking as you go
+          </p>
+        </div>
+        <button
+          type="button"
+          className="ob-send"
+          onClick={() => setStage("processing")}
+        >
+          Stop and process
+        </button>
+      </div>
+    );
+  }
+
+  if (stage === "processing" && area) {
+    return (
+      <div className="ob-canopy__body ob-canopy__waiting">
+        <span className="ob-canopy__spin" aria-hidden="true" />
+        <p className="ob-canopy__q">Watching your video…</p>
+        <p className="ob-canopy__note">
+          Finding objects, matching what you said, and pricing each one.
+        </p>
+      </div>
+    );
+  }
+
+  if (stage === "results" && area) {
+    const total = basis === "rcv" ? sumRcv(area.objects) : sumAcv(area.objects);
+    return (
+      <div className="ob-panel">
+        <p className="ob-extract__head">
+          Found {area.objects.length} items in your {area.name.toLowerCase()}
+        </p>
+
+        {/* The choice that matters: what a policy pays by default versus what
+            replacing things actually costs. */}
+        <div className="ob-basis" role="radiogroup" aria-label="Value basis">
+          {(
+            [
+              ["acv", "Replace as is", "Worth now, depreciated"],
+              ["rcv", "Replace new", "Cost to buy again today"],
+            ] as const
+          ).map(([id, label, note]) => (
+            <button
+              key={id}
+              type="button"
+              role="radio"
+              aria-checked={basis === id}
+              className={basis === id ? "is-on" : undefined}
+              onClick={() => setBasis(id)}
+            >
+              <b>{label}</b>
+              <span>{note}</span>
+            </button>
+          ))}
+        </div>
+
+        <p className="ob-scan__total">
+          <span>{area.name} total</span>
+          <b>${total.toLocaleString()}</b>
+        </p>
+
+        <div className="ob-extract">
+          {area.objects.map((o) => (
+            <p className="ob-extract__row" key={o.name}>
+              <span>{o.name}</span>
+              <b>${(basis === "rcv" ? o.rcv : o.acv).toLocaleString()}</b>
+            </p>
+          ))}
+        </div>
+
+        <p className="ob-panel__src">
+          Saved to your vault with the video attached, so a claim starts from a
+          list instead of from memory.
+        </p>
+
+        <button type="button" className="ob-send" onClick={() => save(false)}>
+          These look right
+        </button>
+        <button
+          type="button"
+          className="ob-chip ob-chip--wide"
+          onClick={() => save(true)}
+        >
+          Edit them in my vault
+        </button>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 /* --- Account -------------------------------------------------------------- */

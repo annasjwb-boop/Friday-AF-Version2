@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { withScanned } from "../../data/scanStore";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BedDouble,
@@ -63,7 +64,12 @@ function roomValue(room: VaultRoom): number {
  */
 export function VaultBody() {
   const [documents, setDocuments] = useState<VaultDocument[]>(VAULT_DOCUMENTS);
-  const [rooms, setRooms] = useState<VaultRoom[]>(VAULT_ROOMS);
+  /* Items scanned during onboarding are merged in on mount, so someone who
+     just recorded a room arrives to find it already documented rather than
+     empty. */
+  const [rooms, setRooms] = useState<VaultRoom[]>(() =>
+    withScanned(VAULT_ROOMS),
+  );
   const [openRoomId, setOpenRoomId] = useState<string | null>(null);
   /* Onboarding hands off with ?vault=docs or ?vault=rooms, so the prepare
      flow lands on whichever half of the vault the user said they wanted

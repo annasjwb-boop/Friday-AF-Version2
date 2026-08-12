@@ -66,6 +66,8 @@ export type Step = StepBase &
   | { kind: "property" }
   /** Editable risk list. */
   | { kind: "risks" }
+  /** Narrate a video walkthrough and get back a priced inventory. */
+  | { kind: "videoScan"; editTo: string; okTo: string }
   /** Photograph a document and see what a scan pulls off it. */
   | { kind: "uploadDoc" }
   /** Another document, or done. Loops back to `againTo`. */
@@ -331,7 +333,10 @@ export const SCRIPTS: Record<string, Script> = {
         other: true,
         /* Only the documents answer needs its own path; the others share the
            existing tail into the vault. */
-        branch: { "Organize documents": "startDocs" },
+        branch: {
+          "Organize documents": "startDocs",
+          "Document my property": "startScan",
+        },
       },
       { kind: "say", text: METAPHOR_Q },
       {
@@ -361,6 +366,36 @@ export const SCRIPTS: Record<string, Script> = {
       /* --- Documents path ---------------------------------------------------
        * Reached only from the intent branch above. The goto before it ends the
        * other paths, so nothing falls into this by accident. */
+      /* --- Property scan path -----------------------------------------------
+       * Also reached only by branch. Ends on its own goto, like the documents
+       * path, so neither falls into the other. */
+      {
+        kind: "say",
+        label: "startScan",
+        text: "Best way to do this is on video. Pick a room, then walk it slowly saying what things are — I'll turn that into a priced list.",
+      },
+      { kind: "videoScan", editTo: "scanEdit", okTo: "scanOk" },
+      {
+        kind: "say",
+        label: "scanOk",
+        text: "Saved. That room is documented — you can do the rest whenever you like.",
+      },
+      {
+        kind: "goto",
+        to: "/?tab=readiness&vault=rooms",
+        label: "Open your vault",
+      },
+      {
+        kind: "say",
+        label: "scanEdit",
+        text: "I'll open the room so you can correct anything — everything I found is already in there.",
+      },
+      {
+        kind: "goto",
+        to: "/?tab=readiness&vault=rooms",
+        label: "Edit in your vault",
+      },
+
       {
         kind: "say",
         label: "startDocs",
