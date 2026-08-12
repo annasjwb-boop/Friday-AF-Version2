@@ -11,32 +11,6 @@
   padding: 4px 16px 24px;
 }
 
-.dis__tabs {
-  display: flex;
-  gap: 6px;
-  padding: 4px;
-  background: rgb(22 22 24 / 5%);
-  border-radius: 999px;
-}
-
-.dis__tab {
-  flex: 1;
-  padding: 9px 8px;
-  font: inherit;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: rgb(52 52 58 / 62%);
-  cursor: pointer;
-  background: none;
-  border: none;
-  border-radius: 999px;
-}
-
-.dis__tab.is-on {
-  color: #fff;
-  background: #16161a;
-}
-
 .dis__eyebrow {
   margin-top: 6px;
   font-size: 10.5px;

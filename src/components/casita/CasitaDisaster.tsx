@@ -45,16 +45,18 @@ import "./CasitaDisaster.css";
  * show it in the same list as grants.
  * ------------------------------------------------------------------------- */
 
-type Section = "damage" | "plan" | "apply";
+export type DisasterSection = "damage" | "plan" | "apply";
 
-const SECTIONS: [Section, string][] = [
-  ["damage", "Damage"],
-  ["plan", "Recovery plan"],
-  ["apply", "Apply & track"],
-];
-
-export function CasitaDisaster({ onExit }: { onExit: () => void }) {
-  const [section, setSection] = useState<Section>("damage");
+/** Which section shows is decided by the main tab strip, not by this view. */
+export function CasitaDisaster({
+  section,
+  onExit,
+  onSection,
+}: {
+  section: DisasterSection;
+  onExit: () => void;
+  onSection: (s: DisasterSection) => void;
+}) {
   const [items, setItems] = useState<DamageItem[]>(DAMAGE_ITEMS);
   const [cats] = useState(DAMAGE_CATEGORIES);
   const [programs, setPrograms] = useState<Program[]>(PROGRAMS);
@@ -87,21 +89,6 @@ export function CasitaDisaster({ onExit }: { onExit: () => void }) {
 
   return (
     <div className="dis">
-      <div className="dis__tabs" role="tablist">
-        {SECTIONS.map(([id, label]) => (
-          <button
-            key={id}
-            type="button"
-            role="tab"
-            aria-selected={section === id}
-            className={`dis__tab${section === id ? " is-on" : ""}`}
-            onClick={() => setSection(id)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
       {section === "damage" && (
         <>
           <p className="dis__eyebrow">Damage documentation · Hurricane Elena</p>
@@ -222,7 +209,7 @@ export function CasitaDisaster({ onExit }: { onExit: () => void }) {
           <button
             type="button"
             className="dis-next"
-            onClick={() => setSection("plan")}
+            onClick={() => onSection("plan")}
           >
             Build my recovery plan
           </button>
@@ -360,7 +347,7 @@ export function CasitaDisaster({ onExit }: { onExit: () => void }) {
           <button
             type="button"
             className="dis-next"
-            onClick={() => setSection("apply")}
+            onClick={() => onSection("apply")}
           >
             Looks right — prepare my applications
           </button>

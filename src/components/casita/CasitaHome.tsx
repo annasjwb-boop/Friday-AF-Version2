@@ -41,7 +41,17 @@ function loadMetaphor(): MetaphorId {
   return "sanctuary";
 }
 
-type TabId = "overview" | "risk" | "readiness" | "recovery";
+type TabId =
+  | "overview"
+  | "risk"
+  | "readiness"
+  | "recovery"
+  /* Disaster mode replaces the three preparedness tabs with these. Overview
+     stays in both modes — the house and its numbers matter more after a
+     disaster, not less. */
+  | "damage"
+  | "plan"
+  | "apply";
 
 type TabStat = {
   label: string;
@@ -156,6 +166,15 @@ export function CasitaHome() {
   };
 
   const [params] = useSearchParams();
+  /* One tab strip, two sets. Nesting disaster's sections inside the recovery
+     tab put two rows of tabs on screen at once. */
+  const DISASTER_TABS: { id: TabId; label: string }[] = [
+    { id: "overview", label: "Overview" },
+    { id: "damage", label: "Damage" },
+    { id: "plan", label: "Recovery" },
+    { id: "apply", label: "Apply" },
+  ];
+
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const t = params.get("tab");
     return TABS.some((x) => x.id === t) ? (t as TabId) : "overview";
@@ -222,7 +241,15 @@ export function CasitaHome() {
           <div className="casita__actions">
             {/* Help follows whichever tab is open, so the explainers and
                 questions match what's on screen. */}
-            <CasitaHelp context={activeTab} />
+            <CasitaHelp
+              context={
+                activeTab === "damage" ||
+                activeTab === "plan" ||
+                activeTab === "apply"
+                  ? "recovery"
+                  : activeTab
+              }
+            />
             <button type="button" className="casita__avatar" aria-label="Profile">
               <span aria-hidden="true">JB</span>
             </button>
@@ -232,7 +259,7 @@ export function CasitaHome() {
 
       <div className="casita__sheet">
         <nav className="casita__tabs" aria-label="Home views">
-          {TABS.map((t) => (
+          {(disasterMode ? DISASTER_TABS : TABS).map((t) => (
             <button
               key={t.id}
               type="button"
@@ -245,24 +272,36 @@ export function CasitaHome() {
           ))}
         </nav>
 
-        {activeTab === "risk" ? (
+        {activeTab === "damage" ||
+        activeTab === "plan" ||
+        activeTab === "apply" ? (
+          <CasitaDisaster
+            section={activeTab}
+            onSection={setActiveTab}
+            onExit={() => {
+              setDisasterMode(false);
+              setActiveTab("overview");
+            }}
+          />
+        ) : activeTab === "risk" ? (
           <CasitaRisk />
         ) : activeTab === "readiness" ? (
           <CasitaReadiness />
         ) : activeTab === "recovery" ? (
-          disasterMode ? (
-            <CasitaDisaster onExit={() => setDisasterMode(false)} />
-          ) : (
-            <>
-              <CasitaRecovery
-                metaphor={metaphor}
-                onHomeTap={() => setPickerOpen(true)}
-              />
-              {/* Sits over the recovery view rather than in it: the switch is
-                  a mode change, not another item on the plan. */}
-              <CasitaDisasterPrompt onSwitch={() => setDisasterMode(true)} />
-            </>
-          )
+          <>
+            <CasitaRecovery
+              metaphor={metaphor}
+              onHomeTap={() => setPickerOpen(true)}
+            />
+            {/* Sits over the recovery view rather than in it: the switch is a
+                mode change, not another item on the plan. */}
+            <CasitaDisasterPrompt
+              onSwitch={() => {
+                setDisasterMode(true);
+                setActiveTab("damage");
+              }}
+            />
+          </>
         ) : (
           <>
         <div
