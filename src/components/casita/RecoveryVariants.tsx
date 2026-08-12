@@ -41,6 +41,7 @@ import "./RecoveryVariants.css";
  * ------------------------------------------------------------------------- */
 
 const VARIANTS = [
+  { id: "plan", label: "Plan" },
   { id: "receipt", label: "Receipt" },
   { id: "model", label: "Model it" },
   { id: "deck", label: "One at a time" },
@@ -53,7 +54,7 @@ const VARIANTS = [
 type VariantId = (typeof VARIANTS)[number]["id"];
 
 export function RecoveryVariants() {
-  const [variant, setVariant] = useState<VariantId>("receipt");
+  const [variant, setVariant] = useState<VariantId>("plan");
   const [chosen, setChosen] = useState<string[]>([
     "insurance",
     "ihp",
@@ -61,6 +62,12 @@ export function RecoveryVariants() {
     "irs",
   ]);
   const [searching, setSearching] = useState(false);
+  /* Tuned amounts live here rather than in the Plan variant, so a figure
+     adjusted there is the figure every other view reports. */
+  const [amounts, setAmounts] = useState<Record<string, number>>({});
+  const amountOf = (p: Program) => amounts[p.id] ?? p.amount;
+  const setAmount = (id: string, value: number) =>
+    setAmounts((all) => ({ ...all, [id]: value }));
 
   const toggle = (id: string) =>
     setChosen((all) =>
@@ -75,10 +82,18 @@ export function RecoveryVariants() {
     [chosen],
   );
 
-  const funded = selected.reduce((n, p) => n + p.amount, 0) + OWN_MONEY;
+  const funded = selected.reduce((n, p) => n + amountOf(p), 0) + OWN_MONEY;
   const open = Math.max(DOCUMENTED_DAMAGE - funded, 0);
 
-  const shared = { chosen, toggle, selected, funded, open };
+  const shared = {
+    chosen,
+    toggle,
+    selected,
+    funded,
+    open,
+    amountOf,
+    setAmount,
+  };
 
   return (
     <div className="rv">
@@ -109,6 +124,7 @@ export function RecoveryVariants() {
         Find another programme
       </button>
 
+      {variant === "plan" && <PlanTune {...shared} />}
       {variant === "receipt" && <Receipt {...shared} />}
       {variant === "model" && <ModelIt {...shared} />}
       {variant === "deck" && <Deck {...shared} />}
@@ -136,6 +152,220 @@ interface Shared {
   selected: Program[];
   funded: number;
   open: number;
+  /** The tuned figure for a programme, or its default. */
+  amountOf: (p: Program) => number;
+  setAmount: (id: string, value: number) => void;
+}
+
+/* --- 1. Plan -----------------------------------------------------------------
+ * The working view, and the default: summary pinned above, programmes below,
+ * each opening to a slider that moves the bar as it moves.
+ *
+ * The other six read the amounts set here rather than keeping their own, so a
+ * figure tuned once is the figure everywhere.
+ * -------------------------------------------------------------------------- */
+
+function PlanTune({
+  chosen,
+  toggle,
+  selected,
+  funded,
+  open,
+  amountOf,
+  setAmount,
+}: Shared) {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const list = PROGRAMS.filter((p) => !p.blocked);
+
+  return (
+    <>
+      <div className="rp__sticky">
+        <div className="rp__cards">
+          <div className="rp-card rp-card--covered">
+            <p className="rp-card__k">Funded</p>
+            <motion.p
+              key={funded}
+              className="rp-card__v"
+              initial={{ opacity: 0.4 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {money(Math.min(funded, DOCUMENTED_DAMAGE))}
+            </motion.p>
+            <p className="rp-card__n">
+              {selected.length} programmes plus {money(OWN_MONEY)} of your own
+            </p>
+          </div>
+
+          <div className="rp-card rp-card--gap">
+            <p className="rp-card__k">Still open</p>
+            <motion.p
+              key={open}
+              className="rp-card__v"
+              initial={{ opacity: 0.4 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {money(open)}
+            </motion.p>
+            <p className="rp-card__n">
+              {open > 0 ? "No source yet" : "Covered on paper"}
+            </p>
+          </div>
+        </div>
+
+        <div className="rp-bar">
+          <div className="rp-bar__head">
+            <span>Funding</span>
+            <span className="rp-bar__of">
+              {money(DOCUMENTED_DAMAGE)} documented
+            </span>
+          </div>
+          <div className="rp-bar__track">
+            <motion.i
+              className="rp-bar__seg rp-bar__seg--policy"
+              animate={{ width: `${(OWN_MONEY / DOCUMENTED_DAMAGE) * 100}%` }}
+              transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+            />
+            <motion.i
+              className="rp-bar__seg rp-bar__seg--plan"
+              animate={{
+                width: `${
+                  (Math.min(funded - OWN_MONEY, DOCUMENTED_DAMAGE) /
+                    DOCUMENTED_DAMAGE) *
+                  100
+                }%`,
+              }}
+              transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+            />
+          </div>
+          <ul className="rp-bar__key">
+            <li>
+              <span className="rp-bar__dot rp-bar__dot--policy" />
+              Your money {money(OWN_MONEY)}
+            </li>
+            <li>
+              <span className="rp-bar__dot rp-bar__dot--plan" />
+              Programmes {money(Math.max(funded - OWN_MONEY, 0))}
+            </li>
+            <li>
+              <span className="rp-bar__dot rp-bar__dot--open" />
+              Open {money(open)}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="rp__subhead">
+        <h3 className="rp__sub">Programmes you can use</h3>
+      </div>
+
+      <div className="rp__options">
+        {list.map((p) => {
+          const on = chosen.includes(p.id);
+          const isOpen = openId === p.id;
+          const max = maxFor(p);
+
+          return (
+            <div className={`rp-opt${on ? " is-on" : ""}`} key={p.id}>
+              <button
+                type="button"
+                className="rp-opt__head"
+                aria-expanded={isOpen}
+                onClick={() => setOpenId(isOpen ? null : p.id)}
+              >
+                <span className="rp-opt__body">
+                  <span className="rp-opt__name">
+                    {p.name}
+                    <span className={`rv-tag is-${p.kind}`}>
+                      {MONEY_LABEL[p.kind]}
+                    </span>
+                  </span>
+                  <span className="rp-opt__sub">
+                    {p.cap} · {p.speed}
+                  </span>
+                </span>
+                <span className="rp-opt__amt">
+                  {on && <em>{money(amountOf(p))}</em>}
+                  <span className="rp-opt__icon" aria-hidden="true">
+                    {on ? (
+                      <Check size={15} strokeWidth={2.6} />
+                    ) : (
+                      <Plus size={15} strokeWidth={2.4} />
+                    )}
+                  </span>
+                </span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    className="rp-opt__more"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+                  >
+                    <div className="rp-opt__inner">
+                      <p className="rv-detail">{p.detail}</p>
+
+                      <p className="rv-k">Who's eligible</p>
+                      <p className="rv-detail">{p.eligibility}</p>
+
+                      <p className="rv-k">How you can use it</p>
+                      <p className="rv-detail">{p.howToUse}</p>
+
+                      {max > 0 && (
+                        <label className="rv-ctl rv-ctl--inline">
+                          <span>
+                            Count on <b>{money(amountOf(p))}</b>
+                          </span>
+                          <input
+                            type="range"
+                            min={0}
+                            max={max}
+                            step={Math.max(Math.round(max / 40), 100)}
+                            value={amountOf(p)}
+                            onChange={(e) =>
+                              setAmount(p.id, Number(e.target.value))
+                            }
+                          />
+                          <em>
+                            {p.kind === "grant"
+                              ? "Typical awards sit well below the cap — the slider starts there."
+                              : p.kind === "loan"
+                                ? "Borrowed, and repaid with interest."
+                                : "Adjust to what you expect to receive."}
+                          </em>
+                        </label>
+                      )}
+
+                      <div className="rp-opt__acts">
+                        <button
+                          type="button"
+                          className="rp-opt__done"
+                          onClick={() => toggle(p.id)}
+                        >
+                          {on ? "Remove from plan" : "Add to plan"}
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+/** Upper bound for a programme's slider, read from its stated cap. */
+function maxFor(p: Program): number {
+  const digits = p.cap.replace(/[^0-9]/g, "");
+  if (digits) return Number(digits);
+  return p.amount > 0 ? Math.round(p.amount * 2) : 0;
 }
 
 /* --- 1. Receipt --------------------------------------------------------------
@@ -143,7 +373,7 @@ interface Shared {
  * that makes an unfunded balance impossible to miss.
  * -------------------------------------------------------------------------- */
 
-function Receipt({ selected, funded, open, toggle, chosen }: Shared) {
+function Receipt({ selected, funded, open, toggle, chosen, amountOf }: Shared) {
   const unchosen = PROGRAMS.filter((p) => !chosen.includes(p.id) && !p.blocked);
 
   return (
@@ -169,7 +399,7 @@ function Receipt({ selected, funded, open, toggle, chosen }: Shared) {
             {p.name}
             <em>{MONEY_LABEL[p.kind]}</em>
           </span>
-          <b>−{money(p.amount)}</b>
+          <b>−{money(amountOf(p))}</b>
         </button>
       ))}
 
@@ -461,7 +691,7 @@ function Deck({ chosen, toggle }: Shared) {
  * one view that makes duplication of benefits visible.
  * -------------------------------------------------------------------------- */
 
-function Waterfall({ selected, open }: Shared) {
+function Waterfall({ selected, open, amountOf }: Shared) {
   let running = OWN_MONEY;
 
   return (
@@ -482,7 +712,7 @@ function Waterfall({ selected, open }: Shared) {
       </div>
 
       {selected.map((p, n) => {
-        running += p.amount;
+        running += amountOf(p);
         return (
           <div className="rv-fall__step" key={p.id}>
             <span className="rv-fall__n">{n + 1}</span>
@@ -492,7 +722,7 @@ function Waterfall({ selected, open }: Shared) {
                 {p.speed} · running total {money(running)}
               </em>
             </div>
-            <span className="rv-fall__amt">{money(p.amount)}</span>
+            <span className="rv-fall__amt">{money(amountOf(p))}</span>
           </div>
         );
       })}
@@ -572,7 +802,7 @@ const BANDS: [string, string[]][] = [
   ["Later", ["6–10 weeks if you amend", "12–18 months", "Unknown"]],
 ];
 
-function Timeline({ selected }: Shared) {
+function Timeline({ selected, amountOf }: Shared) {
   return (
     <section className="rv-when">
       <p className="rv-when__intro">
@@ -582,7 +812,7 @@ function Timeline({ selected }: Shared) {
 
       {BANDS.map(([band, speeds]) => {
         const inBand = selected.filter((p) => speeds.includes(p.speed));
-        const total = inBand.reduce((n, p) => n + p.amount, 0);
+        const total = inBand.reduce((n, p) => n + amountOf(p), 0);
         return (
           <div className="rv-when__band" key={band}>
             <div className="rv-when__head">
@@ -597,7 +827,7 @@ function Timeline({ selected }: Shared) {
               inBand.map((p) => (
                 <p className="rv-when__row" key={p.id}>
                   <span>{p.name}</span>
-                  <b>{money(p.amount)}</b>
+                  <b>{money(amountOf(p))}</b>
                 </p>
               ))
             )}
@@ -622,14 +852,14 @@ const NEED_COSTS: [Need, number][] = [
   ["living", 14_850],
 ];
 
-function ByNeed({ selected, toggle, chosen }: Shared) {
+function ByNeed({ selected, toggle, chosen, amountOf }: Shared) {
   return (
     <section className="rv-needs-view">
       {NEED_COSTS.map(([need, cost]) => {
         const covering = selected.filter(
           (p) => p.needs.includes(need) || p.needs.includes("any"),
         );
-        const got = covering.reduce((n, p) => n + p.amount, 0);
+        const got = covering.reduce((n, p) => n + amountOf(p), 0);
         const pct = Math.min(Math.round((got / cost) * 100), 100);
 
         return (

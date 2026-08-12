@@ -796,3 +796,56 @@
   line-height: 1.6;
   color: rgb(52 52 58 / 60%);
 }
+
+/* --- Plan variant ------------------------------------------------------------- */
+
+.rv-tag {
+  padding: 2px 8px;
+  margin-left: 7px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+  border-radius: 999px;
+}
+
+.rv-tag.is-grant { color: #1d6b3f; background: rgb(45 160 90 / 15%); }
+.rv-tag.is-loan { color: #8a6412; background: rgb(217 155 50 / 20%); }
+.rv-tag.is-tax { color: #3c4149; background: rgb(22 22 24 / 8%); }
+.rv-tag.is-relief { color: #0a5fbf; background: rgb(10 132 255 / 12%); }
+
+.rv-k {
+  margin-top: 12px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 50%);
+}
+
+.rv-detail {
+  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #3c4149;
+}
+
+/* The slider is the point of opening a programme, so it sits apart from the
+   prose above it. */
+.rv-ctl--inline {
+  display: block;
+  padding: 12px 13px;
+  margin-top: 14px;
+  background: #f7f8f9;
+  border-radius: 11px;
+}
+
+.rv-ctl--inline em {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 58%);
+}
