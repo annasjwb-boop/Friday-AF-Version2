@@ -1,0 +1,416 @@
+/* ---------------------------------------------------------------------------
+ * Disaster mode home. The source used navy and gold on cream; this keeps the
+ * app's own palette, with the incident banner in the deep coral already used
+ * for loss elsewhere.
+ * ------------------------------------------------------------------------- */
+
+.dh {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 0 24px;
+}
+
+/* --- Incident banner --------------------------------------------------------- */
+
+.dh__banner {
+  padding: 16px;
+  color: #fff;
+  background: #a3281a;
+}
+
+.dh__mode {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 78%);
+}
+
+.dh__pulse {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  animation: dh-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes dh-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.dh__name {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #fff;
+}
+
+.dh__acres {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: rgb(255 255 255 / 72%);
+}
+
+/* --- Map ---------------------------------------------------------------------- */
+
+.dh-map {
+  height: 210px;
+  margin: 0 16px;
+  overflow: hidden;
+  background: #eceef0;
+  border: 1px solid rgb(22 22 24 / 9%);
+  border-radius: 14px;
+}
+
+.dh-map__fallback {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  font-size: 12px;
+  color: rgb(52 52 58 / 50%);
+}
+
+.dh-map__home {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: #16161a;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgb(22 22 24 / 45%);
+}
+
+.dh-map__centre {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #16161a;
+  background: #d99b32;
+  border: 2px solid #fff;
+  border-radius: 6px;
+}
+
+/* --- Recovery centre ----------------------------------------------------------- */
+
+.dh-centre {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  margin: 0 16px;
+  padding: 13px 14px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 10%);
+  border-radius: 13px;
+}
+
+.dh-centre__pin {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: #a3281a;
+  background: rgb(192 52 28 / 10%);
+  border-radius: 9px;
+}
+
+.dh-centre__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.dh-centre__title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.dh-centre__sub {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 60%);
+}
+
+.dh-centre svg:last-child {
+  flex: none;
+  color: rgb(52 52 58 / 40%);
+}
+
+/* --- Timeline -------------------------------------------------------------------- */
+
+.dh__heading {
+  padding: 0 16px;
+  margin-top: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 55%);
+}
+
+.dh-time {
+  padding: 0 16px;
+  list-style: none;
+}
+
+.dh-step {
+  position: relative;
+  display: flex;
+  gap: 13px;
+  padding-bottom: 20px;
+}
+
+/* The rail runs between the dots, stopping at the last one. */
+.dh-step:not(:last-child)::before {
+  position: absolute;
+  top: 20px;
+  bottom: 0;
+  left: 7px;
+  width: 2px;
+  content: "";
+  background: rgb(22 22 24 / 9%);
+}
+
+.dh-step__dot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  color: #fff;
+  background: rgb(22 22 24 / 14%);
+  border-radius: 50%;
+}
+
+.dh-step.is-now .dh-step__dot {
+  background: #c0341c;
+}
+
+.dh-step.is-done .dh-step__dot {
+  background: #2f7d55;
+}
+
+.dh-step__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.dh-step__title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #16161a;
+}
+
+/* Later steps stay readable but recede — visible without asking for action. */
+.dh-step.is-later .dh-step__title,
+.dh-step.is-next .dh-step__title {
+  font-size: 14px;
+  color: rgb(22 22 24 / 78%);
+}
+
+.dh-step.is-later .dh-step__text {
+  color: rgb(52 52 58 / 48%);
+}
+
+.dh-step__text {
+  margin-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: rgb(52 52 58 / 66%);
+}
+
+.dh-step__more {
+  overflow: hidden;
+}
+
+.dh-step__inner {
+  padding-top: 11px;
+}
+
+/* --- Video ------------------------------------------------------------------------ */
+
+.dh-video {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 10%);
+  border-radius: 12px;
+}
+
+.dh-video__thumb {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 74px;
+  height: 52px;
+  color: #fff;
+  background: linear-gradient(150deg, #1c2740, #3a4a6d);
+  border-radius: 9px;
+}
+
+.dh-video__thumb em {
+  position: absolute;
+  right: 5px;
+  bottom: 4px;
+  font-size: 9.5px;
+  font-style: normal;
+  font-weight: 600;
+  color: rgb(255 255 255 / 85%);
+}
+
+.dh-video__k {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 52%);
+}
+
+.dh-video__t {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #16161a;
+}
+
+/* --- Actions ---------------------------------------------------------------------- */
+
+.dh-act {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px 12px;
+  margin-top: 8px;
+  border-radius: 11px;
+}
+
+.dh-act b {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.dh-act em {
+  display: block;
+  margin-top: 3px;
+  font-size: 11.5px;
+  font-style: normal;
+  line-height: 1.5;
+}
+
+.dh-act__icon {
+  flex: none;
+  margin-top: 1px;
+}
+
+/* An active evacuation order is the one thing on this screen that should
+   interrupt. */
+.dh-act--alert {
+  color: #a3281a;
+  background: rgb(192 52 28 / 9%);
+  border: 1px solid rgb(192 52 28 / 26%);
+}
+
+.dh-act--alert em {
+  color: rgb(122 44 26 / 88%);
+}
+
+.dh-act--note,
+.dh-act--place {
+  color: #16161a;
+  background: #f7f8f9;
+}
+
+.dh-act--note em,
+.dh-act--place em {
+  color: rgb(52 52 58 / 62%);
+}
+
+.dh-act--note .dh-act__icon,
+.dh-act--place .dh-act__icon {
+  color: rgb(52 52 58 / 45%);
+}
+
+/* --- Step actions ------------------------------------------------------------------ */
+
+.dh-step__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dh-step__cta {
+  padding: 11px 20px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: #1d6b3f;
+  border: none;
+  border-radius: 999px;
+}
+
+.dh-step__alt {
+  padding: 11px 16px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3c4149;
+  cursor: pointer;
+  background: none;
+  border: 1px solid rgb(22 22 24 / 14%);
+  border-radius: 999px;
+}
+
+.dh-step__link {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 8px 0 0;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #0a84ff;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dh__pulse {
+    animation: none;
+  }
+}

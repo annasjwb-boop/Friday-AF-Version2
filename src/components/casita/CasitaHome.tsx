@@ -18,6 +18,7 @@ import { getTurntableFrames } from "./turntableFrames";
 import { CasitaHomePicker } from "./CasitaHomePicker";
 import { CasitaRecovery } from "./CasitaRecovery";
 import { CasitaDisaster } from "./CasitaDisaster";
+import { DisasterHome } from "./DisasterHome";
 import { CasitaDisasterPrompt } from "./CasitaDisasterPrompt";
 import { CasitaHelp } from "./CasitaHelp";
 import { CasitaOverview } from "./CasitaOverview";
@@ -170,7 +171,7 @@ export function CasitaHome() {
   /* One tab strip, two sets. Nesting disaster's sections inside the recovery
      tab put two rows of tabs on screen at once. */
   const DISASTER_TABS: { id: TabId; label: string }[] = [
-    { id: "overview", label: "Overview" },
+    { id: "overview", label: "Home" },
     { id: "damage", label: "Damage" },
     { id: "plan", label: "Recovery" },
     { id: "apply", label: "Apply" },
@@ -278,7 +279,9 @@ export function CasitaHome() {
           ))}
         </nav>
 
-        {activeTab === "damage" ||
+        {disasterMode && activeTab === "overview" ? (
+          <DisasterHome onOpenDamage={() => setActiveTab("damage")} />
+        ) : activeTab === "damage" ||
         activeTab === "plan" ||
         activeTab === "apply" ? (
           <CasitaDisaster
