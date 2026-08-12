@@ -439,7 +439,7 @@ export function CasitaDisaster({
                         <p>{ap.docs}</p>
                         {ap.status === "ready" && (
                           <button type="button" className="dis-prog__cta is-on">
-                            Review &amp; sign
+                            Review &amp; submit
                           </button>
                         )}
                       </motion.div>

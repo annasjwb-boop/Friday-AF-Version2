@@ -246,7 +246,7 @@ export type AppStatus = "sub" | "ready" | "draft" | "watch" | "action";
 
 export const APP_STATUS_LABEL: Record<AppStatus, string> = {
   sub: "Submitted",
-  ready: "Ready to sign",
+  ready: "Ready to submit",
   draft: "Drafted",
   watch: "Watching",
   action: "Action needed",
@@ -264,8 +264,8 @@ export const APPLICATIONS: Application[] = [
   {
     id: "ihp",
     name: "FEMA IHP + ONA",
-    status: "sub",
-    line: "Submitted · inspector scheduled Jul 9",
+    status: "ready",
+    line: "Package ready · review and submit",
     docs: "Declaration page, damage photos ×48, repair estimate attached",
   },
   {
