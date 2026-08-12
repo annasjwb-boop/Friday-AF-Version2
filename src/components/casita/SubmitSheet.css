@@ -1,0 +1,286 @@
+/* ---------------------------------------------------------------------------
+ * Submission sheet. Same shell as the other full-screen tasks, with the video
+ * treated as the subject rather than decoration.
+ * ------------------------------------------------------------------------- */
+
+.sub {
+  position: absolute;
+  inset: 0;
+  z-index: 47;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  color: #111214;
+  background: #fff;
+}
+
+.sub__top {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 6px 18px 14px;
+}
+
+.sub__kicker {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(52 52 58 / 52%);
+}
+
+.sub__title {
+  margin-top: 3px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #16161a;
+}
+
+.sub__close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  color: #3c4149;
+  cursor: pointer;
+  background: rgb(22 22 24 / 5%);
+  border: none;
+  border-radius: 50%;
+}
+
+.sub__scroll {
+  flex: 1;
+  min-height: 0;
+  padding: 0 18px calc(24px + env(safe-area-inset-bottom, 0px));
+  overflow-y: auto;
+}
+
+.sub__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sub__note {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 13px 14px;
+  margin-bottom: 14px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #0a4d8c;
+  background: rgb(10 132 255 / 8%);
+  border: 1px solid rgb(10 132 255 / 24%);
+  border-radius: 11px;
+}
+
+.sub__note svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.sub__note b {
+  font-weight: 600;
+}
+
+/* --- Video stage ---------------------------------------------------------------- */
+
+.sub__stage {
+  position: relative;
+  padding: 3px;
+  border-radius: 15px;
+}
+
+/* The glow is a halo behind the frame, not a wash across the footage — the
+   video has to stay readable, since being able to see the filing is the point. */
+.sub__glow {
+  position: absolute;
+  inset: -6px;
+  background: linear-gradient(
+    120deg,
+    #0a84ff,
+    #7a5ea8 35%,
+    #0ad0ff 65%,
+    #0a84ff
+  );
+  background-size: 300% 300%;
+  border-radius: 20px;
+  filter: blur(9px);
+  opacity: 0.55;
+  animation: sub-hue 6s ease-in-out infinite;
+}
+
+@keyframes sub-hue {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.sub__video {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  border-radius: 13px;
+}
+
+/* A single pass down the frame, slow enough to read as attention rather than
+   as a loading effect. */
+.sub__scan {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  left: 3px;
+  z-index: 2;
+  height: 46px;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgb(10 208 255 / 0%),
+    rgb(10 208 255 / 26%),
+    rgb(10 208 255 / 0%)
+  );
+  border-radius: 13px;
+  animation: sub-scan 3.4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+@keyframes sub-scan {
+  0% { transform: translateY(0); opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { transform: translateY(320px); opacity: 0; }
+}
+
+.sub__stage.is-done .sub__scan {
+  display: none;
+}
+
+.sub__stage.is-done .sub__glow {
+  background: #2f7d55;
+  opacity: 0.4;
+  animation: none;
+}
+
+.sub__badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 3;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 11px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: rgb(11 12 15 / 62%);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+/* --- Steps ------------------------------------------------------------------------ */
+
+.sub__steps {
+  margin-top: 18px;
+  list-style: none;
+}
+
+.sub__step {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 13px;
+  color: rgb(52 52 58 / 50%);
+}
+
+.sub__step i {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  color: #fff;
+  background: rgb(22 22 24 / 12%);
+  border-radius: 50%;
+}
+
+.sub__step.is-done { color: #3c4149; }
+.sub__step.is-done i { background: #2f7d55; }
+
+.sub__step.is-now {
+  font-weight: 600;
+  color: #16161a;
+}
+
+.sub__step.is-now i {
+  background: #0a84ff;
+  animation: sub-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes sub-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.78); opacity: 0.6; }
+}
+
+/* --- Foot -------------------------------------------------------------------------- */
+
+.sub__waiting,
+.sub__ready {
+  padding: 12px 13px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  border-radius: 10px;
+}
+
+.sub__waiting {
+  color: rgb(52 52 58 / 62%);
+  background: #f7f8f9;
+}
+
+.sub__ready {
+  color: #1d6b3f;
+  background: rgb(45 160 90 / 12%);
+}
+
+.sub__cta {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: #16161a;
+  border: none;
+  border-radius: 12px;
+}
+
+.sub__alt {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgb(52 52 58 / 62%);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sub__glow,
+  .sub__scan,
+  .sub__step.is-now i {
+    animation: none;
+  }
+
+  .sub__scan {
+    display: none;
+  }
+}

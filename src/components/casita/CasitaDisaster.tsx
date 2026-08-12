@@ -30,6 +30,7 @@ import {
   type Program,
 } from "../../data/disaster";
 import { InspectorSheet } from "./InspectorSheet";
+import { SubmitSheet } from "./SubmitSheet";
 import { VideoScanStep } from "../../onboarding/steps";
 import "./CasitaDisaster.css";
 
@@ -71,6 +72,7 @@ export function CasitaDisaster({
      each a task in their own right, not a control on this page. */
   const [recording, setRecording] = useState(false);
   const [findingPro, setFindingPro] = useState(false);
+  const [submitting, setSubmitting] = useState<string | null>(null);
 
   const extras = extrasTotal(cats);
   const documented = structuralTotal(cats) + itemLoss(items) + extras;
@@ -463,7 +465,11 @@ export function CasitaDisaster({
                       >
                         <p>{ap.docs}</p>
                         {ap.status === "ready" && (
-                          <button type="button" className="dis-prog__cta is-on">
+                          <button
+                            type="button"
+                            className="dis-prog__cta is-on"
+                            onClick={() => setSubmitting(ap.name)}
+                          >
                             Review &amp; submit
                           </button>
                         )}
@@ -527,6 +533,13 @@ export function CasitaDisaster({
               <VideoScanStep onDone={() => setRecording(false)} />
             </div>
           </motion.div>
+        )}
+
+        {submitting && (
+          <SubmitSheet
+            name={submitting}
+            onClose={() => setSubmitting(null)}
+          />
         )}
 
         {findingPro && (
