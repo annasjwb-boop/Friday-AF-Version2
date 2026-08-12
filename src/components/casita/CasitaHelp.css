@@ -176,6 +176,7 @@
 }
 
 .ch-tip__title {
+  display: block;
   margin-top: 10px;
   font-size: 14.5px;
   font-weight: 600;
@@ -184,6 +185,7 @@
 }
 
 .ch-tip__body {
+  display: block;
   margin-top: 6px;
   font-size: 13px;
   line-height: 1.55;
@@ -284,6 +286,13 @@
 .ch-chat__asks button:hover {
   background: rgb(10 132 255 / 6%);
 }
+
+/* --- Tips: heading, expansion, submission --------------------------------------- */
+
+/* Whether a former program official has checked it, or hasn't yet — the
+   difference matters when someone is deciding whether to act on it. */
+
+/* --- Chat --------------------------------------------------------------------- */
 
 /* --- Tips: heading, expansion, submission --------------------------------------- */
 

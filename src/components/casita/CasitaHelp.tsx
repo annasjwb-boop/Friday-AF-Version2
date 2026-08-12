@@ -211,7 +211,6 @@ function Tips({ view }: { view: TipView }) {
 
   return (
     <>
-      <h3 className="ch-tips__title">From people who've been through it</h3>
       <p className="ch__lede">
         Shared by past disaster survivors and the AidFinder team, checked by the
         people who ran the programs. Vote for what helped you.
