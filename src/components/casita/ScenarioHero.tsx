@@ -120,7 +120,7 @@ export function ScenarioHero() {
       </h2>
 
       <div className="sh__dial">
-        <svg viewBox="0 0 340 190" role="img" aria-label={`${pct}% covered`}>
+        <svg viewBox="0 0 340 176" role="img" aria-label={`${pct}% covered`}>
           {/* Uncovered first, so the covered arc draws over its end cap. */}
           <path
             d={arc(180, 0)}

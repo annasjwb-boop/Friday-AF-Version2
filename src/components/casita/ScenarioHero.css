@@ -121,12 +121,14 @@
   fill: rgb(52 52 58 / 60%);
 }
 
+/* The viewBox is cropped just below the arc, so this spaces off the arc
+   itself rather than fighting dead space inside the SVG. */
 .sh__adjust {
   display: inline-flex;
   gap: 6px;
   align-items: center;
   padding: 6px 14px;
-  margin-top: -34px;
+  margin-top: 12px;
   font: inherit;
   font-size: 11px;
   font-weight: 700;
