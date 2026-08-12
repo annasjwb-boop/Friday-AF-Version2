@@ -3,6 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import { SlidersHorizontal } from "lucide-react";
 import {
   RISK_PERILS,
+  byUncovered,
   perilPoints,
   totalScore,
   type RiskPeril,
@@ -26,6 +27,10 @@ export function CasitaRisk() {
   const [fields, setFields] = useState(allDefaults);
 
   const score = totalScore(perils);
+  /* Sorted by what each leaves with the household, so the list opens on the
+     worst rather than on whatever order the data happens to be in. */
+  const ordered = useMemo(() => [...perils].sort(byUncovered), [perils]);
+
   const uninsured = useMemo(
     () => perils.filter((p) => p.status === "uninsured"),
     [perils],
@@ -55,7 +60,7 @@ export function CasitaRisk() {
       </div>
 
       <div className="casita-risk__list">
-        {perils.map((p) => (
+        {ordered.map((p) => (
           <RiskRow
             key={p.id}
             peril={p}

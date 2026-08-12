@@ -60,7 +60,25 @@ export interface RiskPeril {
  */
 export function uncoveredShare(p: RiskPeril): number | null {
   if (p.severity === 0) return null;
+  /* A peril the policy excludes leaves all of it with you. The whoPays split
+     puts flood at 70% because federal aid and charity typically cover some of
+     what's left — but that is help arriving after the fact, not coverage, and
+     showing 70% next to "Uninsured" reads as though the policy did something. */
+  if (p.status === "uninsured") return 100;
   return p.whoPays.find((w) => w.label === "You")?.pct ?? null;
+}
+
+/**
+ * Worst first. Perils whose hazard doesn't arise here sort last rather than
+ * being hidden — the exclusion is still worth knowing about.
+ */
+export function byUncovered(a: RiskPeril, b: RiskPeril): number {
+  const x = uncoveredShare(a);
+  const y = uncoveredShare(b);
+  if (x === null && y === null) return 0;
+  if (x === null) return 1;
+  if (y === null) return -1;
+  return y - x;
 }
 
 /** A covered peril contributes nothing, however likely it is. */
