@@ -1,5 +1,10 @@
 import { lazy, Suspense, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import {
+  DEFAULT_HOME_NAME,
+  loadHomeName,
+  saveHomeName,
+} from "../../data/homeName";
 import { AnimatePresence } from "framer-motion";
 import {
   BatteryFull,
@@ -130,6 +135,21 @@ export function CasitaHome() {
   const [peril, setPeril] = useState<PerilId>("clear");
   /* Onboarding hands off with ?tab=risk or ?tab=readiness, so a flow can land
      the user on the view it just spent five minutes talking about. */
+  /* The name is the person's, so it outlives the session. Kept in storage
+     rather than state alone — renaming your home and finding it reverted on
+     the next visit would read as the app not having listened. */
+  const [title, setTitle] = useState(loadHomeName);
+  const [savedTitle, setSavedTitle] = useState(title);
+  const [editingTitle, setEditingTitle] = useState(false);
+
+  const commitTitle = () => {
+    const next = title.trim() || DEFAULT_HOME_NAME;
+    setTitle(next);
+    setSavedTitle(next);
+    saveHomeName(next);
+    setEditingTitle(false);
+  };
+
   const [params] = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const t = params.get("tab");
@@ -158,7 +178,40 @@ export function CasitaHome() {
         </div>
         <div className="casita__bar">
           <div className="casita__identity">
-            <h1 className="casita__title">Casita</h1>
+            {editingTitle ? (
+              <input
+                className="casita__title casita__title--edit"
+                value={title}
+                autoFocus
+                aria-label="Name for your home"
+                maxLength={28}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={commitTitle}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commitTitle();
+                  if (e.key === "Escape") {
+                    setTitle(savedTitle);
+                    setEditingTitle(false);
+                  }
+                }}
+              />
+            ) : (
+              <h1
+                className="casita__title"
+                tabIndex={0}
+                role="button"
+                aria-label={`${title} — tap to rename`}
+                onClick={() => setEditingTitle(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setEditingTitle(true);
+                  }
+                }}
+              >
+                {title}
+              </h1>
+            )}
             <p className="casita__address">1200 Edwards Dr, Fort Myers, FL 33901</p>
           </div>
           <div className="casita__actions">

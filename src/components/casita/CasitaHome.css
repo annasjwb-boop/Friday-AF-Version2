@@ -462,3 +462,45 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* --- Editable home name -------------------------------------------------------
+ * Tap the title to rename. No pencil icon: the header is already carrying two
+ * help buttons and an avatar, and a fourth control there would crowd the
+ * address. The hint is the cursor and the focus ring.
+ * -------------------------------------------------------------------------- */
+
+h1.casita__title {
+  cursor: text;
+  border-radius: 6px;
+  transition: background 0.16s ease;
+}
+
+h1.casita__title:hover {
+  background: rgb(255 255 255 / 8%);
+  box-shadow: 0 0 0 6px rgb(255 255 255 / 8%);
+}
+
+h1.casita__title:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 60%);
+  outline-offset: 4px;
+}
+
+/* Matches the heading exactly, so the text doesn't shift when editing starts. */
+.casita__title--edit {
+  width: 100%;
+  padding: 0;
+  font-family: inherit;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  color: #fff;
+  background: none;
+  border: none;
+  border-bottom: 2px solid rgb(255 255 255 / 45%);
+}
+
+.casita__title--edit:focus {
+  outline: none;
+  border-bottom-color: #fff;
+}
