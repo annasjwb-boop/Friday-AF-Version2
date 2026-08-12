@@ -51,11 +51,26 @@ export function RiskTune({
   const setSeverity = (id: string, severity: number) =>
     onChange(perils.map((p) => (p.id === id ? { ...p, severity } : p)));
 
-  const setField = (perilId: string, fieldId: string, value: FieldValue) =>
-    onFields({
-      ...fields,
-      [perilId]: { ...fields[perilId], [fieldId]: value },
-    });
+  /**
+   * Editing a figure re-derives the severity from it.
+   *
+   * The severity is a reading of these facts, so leaving it behind when the
+   * facts change would make the panel disagree with itself — a limestone depth
+   * of 250ft sitting under a severity of High. The chips above stay available
+   * as an override, and the next field edit re-derives over them.
+   */
+  const setField = (perilId: string, fieldId: string, value: FieldValue) => {
+    const nextValues = { ...fields[perilId], [fieldId]: value };
+    onFields({ ...fields, [perilId]: nextValues });
+
+    const peril = perils.find((p) => p.id === perilId);
+    if (!peril || peril.status === "covered") return;
+
+    const suggested = suggestSeverity(perilId, nextValues);
+    if (suggested !== null && suggested !== peril.severity) {
+      setSeverity(perilId, suggested);
+    }
+  };
 
   /* Every other sheet in the app mounts into #app-viewport, which is the phone
      frame. Portaling to document.body instead made `position: absolute` resolve
@@ -181,18 +196,17 @@ export function RiskTune({
                             />
                           ))}
 
-                          {!covered &&
-                            suggested !== null &&
-                            suggested !== p.severity && (
-                              <button
-                                type="button"
-                                className="risk-tune__suggest"
-                                onClick={() => setSeverity(p.id, suggested)}
-                              >
-                                These figures suggest{" "}
-                                <b>{SEVERITY_LABELS[suggested]}</b> — apply
-                              </button>
-                            )}
+                          {!covered && suggested !== null && (
+                            <p className="risk-tune__derived">
+                              These figures read as{" "}
+                              <b>{SEVERITY_LABELS[suggested]}</b>
+                              {suggested === p.severity ? (
+                                <em>· {perilPoints(p)} points</em>
+                              ) : (
+                                <em>· set above to {SEVERITY_LABELS[p.severity]}</em>
+                              )}
+                            </p>
+                          )}
                         </div>
                       </motion.div>
                     )}
