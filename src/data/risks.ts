@@ -47,6 +47,22 @@ export interface RiskPeril {
   sources: string[];
 }
 
+/**
+ * The share of a loss from this peril that would fall to the household.
+ *
+ * Taken from whoPays rather than derived separately, so the figure on the row
+ * and the bar inside the expanded view can't disagree.
+ *
+ * Returns null where the hazard doesn't arise here. Earthquake would leave 80%
+ * with you and landslide 88% — true of the exclusion, false as a description
+ * of this property, and printing those percentages next to a negligible peril
+ * would overstate the exposure rather than explain it.
+ */
+export function uncoveredShare(p: RiskPeril): number | null {
+  if (p.severity === 0) return null;
+  return p.whoPays.find((w) => w.label === "You")?.pct ?? null;
+}
+
 /** A covered peril contributes nothing, however likely it is. */
 export function perilPoints(p: RiskPeril): number {
   if (p.status === "covered") return 0;

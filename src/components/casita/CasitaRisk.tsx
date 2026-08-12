@@ -55,15 +55,17 @@ export function CasitaRisk() {
 
       <motion.p className="casita-risk__summary" {...cardMotion(-1)}>
         <span className="casita-risk__summary-dot" aria-hidden="true" />
-        {scoreBand(score)} · {uninsuredPoints} of {score} points from{" "}
-        {uninsured.length} uninsured perils
+        {scoreBand(score)} · {uninsured.length} perils your policy doesn't
+        cover at all
       </motion.p>
 
       {/* Ring chart hidden for now. The component and its data are intact —
           restore by importing ExposureViz and rendering it here. */}
 
       <div className="casita-risk__listhead">
-        <h2 className="casita-risk__listtitle">How your exposure breaks down</h2>
+        <h2 className="casita-risk__listtitle">
+          How much of each loss lands on you
+        </h2>
         <button
           type="button"
           className="casita-risk__tune"
@@ -86,7 +88,9 @@ export function CasitaRisk() {
       </div>
 
       <section className="risk-cap">
-        <p className="risk-cap__label">If you closed every uninsured gap</p>
+        <p className="risk-cap__label">
+          Your risk score if you closed every uninsured gap
+        </p>
         <p className="risk-cap__nums">
           <span className="risk-cap__from">{score}</span>
           <span className="risk-cap__arrow">→</span>

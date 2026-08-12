@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { perilPoints, type RiskPeril } from "../../data/risks";
+import { uncoveredShare, type RiskPeril } from "../../data/risks";
 import { ExploreOptions } from "./ExploreOptions";
 import "./RiskRow.css";
 
@@ -30,7 +30,7 @@ export function RiskRow({
   onToggle: () => void;
 }) {
   const [exploring, setExploring] = useState(false);
-  const pts = perilPoints(peril);
+  const share = uncoveredShare(peril);
   const fill = peril.status === "covered" ? 100 : (peril.severity / 4) * 100;
 
   return (
@@ -51,7 +51,11 @@ export function RiskRow({
         </span>
 
         <span className="rr__pill">{STATUS_LABEL[peril.status]}</span>
-        <span className="rr__pts">{pts === 0 ? "0" : `+${pts}`}</span>
+        {/* What share of this loss lands on the household, rather than the
+            score contribution — the number people can act on. */}
+        <span className="rr__pts">
+          {share === null ? "—" : `${share}%`}
+        </span>
         <ChevronDown size={17} strokeWidth={2} className="rr__chev" />
       </button>
 
