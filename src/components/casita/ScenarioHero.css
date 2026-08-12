@@ -1,0 +1,229 @@
+/* ---------------------------------------------------------------------------
+ * Scenario hero. The gap simulator's composition — question, two-tone arc,
+ * covered and gap cards — in the app's palette rather than its navy and gold.
+ * ------------------------------------------------------------------------- */
+
+.sh {
+  padding: 4px 0 6px;
+}
+
+/* --- The question ---------------------------------------------------------- */
+
+.sh__q {
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+  color: #16161a;
+}
+
+.sh__picker {
+  position: relative;
+  display: inline-block;
+}
+
+/* The peril sits inside the sentence, so the question reads as a question
+   rather than as a chart with a filter above it. */
+.sh__peril {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 2px 12px 3px;
+  font: inherit;
+  font-size: 21px;
+  color: #16161a;
+  cursor: pointer;
+  background: #fff;
+  border: 1.5px solid rgb(22 22 24 / 26%);
+  border-radius: 999px;
+}
+
+.sh__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 5;
+  min-width: 210px;
+  padding: 5px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 12%);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgb(22 22 24 / 16%);
+}
+
+.sh__menu button {
+  display: block;
+  width: 100%;
+  padding: 9px 11px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #3c4149;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 8px;
+}
+
+.sh__menu button:hover {
+  background: rgb(22 22 24 / 5%);
+}
+
+.sh__menu button.is-on {
+  color: #fff;
+  background: #16161a;
+}
+
+/* --- Dial ------------------------------------------------------------------- */
+
+.sh__dial {
+  position: relative;
+  margin-top: 6px;
+  text-align: center;
+}
+
+.sh__dial svg {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.sh__arc {
+  fill: none;
+}
+
+.sh__arc--covered {
+  stroke: #16161a;
+}
+
+/* Amber rather than coral: this is money not yet accounted for, not damage. */
+.sh__arc--gap {
+  stroke: #edd9a6;
+}
+
+.sh__total {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  fill: #16161a;
+}
+
+.sh__adjust {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 14px;
+  margin-top: -34px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a6412;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid rgb(217 155 50 / 55%);
+  border-radius: 999px;
+}
+
+.sh__label {
+  margin-top: 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #3c4149;
+}
+
+.sh__pays {
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: rgb(52 52 58 / 70%);
+  text-align: center;
+}
+
+.sh__pays b {
+  font-weight: 700;
+  color: #16161a;
+}
+
+/* --- Cards ------------------------------------------------------------------- */
+
+.sh__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.sh-card {
+  padding: 15px 16px;
+  border-radius: 15px;
+}
+
+.sh-card--covered {
+  background: #16161a;
+}
+
+.sh-card--gap {
+  background: #faefd4;
+  border: 1px solid rgb(217 155 50 / 40%);
+}
+
+.sh-card__k {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.sh-card--covered .sh-card__k {
+  color: #d9b46a;
+}
+
+.sh-card--gap .sh-card__k {
+  color: #8a6412;
+}
+
+.sh-card__v {
+  margin-top: 5px;
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.sh-card--covered .sh-card__v {
+  color: #fff;
+}
+
+.sh-card--gap .sh-card__v {
+  color: #a3341c;
+}
+
+.sh-card__n {
+  margin-top: 8px;
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.sh-card--covered .sh-card__n {
+  color: rgb(255 255 255 / 62%);
+}
+
+.sh-card--gap .sh-card__n {
+  color: #7a5c22;
+}
+
+@media (max-width: 360px) {
+  .sh__cards {
+    grid-template-columns: 1fr;
+  }
+}

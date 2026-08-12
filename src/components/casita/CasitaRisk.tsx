@@ -11,7 +11,7 @@ import {
 } from "../../data/risks";
 import { RiskRow } from "./RiskRow";
 import { RiskTune } from "./RiskTune";
-import { ScoreGauge, RISK_ZONES } from "./ScoreGauge";
+import { ScenarioHero } from "./ScenarioHero";
 import { allDefaults } from "../../data/perilFields";
 import "./CasitaRisk.css";
 
@@ -51,20 +51,7 @@ export function CasitaRisk() {
 
   return (
     <div className="casita-risk">
-      <motion.section
-        className="casita-risk__hero"
-        aria-label="Risk score"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        <ScoreGauge
-          score={score}
-          label="Risk Score"
-          zones={RISK_ZONES}
-          idPrefix="risk"
-        />
-      </motion.section>
+      <ScenarioHero />
 
       <motion.p className="casita-risk__summary" {...cardMotion(-1)}>
         <span className="casita-risk__summary-dot" aria-hidden="true" />
