@@ -449,3 +449,14 @@
   font-weight: 600;
   color: #16161a;
 }
+
+/* Sets up the arc rather than labelling it, so the number underneath has a
+   reason to exist before it appears. */
+.vault-hero__intro {
+  max-width: 30ch;
+  margin: 0 auto 6px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #3c4149;
+  text-align: center;
+}

@@ -28,10 +28,7 @@ import {
   buildSections,
   readinessPercent,
 } from "../../data/vaultSections";
-import {
-  ScoreGauge,
-  READINESS_ZONES,
-} from "../casita/ScoreGauge";
+import { ProgressArc } from "../casita/ProgressArc";
 import { VaultSections } from "./VaultSections";
 import { VaultDocsSheet } from "./VaultDocs";
 import { VaultUpload } from "./VaultUpload";
@@ -146,15 +143,17 @@ export function VaultBody() {
   return (
     <div className="vault-body">
       {/* --- Documented value hero ------------------------------------- */}
-      {/* Same dial as the risk score, with the zones mirrored: readiness is
-          higher-is-better, so the warning band sits at the empty end. */}
+      {/* Same arc as the risk scenario. Readiness is one number over documents
+          and assets alike, so the arc is measuring the same kind of thing:
+          how much of what's needed is accounted for. */}
       <section className="vault-hero" aria-label="Readiness">
-        <ScoreGauge
-          score={ready.pct}
-          label="Readiness"
-          zones={READINESS_ZONES}
-          suffix="of 100"
-          idPrefix="ready"
+        <p className="vault-hero__intro">
+          Let's get all the documents you need for insurance and aid organized.
+        </p>
+        <ProgressArc
+          pct={ready.pct}
+          caption="of what you need, gathered"
+          label={`${ready.pct}% of the documents and assets you need`}
         />
         <p className="vault-hero__sub">
           {ready.docsDone} of {ready.docsTotal} documents ·{" "}

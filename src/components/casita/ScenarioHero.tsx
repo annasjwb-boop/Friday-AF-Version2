@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence } from "framer-motion";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Pencil, X } from "lucide-react";
 import { RISK_PERILS } from "../../data/risks";
 import {
@@ -14,6 +13,7 @@ import {
 } from "./protection";
 import { PropertyStep } from "../../onboarding/steps";
 import { loadRebuildCost, saveRebuildCost } from "../../data/homeFacts";
+import { ProgressArc } from "./ProgressArc";
 import "./ScenarioHero.css";
 
 /* ---------------------------------------------------------------------------
@@ -30,25 +30,6 @@ import "./ScenarioHero.css";
  * Composition follows the gap simulator; the palette is the app's own, so this
  * sits beside the peril list and the vault rather than looking imported.
  * ------------------------------------------------------------------------- */
-
-/* Half-circle geometry. The arc is the scenario cost; the filled part is what
-   the policy covers. */
-const CX = 170;
-const CY = 158;
-const R = 116;
-const W = 26;
-
-function polar(angle: number): [number, number] {
-  const a = (angle * Math.PI) / 180;
-  return [CX + R * Math.cos(a), CY - R * Math.sin(a)];
-}
-
-function arc(fromDeg: number, toDeg: number) {
-  const [x1, y1] = polar(fromDeg);
-  const [x2, y2] = polar(toDeg);
-  const large = Math.abs(fromDeg - toDeg) > 180 ? 1 : 0;
-  return `M ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2}`;
-}
 
 export function ScenarioHero() {
   const [perilId, setPerilId] = useState("wind");
@@ -81,8 +62,6 @@ export function ScenarioHero() {
   const gap = total - covered;
   const pct = coveredPercent(perilId, rebuild);
 
-  /* 180° is the left end, 0° the right. The covered share fills from the left. */
-  const split = 180 - 180 * (covered / total);
 
   return (
     <section className="sh" aria-label="Total loss scenario">
@@ -121,34 +100,11 @@ export function ScenarioHero() {
       </h2>
 
       <div className="sh__dial">
-        <svg viewBox="0 0 340 176" role="img" aria-label={`${pct}% covered`}>
-          {/* Uncovered first, so the covered arc draws over its end cap. */}
-          <path
-            d={arc(180, 0)}
-            className="sh__arc sh__arc--gap"
-            strokeWidth={W}
-            strokeLinecap="round"
-          />
-          {covered > 0 && (
-            <motion.path
-              d={arc(180, split)}
-              className="sh__arc sh__arc--covered"
-              strokeWidth={W}
-              strokeLinecap="round"
-              initial={false}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
-            />
-          )}
-          <text x={CX} y={CY - 30} textAnchor="middle" className="sh__total">
-            {pct}%
-          </text>
-          {/* The total stays, smaller, so the percentage has something to be a
-              percentage of — without it the arc is a proportion of nothing. */}
-          <text x={CX} y={CY - 6} textAnchor="middle" className="sh__of">
-            of {money(total)} covered
-          </text>
-        </svg>
+        <ProgressArc
+          pct={pct}
+          caption={`of ${money(total)} covered`}
+          label={`${pct}% of a ${money(total)} total loss covered`}
+        />
 
         <button
           type="button"
