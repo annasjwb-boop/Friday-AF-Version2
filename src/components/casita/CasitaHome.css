@@ -504,3 +504,35 @@ h1.casita__title:focus-visible {
   outline: none;
   border-bottom-color: #fff;
 }
+
+/* --- Disaster mode chrome -----------------------------------------------------
+ * The incident colour runs from the black header down through the tab strip, so
+ * the mode is legible before any content is read. It stops at the strip rather
+ * than tinting the whole sheet — the content below still has to be readable for
+ * a long time.
+ * ------------------------------------------------------------------------------ */
+
+.casita__sheet--alert {
+  background: linear-gradient(#a3281a 0, #a3281a 62px, #fff 62px);
+}
+
+.casita__sheet--alert .casita__tab {
+  color: rgb(255 255 255 / 72%);
+}
+
+.casita__sheet--alert .casita__tab:hover {
+  color: #fff;
+}
+
+/* The active pill goes near-black on the red, which holds more contrast than a
+   white pill with dark text and matches the strip's normal behaviour. */
+.casita__sheet--alert .casita__tab.is-active {
+  color: #fff;
+  background: #16161a;
+}
+
+/* The banner sits directly beneath, so its own top padding would double the
+   colour block. */
+.casita__sheet--alert .dh__banner {
+  padding-top: 6px;
+}

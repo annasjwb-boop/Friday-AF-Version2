@@ -264,7 +264,9 @@ export function CasitaHome() {
         </div>
       </header>
 
-      <div className="casita__sheet">
+      <div
+        className={`casita__sheet${disasterMode ? " casita__sheet--alert" : ""}`}
+      >
         <nav className="casita__tabs" aria-label="Home views">
           {(disasterMode ? DISASTER_TABS : TABS).map((t) => (
             <button
