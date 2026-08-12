@@ -4,7 +4,6 @@ import {
   Check,
   ChevronDown,
   FileUp,
-  Plus,
   Video,
   Wrench,
   X,
@@ -17,21 +16,18 @@ import {
   DAMAGE_ITEMS,
   FEED,
   PROFILE_FACTS,
-  PROGRAMS,
-  SAVINGS,
   STAGES,
-  TAG_LABEL,
   extrasTotal,
   itemLoss,
   money,
   structuralTotal,
   type Condition,
   type DamageItem,
-  type Program,
 } from "../../data/disaster";
 import { InspectorSheet } from "./InspectorSheet";
 import { SubmitSheet } from "./SubmitSheet";
 import { VideoScanStep } from "../../onboarding/steps";
+import { RecoveryVariants } from "./RecoveryVariants";
 import "./RecoveryPlanBlock.css";
 import "./CasitaDisaster.css";
 
@@ -64,8 +60,6 @@ export function CasitaDisaster({
 }) {
   const [items, setItems] = useState<DamageItem[]>(DAMAGE_ITEMS);
   const [cats] = useState(DAMAGE_CATEGORIES);
-  const [programs, setPrograms] = useState<Program[]>(PROGRAMS);
-  const [loanOK, setLoanOK] = useState<boolean | null>(null);
   const [openApp, setOpenApp] = useState<string | null>(null);
   const [profileApplied, setProfileApplied] = useState(false);
   const [docsLoaded, setDocsLoaded] = useState(false);
@@ -77,7 +71,6 @@ export function CasitaDisaster({
     id: string;
     name: string;
   } | null>(null);
-  const [openProgram, setOpenProgram] = useState<string | null>(null);
   /* Status stays as filed rather than flipping on open: the sheet is where
      the application is reviewed, and it is only submitted at the end of it. */
   /* Reviewing a draft moves that row to Ready, which is the one status change
@@ -87,25 +80,11 @@ export function CasitaDisaster({
 
   const extras = extrasTotal(cats);
   const documented = structuralTotal(cats) + itemLoss(items) + extras;
-  const need = documented;
-  const funded =
-    programs.filter((p) => p.added).reduce((n, p) => n + p.amt, 0) + SAVINGS;
-  const gap = Math.max(need - funded, 0);
 
   const setCond = (id: string, cond: Condition) =>
     setItems((all) => all.map((i) => (i.id === id ? { ...i, cond } : i)));
 
-  const toggle = (id: string) =>
-    setPrograms((all) =>
-      all.map((p) => (p.id === id ? { ...p, added: !p.added } : p)),
-    );
 
-  /* Loans sink to the bottom when the household has said grants only, rather
-     than disappearing — the option is still theirs to change. */
-  const ordered =
-    loanOK === false
-      ? [...programs].sort((a, b) => (a.loan ? 1 : 0) - (b.loan ? 1 : 0))
-      : programs;
 
   return (
     <div className="dis">
@@ -239,194 +218,7 @@ export function CasitaDisaster({
         </>
       )}
 
-      {section === "plan" && (
-        <>
-          <p className="dis__eyebrow">Recovery plan · actual damages</p>
-          <h2 className="dis__title">
-            Piece together the {money(need)} it takes to recover
-          </h2>
-
-          {/* Same pattern as the pre-disaster plan: the summary stays put while
-              the programmes scroll under it, so adding one shows its effect
-              where it happens. The figures are real damage rather than a
-              modelled scenario. */}
-          <div className="rp__sticky">
-            <div className="rp__cards">
-              <div className="rp-card rp-card--covered">
-                <p className="rp-card__k">Funded</p>
-                <motion.p
-                  key={funded}
-                  className="rp-card__v"
-                  initial={{ opacity: 0.4 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {money(Math.min(funded, need))}
-                </motion.p>
-                <p className="rp-card__n">
-                  {programs.filter((p) => p.added).length} programmes plus{" "}
-                  {money(SAVINGS)} of your own
-                </p>
-              </div>
-
-              <div className="rp-card rp-card--gap">
-                <p className="rp-card__k">Still open</p>
-                <motion.p
-                  key={gap}
-                  className="rp-card__v"
-                  initial={{ opacity: 0.4 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {money(gap)}
-                </motion.p>
-                <p className="rp-card__n">
-                  {gap > 0
-                    ? "No source yet — keep adding, or plan for it"
-                    : "This plan covers your documented damage"}
-                </p>
-              </div>
-            </div>
-
-            <div className="rp-bar">
-              <div className="rp-bar__head">
-                <span>Funding</span>
-                <span className="rp-bar__of">{money(need)} documented</span>
-              </div>
-              <div className="rp-bar__track">
-                <motion.i
-                  className="rp-bar__seg rp-bar__seg--policy"
-                  animate={{ width: `${(SAVINGS / need) * 100}%` }}
-                  transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-                />
-                <motion.i
-                  className="rp-bar__seg rp-bar__seg--plan"
-                  animate={{
-                    width: `${(Math.min(funded - SAVINGS, need) / need) * 100}%`,
-                  }}
-                  transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-                />
-              </div>
-              <ul className="rp-bar__key">
-                <li>
-                  <span className="rp-bar__dot rp-bar__dot--policy" />
-                  Your money {money(SAVINGS)}
-                </li>
-                <li>
-                  <span className="rp-bar__dot rp-bar__dot--plan" />
-                  Programmes {money(Math.max(funded - SAVINGS, 0))}
-                </li>
-                <li>
-                  <span className="rp-bar__dot rp-bar__dot--open" />
-                  Open {money(gap)}
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {loanOK === null && (
-            <section className="dis-card dis-card--ask">
-              <h3>One question shapes your plan</h3>
-              <p className="dis-card__sub">
-                Are you open to a low-interest federal loan, or would you rather
-                stick to grants and cash?
-              </p>
-              <div className="dis-ask">
-                <button type="button" onClick={() => setLoanOK(true)}>
-                  Open to a loan
-                </button>
-                <button type="button" onClick={() => setLoanOK(false)}>
-                  Grants &amp; cash only
-                </button>
-              </div>
-            </section>
-          )}
-
-          <div className="rp__subhead">
-            <h3 className="rp__sub">Programmes you can use</h3>
-          </div>
-
-          <div className="rp__options">
-            {ordered.map((p) => {
-              const open = openProgram === p.id;
-              return (
-                <div
-                  className={`rp-opt${p.added ? " is-on" : ""}`}
-                  key={p.id}
-                >
-                  <button
-                    type="button"
-                    className="rp-opt__head"
-                    aria-expanded={open}
-                    onClick={() =>
-                      p.na ? undefined : setOpenProgram(open ? null : p.id)
-                    }
-                  >
-                    <span className="rp-opt__body">
-                      <span className="rp-opt__name">
-                        {p.name}
-                        <span className={`dis-prog__tag is-${p.tag}`}>
-                          {TAG_LABEL[p.tag]}
-                        </span>
-                      </span>
-                      <span className="rp-opt__sub">{p.up}</span>
-                    </span>
-                    <span className="rp-opt__amt">
-                      {p.amt > 0 && <em>{money(p.amt)}</em>}
-                      <span className="rp-opt__icon" aria-hidden="true">
-                        {p.added ? (
-                          <Check size={15} strokeWidth={2.6} />
-                        ) : (
-                          <Plus size={15} strokeWidth={2.4} />
-                        )}
-                      </span>
-                    </span>
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {open && (
-                      <motion.div
-                        className="rp-opt__more"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-                      >
-                        <div className="rp-opt__inner">
-                          <p className="rp-opt__note">{p.desc}</p>
-                          {p.loan && (
-                            <p className="dis-prog__warn">
-                              A loan closes the gap on the bar above without
-                              reducing what you eventually pay.
-                            </p>
-                          )}
-                          <div className="rp-opt__acts">
-                            <button
-                              type="button"
-                              className="rp-opt__done"
-                              onClick={() => toggle(p.id)}
-                            >
-                              {p.added ? "Remove from plan" : "Add to plan"}
-                            </button>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
-          </div>
-
-          <button
-            type="button"
-            className="dis-next"
-            onClick={() => onSection("apply")}
-          >
-            Looks right — prepare my applications
-          </button>
-        </>
-      )}
+      {section === "plan" && <RecoveryVariants />}
 
       {section === "apply" && (
         <>
