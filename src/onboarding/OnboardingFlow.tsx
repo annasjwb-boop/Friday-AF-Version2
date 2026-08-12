@@ -395,7 +395,9 @@ function Interactive({
         />
       );
     case "property":
-      return <PropertyStep onDone={onDone} />;
+      /* The flow only needs the reply; the rebuild figure is used by the
+         risk view, which opens the same panel with its own handler. */
+      return <PropertyStep onDone={(v) => onDone(v)} />;
     case "risks":
       return <RisksStep onDone={onDone} />;
     case "insurance":

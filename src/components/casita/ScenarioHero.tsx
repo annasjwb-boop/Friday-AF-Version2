@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
-import { ChevronDown, Pencil } from "lucide-react";
+import { ChevronDown, Pencil, X } from "lucide-react";
 import { RISK_PERILS } from "../../data/risks";
 import {
   DEDUCTIBLE,
-  TOTAL_LOSS_ESTIMATE,
+  DWELLING_LIMIT,
+  PERSONAL_PROPERTY,
   coverageForPeril,
   money,
 } from "./protection";
+import { PropertyStep } from "../../onboarding/steps";
+import { loadRebuildCost, saveRebuildCost } from "../../data/homeFacts";
 import "./ScenarioHero.css";
 
 /* ---------------------------------------------------------------------------
@@ -47,18 +52,36 @@ function arc(fromDeg: number, toDeg: number) {
 export function ScenarioHero() {
   const [perilId, setPerilId] = useState("wind");
   const [open, setOpen] = useState(false);
+  const [adjusting, setAdjusting] = useState(false);
+  const [rebuild, setRebuild] = useState(loadRebuildCost);
+
+  useEffect(() => {
+    const sync = () => setRebuild(loadRebuildCost());
+    window.addEventListener("home-facts", sync);
+    return () => window.removeEventListener("home-facts", sync);
+  }, []);
 
   const peril = RISK_PERILS.find((p) => p.id === perilId) ?? RISK_PERILS[0];
   const cover = coverageForPeril(perilId);
 
   /* An excluded peril pays nothing; a covered one pays to the limits, less the
      deductible, which is what makes the two cards move together. */
-  const covered = cover.covered ? TOTAL_LOSS_ESTIMATE - cover.gap : 0;
-  const gap = TOTAL_LOSS_ESTIMATE - covered;
-  const pct = Math.round((covered / TOTAL_LOSS_ESTIMATE) * 100);
+  /* Recomputed from the rebuild figure rather than shifting a fixed gap: the
+     dwelling limit does not move when rebuild cost does, so raising the cost
+     has to widen the shortfall. Holding the gap constant would have shown a
+     more expensive house as better covered. */
+  const total = rebuild + PERSONAL_PROPERTY;
+  const covered = cover.covered
+    ? Math.max(
+        Math.min(DWELLING_LIMIT, rebuild) + PERSONAL_PROPERTY - DEDUCTIBLE,
+        0,
+      )
+    : 0;
+  const gap = total - covered;
+  const pct = Math.round((covered / total) * 100);
 
   /* 180° is the left end, 0° the right. The covered share fills from the left. */
-  const split = 180 - 180 * (covered / TOTAL_LOSS_ESTIMATE);
+  const split = 180 - 180 * (covered / total);
 
   return (
     <section className="sh" aria-label="Total loss scenario">
@@ -117,11 +140,15 @@ export function ScenarioHero() {
             />
           )}
           <text x={CX} y={CY - 22} textAnchor="middle" className="sh__total">
-            {money(TOTAL_LOSS_ESTIMATE)}
+            {money(total)}
           </text>
         </svg>
 
-        <button type="button" className="sh__adjust">
+        <button
+          type="button"
+          className="sh__adjust"
+          onClick={() => setAdjusting(true)}
+        >
           <Pencil size={12} strokeWidth={2.4} aria-hidden="true" />
           Adjust
         </button>
@@ -170,6 +197,73 @@ export function ScenarioHero() {
           </p>
         </div>
       </div>
+
+      <AnimatePresence>
+        {adjusting && (
+          <AdjustSheet
+            cost={rebuild}
+            onClose={() => setAdjusting(false)}
+            onSave={(c) => {
+              saveRebuildCost(c);
+              setRebuild(c);
+              setAdjusting(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
+}
+
+/**
+ * The property panel from onboarding, opened from the dial.
+ *
+ * Reusing it rather than building a second editor means the figures someone
+ * corrected during onboarding and the ones they correct here are the same
+ * fields, in the same order, with the same slider.
+ */
+function AdjustSheet({
+  cost,
+  onSave,
+  onClose,
+}: {
+  cost: number;
+  onSave: (cost: number) => void;
+  onClose: () => void;
+}) {
+  const host = document.getElementById("app-viewport");
+
+  const panel = (
+    <motion.div
+      className="sh-adjust"
+      initial={{ y: "100%" }}
+      animate={{ y: 0 }}
+      exit={{ y: "100%" }}
+      transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+    >
+      <header className="sh-adjust__top">
+        <div>
+          <p className="sh-adjust__kicker">Your property</p>
+          <h2 className="sh-adjust__title">What we have on file</h2>
+        </div>
+        <button
+          type="button"
+          className="sh-adjust__close"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          <X size={19} strokeWidth={2} aria-hidden="true" />
+        </button>
+      </header>
+      <div className="sh-adjust__body">
+        <PropertyStep
+          initialCost={cost}
+          saveLabel="Save these details"
+          onDone={(_, c) => onSave(c)}
+        />
+      </div>
+    </motion.div>
+  );
+
+  return host ? createPortal(panel, host) : panel;
 }

@@ -480,9 +480,18 @@ const FIELDS = [
   { k: "Roof", v: "Asphalt shingle, replaced 2016" },
 ];
 
-export function PropertyStep({ onDone }: { onDone: (v: string) => void }) {
+export function PropertyStep({
+  onDone,
+  initialCost = 780_000,
+  saveLabel,
+}: {
+  onDone: (v: string, cost: number) => void;
+  /** Lets the risk view open this on the figure already in use. */
+  initialCost?: number;
+  saveLabel?: string;
+}) {
   const [fields, setFields] = useState(FIELDS);
-  const [cost, setCost] = useState(780_000);
+  const [cost, setCost] = useState(initialCost);
 
   return (
     <div className="ob-panel">
@@ -525,9 +534,9 @@ export function PropertyStep({ onDone }: { onDone: (v: string) => void }) {
       <button
         type="button"
         className="ob-send"
-        onClick={() => onDone("Details look right")}
+        onClick={() => onDone("Details look right", cost)}
       >
-        These look right
+        {saveLabel ?? "These look right"}
       </button>
     </div>
   );
