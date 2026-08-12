@@ -401,7 +401,10 @@ function OptionControl({
       )}
 
       {control.kind === "multi" && (
-        <div className="rp-ctl__chips">
+        /* Full-width rows rather than chips: each carries a range, a caveat
+           and an amount, which a chip cannot hold without truncating the part
+           that matters. */
+        <div className="rp-ctl__rows">
           {(control.options ?? []).map((opt) => {
             const list = Array.isArray(value) ? value : [];
             const on = list.includes(opt.id);
@@ -410,15 +413,33 @@ function OptionControl({
                 key={opt.id}
                 type="button"
                 aria-pressed={on}
-                className={on ? "is-on" : undefined}
+                className={`rp-row${on ? " is-on" : ""}`}
                 onClick={() =>
                   onChange(
                     on ? list.filter((x) => x !== opt.id) : [...list, opt.id],
                   )
                 }
               >
-                <b>{opt.label}</b>
-                {opt.note && <em>{opt.note}</em>}
+                <span className="rp-row__body">
+                  <span className="rp-row__name">{opt.label}</span>
+                  {opt.range && (
+                    <span className="rp-row__range">{opt.range}</span>
+                  )}
+                  {opt.note && <span className="rp-row__note">{opt.note}</span>}
+                </span>
+                <span className="rp-row__right">
+                  {opt.worth ? (
+                    <span className="rp-row__worth">
+                      {money(opt.worth)}
+                      <em>typical</em>
+                    </span>
+                  ) : (
+                    <span className="rp-row__worth is-none">—</span>
+                  )}
+                  <span className="rp-row__tick" aria-hidden="true">
+                    {on && <Check size={13} strokeWidth={3} />}
+                  </span>
+                </span>
               </button>
             );
           })}

@@ -29,7 +29,16 @@ export interface Control {
   /** How the slider's value reads. */
   unit?: "money" | "percent" | "perMonth";
   /** choice and multi — value is the amount each option is worth, or 0. */
-  options?: { id: string; label: string; note?: string; worth?: number }[];
+  options?: {
+    id: string;
+    label: string;
+    note?: string;
+    /** What it's worth to the plan. For aid this is the typical award, not
+        the cap — see the note on the wait option. */
+    worth?: number;
+    /** The full range, where a cap would otherwise be read as the amount. */
+    range?: string;
+  }[];
   note?: string;
   default: number | string | string[];
 }
@@ -204,32 +213,36 @@ export const GAP_OPTIONS: GapOption[] = [
           {
             id: "ihp",
             label: "FEMA Housing Assistance",
-            note: "Up to $43,600",
-            worth: 43_600,
+            range: "$0 – $43,600",
+            note: "Average award under $5,000 — the cap is rarely reached",
+            worth: 4_000,
           },
           {
             id: "ona",
             label: "FEMA Other Needs",
-            note: "Up to $43,600",
-            worth: 12_850,
+            range: "$0 – $43,600",
+            note: "Average award under $5,000 — covers contents, vehicle, medical",
+            worth: 2_400,
           },
           {
             id: "sba",
             label: "SBA home loan",
-            note: "Repaid, not a grant",
+            range: "Up to $500,000",
+            note: "A loan, repaid with interest — needs reasonable credit",
             worth: 110_000,
           },
           {
             id: "state",
             label: "State recovery grant",
-            note: "Not yet open",
+            range: "Not yet open",
+            note: "We'll tell you when it activates",
             worth: 0,
           },
         ],
         default: [],
       },
     ],
-    note: "Only about 5% of disasters are declared, and aid arrives months later. Shown separately below because none of it is certain.",
+    note: "Counted at the typical award, not the cap. FEMA's ceiling is $43,600 but most households receive under $5,000, and only about 5% of disasters are declared at all. Shown separately below because none of it is certain.",
   },
 ];
 
