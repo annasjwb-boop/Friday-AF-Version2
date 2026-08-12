@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Play, Sparkles, Video, X } from "lucide-react";
+import { Lightbulb, Play, Sparkles, X } from "lucide-react";
 import {
   EXPLAINERS,
   answersFor,
@@ -30,7 +30,7 @@ export function CasitaHelp({ context }: { context: HelpContext }) {
         aria-label="Watch an explainer about this screen"
         onClick={() => setOpen("video")}
       >
-        <Video size={17} strokeWidth={1.9} aria-hidden="true" />
+        <Lightbulb size={17} strokeWidth={1.9} aria-hidden="true" />
       </button>
       <button
         type="button"
