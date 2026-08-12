@@ -333,3 +333,156 @@
   border: 1px solid rgb(22 22 24 / 14%);
   border-radius: 999px;
 }
+
+/* --- Expanded options ------------------------------------------------------- */
+
+.rp-opt {
+  display: block;
+  padding: 0;
+  overflow: hidden;
+}
+
+.rp-opt__head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 14px 15px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.rp-opt__amt em.is-reduce {
+  color: #8a6412;
+}
+
+/* Aid that depends on a declaration reads differently from money in hand. */
+.rp-opt__amt em.is-maybe {
+  color: rgb(52 52 58 / 55%);
+}
+
+.rp-opt__more {
+  overflow: hidden;
+}
+
+.rp-opt__inner {
+  padding: 2px 15px 15px;
+}
+
+.rp-opt__note {
+  padding: 10px 11px;
+  margin-top: 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: rgb(52 52 58 / 65%);
+  background: rgb(22 22 24 / 4%);
+  border-radius: 9px;
+}
+
+/* --- Controls ---------------------------------------------------------------- */
+
+.rp-ctl {
+  padding-top: 13px;
+  margin-top: 13px;
+  border-top: 1px solid rgb(22 22 24 / 8%);
+}
+
+.rp-ctl:first-child {
+  border-top: none;
+}
+
+.rp-ctl__head {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.rp-ctl__label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #16161a;
+}
+
+.rp-ctl__value {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #16161a;
+}
+
+.rp-ctl input[type="range"] {
+  width: 100%;
+  accent-color: #16161a;
+}
+
+.rp-ctl__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rp-ctl__chips button {
+  padding: 8px 12px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid rgb(22 22 24 / 14%);
+  border-radius: 10px;
+}
+
+.rp-ctl__chips button b {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.rp-ctl__chips button em {
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  font-style: normal;
+  color: rgb(52 52 58 / 58%);
+}
+
+.rp-ctl__chips button.is-on {
+  background: #16161a;
+  border-color: #16161a;
+}
+
+.rp-ctl__chips button.is-on b { color: #fff; }
+.rp-ctl__chips button.is-on em { color: rgb(255 255 255 / 62%); }
+
+.rp-ctl__note {
+  margin-top: 7px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgb(52 52 58 / 55%);
+}
+
+.rp-bar__of s {
+  color: rgb(52 52 58 / 40%);
+}
+
+/* Sits under the bar, not in it — see the note in the component. */
+.rp__maybe {
+  padding: 12px 13px;
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgb(52 52 58 / 68%);
+  background: rgb(22 22 24 / 4%);
+  border-radius: 10px;
+}
+
+.rp__maybe b {
+  font-weight: 600;
+  color: #16161a;
+}

@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Plus, X } from "lucide-react";
 import { RISK_PERILS } from "../../data/risks";
 import {
   GAP_OPTIONS,
-  selectedCoverage,
+  contributionOf,
+  defaultSettings,
+  type Control,
+  type Settings,
 } from "../../data/gapOptions";
 import {
   DEDUCTIBLE,
@@ -33,6 +36,8 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
   const [perilId, setPerilId] = useState("wind");
   const [open, setOpen] = useState(false);
   const [chosen, setChosen] = useState<string[]>([]);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
 
   const peril = RISK_PERILS.find((p) => p.id === perilId) ?? RISK_PERILS[0];
   const cover = coverageForPeril(perilId);
@@ -46,13 +51,41 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
     : 0;
   const gap = total - covered;
 
-  const planned = Math.min(selectedCoverage(chosen), gap);
-  const remaining = gap - planned;
+  /* Three totals, kept apart: money that arrives, reductions in what's needed,
+     and aid that only exists if a declaration comes. Adding them would let a
+     plan look funded on the strength of grants nobody has been offered. */
+  const totals = chosen.reduce(
+    (acc, id) => {
+      const c = contributionOf(id, settings[id] ?? {}, REBUILD_COST);
+      return {
+        funds: acc.funds + c.funds,
+        reduces: acc.reduces + c.reduces,
+        ifDeclared: acc.ifDeclared + c.ifDeclared,
+      };
+    },
+    { funds: 0, reduces: 0, ifDeclared: 0 },
+  );
 
-  const toggle = (id: string) =>
+  const need = Math.max(gap - totals.reduces, 0);
+  const planned = Math.min(totals.funds, need);
+  const remaining = Math.max(need - planned, 0);
+
+  const toggle = (id: string) => {
     setChosen((all) =>
       all.includes(id) ? all.filter((x) => x !== id) : [...all, id],
     );
+    setOpenId((cur) => (cur === id ? null : id));
+  };
+
+  const setValue = (
+    optionId: string,
+    controlId: string,
+    value: number | string | string[],
+  ) =>
+    setSettings((all) => ({
+      ...all,
+      [optionId]: { ...all[optionId], [controlId]: value },
+    }));
 
   return (
     <section className="rp">
@@ -132,18 +165,30 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
       <div className="rp-bar">
         <div className="rp-bar__head">
           <span>Funding</span>
-          <span className="rp-bar__of">{money(total)} needed</span>
+          <span className="rp-bar__of">
+            {totals.reduces > 0 ? (
+              <>
+                <s>{money(total)}</s> {money(total - totals.reduces)} needed
+              </>
+            ) : (
+              `${money(total)} needed`
+            )}
+          </span>
         </div>
 
         <div className="rp-bar__track">
           <motion.i
             className="rp-bar__seg rp-bar__seg--policy"
-            animate={{ width: `${(covered / total) * 100}%` }}
+            animate={{
+              width: `${(covered / Math.max(total - totals.reduces, 1)) * 100}%`,
+            }}
             transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
           />
           <motion.i
             className="rp-bar__seg rp-bar__seg--plan"
-            animate={{ width: `${(planned / total) * 100}%` }}
+            animate={{
+              width: `${(planned / Math.max(total - totals.reduces, 1)) * 100}%`,
+            }}
             transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
           />
         </div>
@@ -176,37 +221,79 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
       <div className="rp__options">
         {GAP_OPTIONS.map((o) => {
           const on = chosen.includes(o.id);
+          const set = settings[o.id] ?? {};
+          const c = contributionOf(o.id, set, REBUILD_COST);
+          const open = openId === o.id && on;
+
           return (
-            <button
-              key={o.id}
-              type="button"
-              className={`rp-opt${on ? " is-on" : ""}`}
-              aria-pressed={on}
-              onClick={() => toggle(o.id)}
-            >
-              <span className="rp-opt__body">
-                <span className="rp-opt__name">{o.name}</span>
-                <span className="rp-opt__sub">{on ? o.note : o.sub}</span>
-                {on && o.covers === null && (
-                  <span className="rp-opt__flag">
-                    Adds no money to the gap
-                  </span>
-                )}
-              </span>
-              <span className="rp-opt__amt">
-                {o.covers !== null && <em>{money(o.covers)}</em>}
-                <span className="rp-opt__icon" aria-hidden="true">
-                  {on ? (
-                    <X size={15} strokeWidth={2.4} />
-                  ) : (
-                    <Plus size={15} strokeWidth={2.4} />
-                  )}
+            <div className={`rp-opt${on ? " is-on" : ""}`} key={o.id}>
+              <button
+                type="button"
+                className="rp-opt__head"
+                aria-pressed={on}
+                onClick={() => toggle(o.id)}
+              >
+                <span className="rp-opt__body">
+                  <span className="rp-opt__name">{o.name}</span>
+                  <span className="rp-opt__sub">{o.sub}</span>
                 </span>
-              </span>
-            </button>
+                <span className="rp-opt__amt">
+                  {on && c.funds > 0 && <em>{money(c.funds)}</em>}
+                  {on && c.reduces > 0 && (
+                    <em className="is-reduce">−{money(c.reduces)} needed</em>
+                  )}
+                  {on && c.ifDeclared > 0 && (
+                    <em className="is-maybe">{money(c.ifDeclared)} if declared</em>
+                  )}
+                  <span className="rp-opt__icon" aria-hidden="true">
+                    {on ? (
+                      <X size={15} strokeWidth={2.4} />
+                    ) : (
+                      <Plus size={15} strokeWidth={2.4} />
+                    )}
+                  </span>
+                </span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {open && (
+                  <motion.div
+                    className="rp-opt__more"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+                  >
+                    <div className="rp-opt__inner">
+                      {o.controls.map((ctl) => (
+                        <OptionControl
+                          key={ctl.id}
+                          control={ctl}
+                          value={set[ctl.id]}
+                          onChange={(v: number | string | string[]) =>
+                            setValue(o.id, ctl.id, v)
+                          }
+                        />
+                      ))}
+                      {o.note && <p className="rp-opt__note">{o.note}</p>}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           );
         })}
       </div>
+
+      {totals.ifDeclared > 0 && (
+        /* Kept out of the bar: aid that depends on a declaration is not
+           funding you can plan around, and folding it in would let the gap
+           look closed on the strength of grants nobody has offered. */
+        <p className="rp__maybe">
+          <b>{money(totals.ifDeclared)}</b> more could come from aid — but only
+          if your disaster is declared, and months after you need it.
+        </p>
+      )}
 
       {remaining === 0 && (
         <p className="rp__done">
@@ -215,5 +302,95 @@ export function RecoveryPlanBlock({ onTune }: { onTune?: () => void }) {
         </p>
       )}
     </section>
+  );
+}
+
+/**
+ * One control inside an expanded option.
+ *
+ * Sliders for amounts, chips for a single choice, chips for several — the
+ * three shapes the decisions actually take. Each reports its value up so the
+ * bar recomputes as the person moves it, rather than on a save.
+ */
+function OptionControl({
+  control,
+  value,
+  onChange,
+}: {
+  control: Control;
+  value: number | string | string[] | undefined;
+  onChange: (v: number | string | string[]) => void;
+}) {
+  const show = (n: number) => {
+    if (control.unit === "percent") return `${n}%`;
+    if (control.unit === "perMonth") return `$${n} a week`;
+    return money(n);
+  };
+
+  return (
+    <div className="rp-ctl">
+      <div className="rp-ctl__head">
+        <span className="rp-ctl__label">{control.label}</span>
+        {control.kind === "slider" && (
+          <span className="rp-ctl__value">{show(Number(value))}</span>
+        )}
+      </div>
+
+      {control.kind === "slider" && (
+        <input
+          type="range"
+          min={control.min}
+          max={control.max}
+          step={control.step}
+          value={Number(value)}
+          aria-label={control.label}
+          onChange={(e) => onChange(Number(e.target.value))}
+        />
+      )}
+
+      {control.kind === "choice" && (
+        <div className="rp-ctl__chips">
+          {(control.options ?? []).map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              aria-pressed={value === opt.id}
+              className={value === opt.id ? "is-on" : undefined}
+              onClick={() => onChange(opt.id)}
+            >
+              <b>{opt.label}</b>
+              {opt.note && <em>{opt.note}</em>}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {control.kind === "multi" && (
+        <div className="rp-ctl__chips">
+          {(control.options ?? []).map((opt) => {
+            const list = Array.isArray(value) ? value : [];
+            const on = list.includes(opt.id);
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                aria-pressed={on}
+                className={on ? "is-on" : undefined}
+                onClick={() =>
+                  onChange(
+                    on ? list.filter((x) => x !== opt.id) : [...list, opt.id],
+                  )
+                }
+              >
+                <b>{opt.label}</b>
+                {opt.note && <em>{opt.note}</em>}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {control.note && <p className="rp-ctl__note">{control.note}</p>}
+    </div>
   );
 }
