@@ -1001,3 +1001,90 @@
     animation-duration: 2.4s;
   }
 }
+
+/* --- Document capture --------------------------------------------------------- */
+
+.ob-pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.ob-page {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #16161a;
+  background: #f2f3f5;
+  border: 1px solid rgb(22 22 24 / 8%);
+  border-radius: 9px;
+}
+
+.ob-page button {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  color: #8a8f98;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.ob-page--add {
+  color: #0a84ff;
+  cursor: pointer;
+  background: none;
+  border: 1px dashed rgb(10 132 255 / 40%);
+}
+
+/* --- Extraction summary -------------------------------------------------------- */
+
+.ob-extract__head {
+  font-size: 14px;
+  font-weight: 600;
+  color: #16161a;
+}
+
+.ob-extract {
+  padding: 12px 13px;
+  background: #f7f8f9;
+  border-radius: 10px;
+}
+
+.ob-extract__row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 12.5px;
+  color: #8a8f98;
+  border-top: 1px solid rgb(22 22 24 / 6%);
+}
+
+.ob-extract__row:first-child {
+  border-top: none;
+}
+
+.ob-extract__row b {
+  font-weight: 600;
+  text-align: right;
+  color: #16161a;
+}
+
+/* What the scan couldn't find is a finding in its own right — "no flood policy
+   on file" is the most useful line on the screen. */
+.ob-extract__gap {
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #8a6412;
+  background: rgb(217 155 50 / 13%);
+  border-radius: 9px;
+}

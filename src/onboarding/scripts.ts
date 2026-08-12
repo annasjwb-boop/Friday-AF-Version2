@@ -59,11 +59,17 @@ export type Step = StepBase &
       id: string;
       options: string[];
       other?: boolean;
+      /** Option → label. Anything unlisted falls through to the next step. */
+      branch?: Record<string, string>;
     }
   /** Editable property details with the rebuild-cost slider. */
   | { kind: "property" }
   /** Editable risk list. */
   | { kind: "risks" }
+  /** Photograph a document and see what a scan pulls off it. */
+  | { kind: "uploadDoc" }
+  /** Another document, or done. Loops back to `againTo`. */
+  | { kind: "moreDocs"; againTo: string; doneTo: string }
   /** Canopy wizard / upload / self-insure. `vehicle` shifts the copy. */
   | { kind: "insurance"; vehicle?: boolean }
   /** Another policy, a vehicle policy, or done. Loops back to `againTo`. */
@@ -323,6 +329,9 @@ export const SCRIPTS: Record<string, Script> = {
         id: "intent",
         options: ["Organize documents", "Document my property"],
         other: true,
+        /* Only the documents answer needs its own path; the others share the
+           existing tail into the vault. */
+        branch: { "Organize documents": "startDocs" },
       },
       { kind: "say", text: METAPHOR_Q },
       {
@@ -346,6 +355,36 @@ export const SCRIPTS: Record<string, Script> = {
           a.intent === "Document my property"
             ? "/?tab=readiness&vault=rooms"
             : "/?tab=readiness&vault=docs",
+        label: "Open your vault",
+      },
+
+      /* --- Documents path ---------------------------------------------------
+       * Reached only from the intent branch above. The goto before it ends the
+       * other paths, so nothing falls into this by accident. */
+      {
+        kind: "say",
+        label: "startDocs",
+        text: "Good place to start. Pick what you've got in front of you and photograph it — I'll read what's on it.",
+      },
+      { kind: "uploadDoc", accumulate: "docs" },
+      {
+        kind: "say",
+        text: (a) => {
+          const n = (a.docs ?? "").split("|").filter(Boolean).length;
+          return n <= 1
+            ? "That's on your profile now. Anything else while you're here?"
+            : `That's ${n} documents on your profile now. Anything else while you're here?`;
+        },
+      },
+      { kind: "moreDocs", againTo: "startDocs", doneTo: "docsWrap" },
+      {
+        kind: "say",
+        label: "docsWrap",
+        text: "Thanks — I'll take you to your vault. You can keep adding there, or tap the assistant any time and we'll work through it together.",
+      },
+      {
+        kind: "goto",
+        to: "/?tab=readiness&vault=docs",
         label: "Open your vault",
       },
     ],

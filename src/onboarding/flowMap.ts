@@ -33,6 +33,8 @@ export const BRANCH_LABELS: Record<string, string[]> = {
     "My vehicle policy",
     "That's everything",
   ],
+  moreDocs: ["Add another document", "That's enough for now"],
+  uploadDoc: ["document added"],
 };
 
 export interface Edge {
@@ -103,6 +105,21 @@ export function edgesOf(steps: Step[], i: number): Edge[] {
           broken: labelIndex(steps, s.backTo) < 0,
         },
       ];
+    case "moreDocs": {
+      const [again, done] = BRANCH_LABELS.moreDocs;
+      return [
+        {
+          on: again,
+          to: at(s.againTo),
+          broken: labelIndex(steps, s.againTo) < 0,
+        },
+        {
+          on: done,
+          to: at(s.doneTo),
+          broken: labelIndex(steps, s.doneTo) < 0,
+        },
+      ];
+    }
     case "morePolicies": {
       const [again, vehicle, done] = BRANCH_LABELS.morePolicies;
       const loop = labelIndex(steps, s.againTo) < 0;
@@ -116,7 +133,15 @@ export function edgesOf(steps: Step[], i: number): Edge[] {
     case "choice":
       return s.options
         .concat(s.other ? ["Something else (free text)"] : [])
-        .map((o) => ({ on: o, to: next }));
+        .map((o) => {
+          const target = s.branch?.[o];
+          if (!target) return { on: o, to: next };
+          return {
+            on: o,
+            to: at(target),
+            broken: labelIndex(steps, target) < 0,
+          };
+        });
     case "pickGrants":
     case "resiliency":
     case "insurance":
@@ -235,6 +260,10 @@ function summarise(step: Step): string {
         : "connect, upload, or none";
     case "morePolicies":
       return "another policy, a vehicle policy, or done";
+    case "uploadDoc":
+      return "pick a category and type, photograph pages, see what was read";
+    case "moreDocs":
+      return "another document, or done";
     case "account":
       return "create an account";
     default:

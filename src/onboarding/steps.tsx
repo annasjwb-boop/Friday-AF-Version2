@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import {
+  Camera,
   Check,
+  FolderClosed,
   Plus,
+  X,
   FileUp,
   Link2,
   MapPin,
@@ -11,6 +14,11 @@ import {
   Flame,
 } from "lucide-react";
 import { OPEN_DISASTERS, RESILIENCY_GRANT } from "../data/grants";
+import {
+  DOC_CATEGORIES,
+  type DocCategory,
+  type DocType,
+} from "../data/docTypes";
 import { NO_STORMS } from "./scripts";
 import { policyCoverages } from "../data/home";
 import { MAPBOX_TOKEN } from "../components/campaign/FloridaMap";
@@ -951,6 +959,213 @@ export function MorePoliciesStep({
         onClick={() => onDone("That's everything", false)}
       >
         That's everything
+      </button>
+    </div>
+  );
+}
+
+/* --- Document upload -------------------------------------------------------- */
+
+type DocStage = "category" | "type" | "pages" | "reading" | "done";
+
+/**
+ * Photograph a document, page by page, and see what came off it.
+ *
+ * The extraction summary is the whole reason this exists. Someone who has just
+ * photographed three pages of a declarations page wants to know it was worth
+ * doing, and what a scan *couldn't* find is as useful as what it could — "no
+ * flood coverage found on this policy" is a finding, not a failure.
+ *
+ * Pages are placeholders rather than a real camera: this is a prototype and a
+ * file picker that discarded the image would be worse than an obvious mock.
+ */
+export function UploadDocStep({ onDone }: { onDone: (v: string) => void }) {
+  const [stage, setStage] = useState<DocStage>("category");
+  const [cat, setCat] = useState<DocCategory | null>(null);
+  const [type, setType] = useState<DocType | null>(null);
+  const [pages, setPages] = useState(0);
+
+  useEffect(() => {
+    if (stage !== "reading") return;
+    const t = setTimeout(() => setStage("done"), 1800);
+    return () => clearTimeout(t);
+  }, [stage]);
+
+  if (stage === "category") {
+    return (
+      <div className="ob-opts">
+        {DOC_CATEGORIES.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            className="ob-opt"
+            onClick={() => {
+              setCat(c);
+              setStage("type");
+            }}
+          >
+            <span className="ob-opt__icon" aria-hidden="true">
+              <FolderClosed size={17} strokeWidth={1.8} />
+            </span>
+            <span>
+              <span className="ob-opt__label">{c.name}</span>
+              <span className="ob-opt__sub">{c.sub}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  if (stage === "type" && cat) {
+    return (
+      <div className="ob-pick">
+        {cat.types.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className="ob-check"
+            onClick={() => {
+              setType(t);
+              setPages(0);
+              setStage("pages");
+            }}
+          >
+            <span className="ob-check__body">
+              <span className="ob-check__name">{t.name}</span>
+              <span className="ob-check__meta">{t.pages}</span>
+            </span>
+          </button>
+        ))}
+        <button
+          type="button"
+          className="ob-chip ob-chip--wide"
+          onClick={() => setStage("category")}
+        >
+          Back to categories
+        </button>
+      </div>
+    );
+  }
+
+  if (stage === "pages" && type) {
+    return (
+      <div className="ob-panel">
+        <p className="ob-panel__src">
+          {type.name} · {type.pages}. Prototype — no photograph is taken or
+          stored.
+        </p>
+
+        <div className="ob-pages">
+          {Array.from({ length: pages }, (_, i) => (
+            <div className="ob-page" key={i}>
+              <FileUp size={15} strokeWidth={1.8} aria-hidden="true" />
+              <span>Page {i + 1}</span>
+              <button
+                type="button"
+                aria-label={`Remove page ${i + 1}`}
+                onClick={() => setPages((n) => n - 1)}
+              >
+                <X size={12} strokeWidth={2.4} />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            className="ob-page ob-page--add"
+            onClick={() => setPages((n) => n + 1)}
+          >
+            <Camera size={16} strokeWidth={1.8} aria-hidden="true" />
+            <span>{pages === 0 ? "Take a photo" : "Add another page"}</span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          className="ob-send"
+          disabled={pages === 0}
+          onClick={() => setStage("reading")}
+        >
+          {pages === 0
+            ? "Add at least one page"
+            : `Read ${pages} page${pages === 1 ? "" : "s"}`}
+        </button>
+      </div>
+    );
+  }
+
+  if (stage === "reading" && type) {
+    return (
+      <div className="ob-canopy__body ob-canopy__waiting">
+        <span className="ob-canopy__spin" aria-hidden="true" />
+        <p className="ob-canopy__q">Reading your {type.name.toLowerCase()}…</p>
+      </div>
+    );
+  }
+
+  if (stage === "done" && type) {
+    return (
+      <div className="ob-panel">
+        <p className="ob-extract__head">
+          Pulled {type.fields.length} details off {pages} page
+          {pages === 1 ? "" : "s"}
+        </p>
+
+        <div className="ob-extract">
+          {type.fields.map(([k, v]) => (
+            <p className="ob-extract__row" key={k}>
+              <span>{k}</span>
+              <b>{v}</b>
+            </p>
+          ))}
+        </div>
+
+        {type.missing?.map((m) => (
+          <p className="ob-extract__gap" key={m}>
+            {m}
+          </p>
+        ))}
+
+        <p className="ob-panel__src">
+          All of this goes onto your profile, so you never have to type it into
+          an application.
+        </p>
+
+        <button
+          type="button"
+          className="ob-send"
+          onClick={() => onDone(`Added my ${type.name.toLowerCase()}`)}
+        >
+          Save to my profile
+        </button>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+/** Another document, or done. */
+export function MoreDocsStep({
+  onDone,
+}: {
+  onDone: (v: string, again: boolean) => void;
+}) {
+  return (
+    <div className="ob-chips">
+      <button
+        type="button"
+        className="ob-chip"
+        onClick={() => onDone("Add another document", true)}
+      >
+        Add another document
+      </button>
+      <button
+        type="button"
+        className="ob-send"
+        onClick={() => onDone("That's enough for now", false)}
+      >
+        That's enough for now
       </button>
     </div>
   );

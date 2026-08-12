@@ -12,6 +12,7 @@ import {
   DEFAULT_ADDRESS,
   GrantsStep,
   InsuranceStep,
+  MoreDocsStep,
   MorePoliciesStep,
   MapStep,
   PickGrantsStep,
@@ -19,6 +20,7 @@ import {
   ResiliencyStep,
   RisksStep,
   TextStep,
+  UploadDocStep,
 } from "./steps";
 import { useThreadScroll } from "../hooks/useThreadScroll";
 import "./OnboardingFlow.css";
@@ -371,7 +373,19 @@ function Interactive({
       return <ResiliencyStep onDone={onDone} />;
     case "choice":
       return (
-        <ChoiceStep options={step.options} other={step.other} onDone={onDone} />
+        <ChoiceStep
+          options={step.options}
+          other={step.other}
+          onDone={(v) => onDone(v, step.branch?.[v])}
+        />
+      );
+    case "uploadDoc":
+      return <UploadDocStep onDone={onDone} />;
+    case "moreDocs":
+      return (
+        <MoreDocsStep
+          onDone={(v, again) => onDone(v, again ? step.againTo : step.doneTo)}
+        />
       );
     case "property":
       return <PropertyStep onDone={onDone} />;

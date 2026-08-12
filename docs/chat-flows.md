@@ -99,7 +99,7 @@ No dead ends, broken jumps or unreachable steps.
 
 ## prepare — Get prepared
 
-Reached from ads 03, 04 · 15 of 15 steps reachable
+Reached from ads 03, 04 · 21 of 21 steps reachable
 
 ```
   1  SAY             Thanks for your address. It looks like I found you.
@@ -119,13 +119,22 @@ Reached from ads 03, 04 · 15 of 15 steps reachable
   9  SAY             I've pulled what public records hold about your property — size, age, materials, history. That all goes into your profile and you'll get a chance to review it.
  10  SAY             What would you rather start with — pulling together the documents you'd need to file a claim or apply for aid, or documenting what's in your home so you can put it on a claim later?
  11  CHOICE          asks "intent"
-             ├─ "Organize documents" → step 12
+             ├─ "Organize documents" → step 16
              ├─ "Document my property" → step 12
              ├─ "Something else (free text)" → step 12
  12  SAY             One last question. Can you tell me how you think about your home? A castle? An igloo? A cabin? A secret lair?
  13  TEXT            free text "metaphor" — A castle, a cabin, a secret lair…
  14  SAY             I'll take you to your vault now. You can keep uploading there, or tap the assistant any time and we'll work through it together.
  15  GOTO            [Open your vault] Open your vault → (depends on answers)
+             └─ ends the flow
+ 16  SAY             [startDocs] Good place to start. Pick what you've got in front of you and photograph it — I'll read what's on it.
+ 17  UPLOADDOC       pick a category and type, photograph pages, see what was read
+ 18  SAY             (depends on answers)
+ 19  MOREDOCS        another document, or done
+             ├─ "Add another document" loops back to step 16
+             ├─ "That's enough for now" → step 20
+ 20  SAY             [docsWrap] Thanks — I'll take you to your vault. You can keep adding there, or tap the assistant any time and we'll work through it together.
+ 21  GOTO            [Open your vault] Open your vault → /?tab=readiness&vault=docs
              └─ ends the flow
 ```
 
