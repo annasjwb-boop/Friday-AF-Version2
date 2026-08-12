@@ -9,6 +9,7 @@ import {
   DWELLING_LIMIT,
   PERSONAL_PROPERTY,
   coverageForPeril,
+  coveredPercent,
   money,
 } from "./protection";
 import { PropertyStep } from "../../onboarding/steps";
@@ -78,7 +79,7 @@ export function ScenarioHero() {
       )
     : 0;
   const gap = total - covered;
-  const pct = Math.round((covered / total) * 100);
+  const pct = coveredPercent(perilId, rebuild);
 
   /* 180° is the left end, 0° the right. The covered share fills from the left. */
   const split = 180 - 180 * (covered / total);

@@ -240,3 +240,21 @@ export function nextActionsForPeril(peril: string): NextAction[] {
       ];
   }
 }
+
+/**
+ * What share of a total loss the policy would pay for one peril.
+ *
+ * Shared by the overview tile and the risk scenario so the two can't disagree
+ * — they're the same claim at different sizes, and an overview saying 78%
+ * beside a dial saying something else would be worse than showing neither.
+ */
+export function coveredPercent(perilId: string, rebuild = REBUILD_COST): number {
+  const cover = coverageForPeril(perilId);
+  if (!cover.covered) return 0;
+  const total = rebuild + PERSONAL_PROPERTY;
+  const covered = Math.max(
+    Math.min(DWELLING_LIMIT, rebuild) + PERSONAL_PROPERTY - DEDUCTIBLE,
+    0,
+  );
+  return Math.round((covered / total) * 100);
+}

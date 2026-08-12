@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Gauge, ShieldCheck } from "lucide-react";
+import { ArrowRight, Gauge, ShieldCheck, Umbrella } from "lucide-react";
 import { readinessProgress } from "../../data/home";
 import {
   RISK_LABEL,
   RISK_OUT_OF_100,
+  coveredPercent,
   nextActionsForPeril,
 } from "./protection";
 import type { PerilId } from "./perils";
@@ -30,6 +31,7 @@ export function CasitaOverview({
   /* The action deck tracks the selected condition — the whole point of the
      peril strip is that what you should do next changes with it. */
   const actions = nextActionsForPeril(peril);
+  const covered = coveredPercent(peril);
 
   /* The black card is a deck: skip cycles to the next action for this
      condition. Reset on peril change, since the deck itself is different. */
@@ -57,6 +59,33 @@ export function CasitaOverview({
             <span>/100</span>
           </p>
           <p className="cov-tile__sub">{RISK_LABEL}</p>
+        </button>
+
+        {/* Coverage sits between them because it's the one that moves with the
+            peril strip above — risk and readiness describe the property, this
+            describes the condition currently selected. */}
+        <button
+          type="button"
+          className="cov-tile"
+          onClick={() => onOpen("risk")}
+        >
+          <span className="cov-tile__icon" aria-hidden="true">
+            <Umbrella size={15} strokeWidth={1.9} />
+          </span>
+          <p className="cov-tile__label">Coverage</p>
+          <motion.p
+            key={covered}
+            className="cov-tile__num"
+            initial={{ opacity: 0.4 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            {covered}
+            <span>%</span>
+          </motion.p>
+          <p className="cov-tile__sub">
+            {covered === 0 ? "Not covered" : "Of a total loss"}
+          </p>
         </button>
 
         <button
